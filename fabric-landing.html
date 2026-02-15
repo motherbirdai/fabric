@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fabric — The trust layer for the agent economy</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,300;1,9..40,400&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{--black:#000;--blue:#068cff;--pink:#fe83e0;--white:#fff;--bg:#f7f7f7;--text:#0a0a0a;--text-2:#555;--text-3:#999;--border:#e5e5e5;--sans:'DM Sans',-apple-system,BlinkMacSystemFont,sans-serif;--mono:'DM Mono','SF Mono',monospace}
+*{margin:0;padding:0;box-sizing:border-box}html{scroll-behavior:smooth;overflow-y:scroll}
+body{background:var(--white);color:var(--text);font-family:var(--sans);font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden;padding-left:env(safe-area-inset-left);padding-right:env(safe-area-inset-right)}
+::selection{background:var(--blue);color:var(--white)}
+a{color:inherit;text-decoration:none;-webkit-tap-highlight-color:transparent}
+
+/* NAV — mobile first */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(255,255,255,.9);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
+.nav-inner{max-width:1200px;margin:0 auto;padding:0 16px;height:52px;display:flex;align-items:center;justify-content:space-between}
+.nav-logo{display:flex;align-items:center}
+.nav-logo svg{height:12px;width:auto}
+.nav-links{display:none;align-items:center;gap:32px;list-style:none}
+.nav-links a{font-size:14px;font-weight:500;color:var(--text-2);transition:color .2s}
+.nav-links a:hover{color:var(--text)}
+.nav-cta{background:var(--black);color:var(--white)!important;padding:8px 20px;border-radius:8px;font-weight:600!important;transition:all .2s!important}
+.nav-cta:hover{background:#222!important}
+.mobile-nav-toggle{display:block;background:none;border:none;cursor:pointer;padding:8px;-webkit-tap-highlight-color:transparent}
+.mobile-nav-toggle span{display:block;width:20px;height:2px;background:var(--text);margin:5px 0;transition:all .3s}
+.mobile-menu{display:none;position:fixed;top:52px;left:0;right:0;bottom:0;background:var(--white);z-index:99;padding:24px;flex-direction:column;gap:4px}
+.mobile-menu.open{display:flex}
+.mobile-menu a{display:block;padding:14px 0;font-size:18px;font-weight:500;color:var(--text);border-bottom:1px solid var(--border)}
+.mobile-menu a:last-child{border-bottom:none}
+.mobile-menu .nav-cta{display:inline-block;margin-top:16px;text-align:center;padding:14px 28px;border-bottom:none}
+
+/* HERO — mobile first */
+.hero{min-height:auto;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:88px 20px 48px;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;top:-200px;left:50%;transform:translateX(-50%);width:500px;height:500px;background:radial-gradient(circle,rgba(6,140,255,.06) 0%,transparent 60%);pointer-events:none}
+.hero::after{content:'';position:absolute;top:0;right:-200px;width:400px;height:400px;background:radial-gradient(circle,rgba(254,131,224,.04) 0%,transparent 60%);pointer-events:none}
+
+.hero-icon{width:112px;height:112px;margin-bottom:32px;animation:heroSpin 25s linear infinite,colorCycle 8s ease-in-out infinite;cursor:pointer}
+.hero-icon polygon{opacity:0;animation:iconIn .5s ease forwards}
+.hero-icon polygon:nth-child(1){animation-delay:.1s}
+.hero-icon polygon:nth-child(2){animation-delay:.2s}
+.hero-icon polygon:nth-child(3){animation-delay:.3s}
+.hero-icon polygon:nth-child(4){animation-delay:.4s}
+.hero-icon polygon:nth-child(5){animation-delay:.5s}
+@keyframes iconIn{from{opacity:0}to{opacity:1}}
+@keyframes heroSpin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+@keyframes colorCycle{0%,100%{fill:#068cff}50%{fill:#fe83e0}}
+
+h1{font-size:32px;font-weight:700;letter-spacing:-1.5px;line-height:1.05;margin-bottom:20px;animation:fadeUp .8s ease .7s both}
+.grad{background:linear-gradient(135deg,var(--blue) 0%,var(--pink) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-sub{font-size:15px;color:var(--text-2);max-width:100%;line-height:1.55;margin-bottom:32px;animation:fadeUp .8s ease .8s both}
+.hero-actions{display:flex;flex-direction:column;align-items:stretch;gap:12px;width:100%;animation:fadeUp .8s ease .9s both}
+.hero-actions a{text-align:center;padding:14px 24px}
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+
+.btn-p{background:var(--black);color:var(--white);padding:14px 28px;border-radius:12px;font-size:15px;font-weight:600;transition:all .25s;display:inline-block}
+.btn-p:hover{background:#1a1a1a;transform:translateY(-1px);box-shadow:0 8px 24px rgba(0,0,0,.12)}
+.btn-s{background:var(--white);color:var(--text);padding:14px 28px;border-radius:12px;font-size:15px;font-weight:600;border:1px solid var(--border);transition:all .25s;display:inline-block}
+.btn-s:hover{border-color:var(--text);transform:translateY(-1px)}
+
+/* Code block */
+.code-block{background:var(--black);border-radius:12px;padding:20px;margin-top:40px;max-width:100%;text-align:left;animation:fadeUp .8s ease 1s both;position:relative;overflow:hidden}
+.code-block::after{content:'';position:absolute;top:0;right:0;width:150px;height:150px;background:radial-gradient(circle,rgba(6,140,255,.08) 0%,transparent 70%);pointer-events:none}
+.code-hdr{display:flex;gap:6px;margin-bottom:16px}
+.code-dot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.08)}
+.code-block pre{font-family:var(--mono);font-size:11px;line-height:2;color:rgba(255,255,255,.55);position:relative;z-index:1;overflow-x:auto;-webkit-overflow-scrolling:touch}
+.kw{color:var(--blue)}.str{color:var(--pink)}.cmt{color:rgba(255,255,255,.2)}.fn{color:rgba(255,255,255,.9)}
+
+/* Protocol bar */
+.proto-bar{background:var(--bg);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:16px 20px}
+.proto-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:center;gap:12px 20px;flex-wrap:wrap}
+.proto-item{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--text-3);font-weight:500}
+.proto-item svg,.proto-item img{width:14px;height:14px;flex-shrink:0}
+
+/* Sections */
+.sec{max-width:1200px;margin:0 auto;padding:56px 20px}
+.sec-label{font-family:var(--mono);font-size:11px;font-weight:500;color:var(--blue);text-transform:uppercase;letter-spacing:1px;margin-bottom:12px}
+.sec-title{font-size:28px;font-weight:700;letter-spacing:-1.5px;line-height:1.1;margin-bottom:16px}
+.sec-desc{font-size:15px;color:var(--text-2);max-width:560px;line-height:1.6}
+
+/* What is Fabric */
+.what-grid{display:grid;grid-template-columns:1fr;gap:32px;align-items:center;margin-top:40px}
+.what-visual{background:var(--black);border-radius:16px;padding:24px 20px;position:relative;overflow:hidden;display:flex;align-items:center}
+.what-visual::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 20% 30%,rgba(6,140,255,.18) 0%,transparent 50%),radial-gradient(circle at 80% 70%,rgba(254,131,224,.12) 0%,transparent 50%)}
+.term{position:relative;z-index:1;width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch}
+.tl{font-family:var(--mono);font-size:12px;line-height:2.1;color:rgba(255,255,255,.45);opacity:0;animation:termIn .4s ease forwards;white-space:nowrap}
+.tl:nth-child(1){animation-delay:.2s}.tl:nth-child(2){animation-delay:.6s}.tl:nth-child(3){animation-delay:.9s}.tl:nth-child(4){animation-delay:1.2s}.tl:nth-child(5){animation-delay:1.5s}.tl:nth-child(6){animation-delay:1.8s}.tl:nth-child(7){animation-delay:2.1s}.tl:nth-child(8){animation-delay:2.4s}.tl:nth-child(9){animation-delay:2.7s}.tl:nth-child(10){animation-delay:3s}.tl:nth-child(11){animation-delay:3.3s}
+@keyframes termIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+.tl .cmd{color:rgba(255,255,255,.25)}.tl .tfn{color:var(--blue)}.tl .tstr{color:var(--pink)}.tl .trust{color:#00e676}.tl .price{color:var(--pink)}.tl .res{color:#fff;font-weight:500}.tl .blk{color:#ff4444}.tl .tcmt{color:rgba(255,255,255,.15);font-style:italic}
+
+.what-feats{display:flex;flex-direction:column;gap:28px}
+.wf{position:relative;padding-left:20px}
+.wf::before{content:'';position:absolute;left:0;top:8px;width:7px;height:7px;border-radius:50%}
+.wf:nth-child(odd)::before{background:var(--blue)}.wf:nth-child(even)::before{background:var(--pink)}
+.wf h3{font-size:18px;font-weight:600;margin-bottom:4px;letter-spacing:-.5px}
+.wf p{font-size:14px;color:var(--text-2);line-height:1.6}
+
+/* How - SVG Flow */
+.how-wrap{background:var(--bg)}
+.how-wrap .sec{padding:56px 20px}
+.flow-wrap{margin-top:40px;width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:16px;scrollbar-width:none;margin-left:-20px;margin-right:-20px;padding-left:20px;padding-right:20px;width:calc(100% + 40px)}
+.flow-wrap::-webkit-scrollbar{display:none}
+.flow-svg{width:100%;min-width:900px;max-width:none;display:block}
+
+/* Features */
+.feat-grid{display:grid;grid-template-columns:1fr;gap:1px;margin-top:40px;background:var(--border);border-radius:16px;overflow:hidden}
+.fc{background:var(--white);padding:24px 20px;transition:background .3s}
+.fc:hover{background:var(--bg)}
+.fc-dot{width:10px;height:10px;border-radius:50%;margin-bottom:16px}
+.fc h3{font-size:16px;font-weight:600;margin-bottom:6px;letter-spacing:-.5px}
+.fc p{font-size:13px;color:var(--text-2);line-height:1.6}
+.ft{display:inline-block;margin-top:12px;font-family:var(--mono);font-size:11px;letter-spacing:.5px;padding:4px 10px;border-radius:4px}
+.ft-b{color:var(--blue);background:rgba(6,140,255,.06)}.ft-p{color:var(--pink);background:rgba(254,131,224,.06)}
+
+/* Pricing */
+.pricing-wrap{background:var(--bg)}
+.pricing-grid{display:grid;grid-template-columns:1fr;gap:1px;margin-top:40px;background:var(--border);border-radius:16px;overflow:hidden}
+.price-card{background:var(--white);padding:24px 20px;display:flex;flex-direction:column}
+.price-card.featured{background:linear-gradient(180deg,rgba(6,140,255,.03) 0%,var(--white) 100%)}
+.price-tag{display:inline-block;font-family:var(--mono);font-size:11px;padding:2px 8px;border-radius:4px;letter-spacing:.3px;margin-bottom:12px;width:fit-content}
+.price-tag-free{color:#00b368;background:rgba(0,179,104,.08)}
+.price-tag-builder{color:var(--blue);background:rgba(6,140,255,.08)}
+.price-tag-pro{color:var(--blue);background:rgba(6,140,255,.08)}
+.price-tag-team{color:var(--pink);background:rgba(254,131,224,.08)}
+.price-amount{font-size:32px;font-weight:700;letter-spacing:-1.5px;margin-bottom:2px}
+.price-period{font-size:13px;color:var(--text-3);margin-bottom:16px}
+.price-feat{font-size:13px;color:var(--text);line-height:1.8;margin-bottom:20px;flex:1}
+.price-feat span{display:block;padding-left:16px;position:relative}
+.price-feat span::before{content:"→";position:absolute;left:0;color:var(--text-3)}
+.price-btn{display:block;text-align:center;padding:12px 20px;border-radius:8px;font-size:14px;font-weight:600;transition:all .2s;text-decoration:none}
+.price-btn-outline{border:1px solid var(--border);color:var(--text)}
+.price-btn-outline:hover{border-color:var(--text);text-decoration:none}
+.price-btn-fill{background:var(--black);color:var(--white)}
+.price-btn-fill:hover{background:#222;text-decoration:none}
+.price-btn-pink{background:var(--pink);color:var(--black)}
+.price-btn-pink:hover{opacity:.9;text-decoration:none}
+.price-note{text-align:center;margin-top:20px;font-size:13px;color:var(--text-3)}
+.price-note span{font-family:var(--mono);color:var(--text-2)}
+
+/* Built on */
+.built{background:var(--black);color:var(--white)}
+.built .sec-label{color:rgba(255,255,255,.3)}
+.built .sec-title{color:var(--white)}
+.built .sec-desc{color:rgba(255,255,255,.5)}
+.built .sec{padding:56px 20px}
+.stack-grid{display:grid;grid-template-columns:1fr;gap:1px;margin-top:40px;background:rgba(255,255,255,.08);border-radius:16px;overflow:hidden}
+.sc{background:var(--black);padding:24px 20px;transition:background .3s}
+.sc:hover{background:#060606}
+.sc-logo{height:24px;margin-bottom:12px;display:flex;align-items:center}
+.sc-logo img,.sc-logo svg{height:24px;width:auto}
+.sc .sn{font-size:16px;font-weight:600;margin-bottom:4px}
+.sc .sb{font-size:11px;color:rgba(255,255,255,.25);margin-bottom:10px;font-family:var(--mono);letter-spacing:.5px}
+.sc p{font-size:13px;color:rgba(255,255,255,.45);line-height:1.6}
+
+/* Stats */
+.stats{border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:48px 20px}
+.stats-inner{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:24px;text-align:center}
+.sv{font-size:28px;font-weight:700;letter-spacing:-1.5px;margin-bottom:2px}
+.sv.blue{color:var(--blue)}.sv.pink{color:var(--pink)}
+.sl{font-size:12px;color:var(--text-3)}
+
+/* CTA */
+.cta{text-align:center;padding:72px 20px;position:relative;overflow:hidden}
+.cta::before{content:'';position:absolute;bottom:-200px;left:50%;transform:translateX(-50%);width:600px;height:600px;background:radial-gradient(circle,rgba(6,140,255,.05) 0%,rgba(254,131,224,.03) 50%,transparent 70%);pointer-events:none}
+.cta-icon{width:64px;height:64px;margin-bottom:28px;animation:slowSpin 20s linear infinite}
+@keyframes slowSpin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+.cta .sec-title{margin-bottom:12px}
+.cta .sec-desc{margin:0 auto 36px;text-align:center;font-size:15px}
+.cta-acts{display:flex;flex-direction:column;align-items:stretch;gap:12px;max-width:320px;margin:0 auto}
+.cta-acts a{text-align:center;padding:14px 24px}
+
+/* Footer */
+footer{border-top:1px solid var(--border);padding:28px 20px}
+.foot-inner{max-width:1200px;margin:0 auto;display:flex;flex-direction:column;gap:12px;align-items:center;text-align:center}
+.foot-l{font-size:12px;color:var(--text-3)}
+.foot-l a{color:var(--text-2)}
+.foot-l a:hover{color:var(--text)}
+.foot-links{display:flex;gap:20px;list-style:none;justify-content:center}
+.foot-links a{font-size:12px;color:var(--text-3)}
+.foot-links a:hover{color:var(--text)}
+
+/* ============ TABLET ============ */
+@media(min-width:600px){
+.stats-inner{grid-template-columns:repeat(4,1fr);gap:32px}
+.sv{font-size:32px}
+.sl{font-size:13px}
+.pricing-grid{grid-template-columns:repeat(2,1fr)}
+.feat-grid{grid-template-columns:repeat(2,1fr)}
+.stack-grid{grid-template-columns:repeat(2,1fr)}
+.hero-icon{width:148px;height:148px;margin-bottom:44px}
+h1{font-size:44px;letter-spacing:-2px}
+.hero-sub{font-size:17px;max-width:480px}
+.hero{padding:108px 32px 64px}
+.hero-actions{max-width:360px}
+.sec{padding:80px 32px}
+.sec-title{font-size:36px;letter-spacing:-1.5px}
+.sec-desc{font-size:17px}
+.how-wrap .sec{padding:80px 32px}
+.flow-wrap{margin-left:-32px;margin-right:-32px;padding-left:32px;padding-right:32px;width:calc(100% + 64px)}
+.flow-svg{min-width:960px}
+.built .sec{padding:80px 32px}
+.what-visual{padding:36px;border-radius:20px}
+.tl{font-size:13px;line-height:2.2}
+.wf h3{font-size:20px}
+.wf p{font-size:15px}
+.what-feats{gap:32px}
+.code-block{padding:28px;border-radius:14px;margin-top:48px}
+.code-block pre{font-size:12px}
+.code-dot{width:9px;height:9px}
+.fc{padding:32px 24px}
+.fc h3{font-size:17px}
+.fc p{font-size:14px}
+.sc{padding:32px 24px}
+.proto-bar{padding:24px 32px}
+.proto-inner{gap:16px 28px}
+.proto-item{font-size:12px;gap:8px}
+.proto-item svg,.proto-item img{width:16px;height:16px}
+.cta{padding:96px 32px}
+.cta-icon{width:72px;height:72px;margin-bottom:32px}
+.cta .sec-desc{font-size:17px;margin-bottom:40px}
+.stats{padding:60px 32px}
+.price-card{padding:28px 24px}
+}
+
+/* ============ DESKTOP ============ */
+@media(min-width:901px){
+.nav-inner{padding:0 40px;height:64px}
+.nav-logo svg{height:14px}
+.nav-links{display:flex}
+.mobile-nav-toggle{display:none}
+.mobile-menu{display:none!important}
+.hero{min-height:100vh;padding:120px 40px 80px}
+.hero::before{width:800px;height:800px}
+.hero::after{right:-300px;width:600px;height:600px}
+.hero-icon{width:200px;height:200px;margin-bottom:60px}
+h1{font-size:clamp(48px,7.5vw,80px);letter-spacing:-3px}
+.hero-sub{font-size:clamp(17px,2.2vw,20px);max-width:600px;margin-bottom:48px}
+.hero-actions{flex-direction:row;align-items:center;gap:16px;width:auto;max-width:none}
+.hero-actions a{text-align:left}
+.btn-p,.btn-s{font-size:16px;padding:14px 32px}
+.sec{padding:120px 40px}
+.sec-label{font-size:13px;margin-bottom:16px}
+.sec-title{font-size:clamp(36px,5vw,56px);letter-spacing:-2px;margin-bottom:20px}
+.sec-desc{font-size:18px}
+.what-grid{grid-template-columns:1fr 1fr;gap:80px;margin-top:64px}
+.what-visual{padding:48px;min-height:420px}
+.tl{font-size:13px;line-height:2.2}
+.what-feats{gap:36px}
+.wf{padding-left:24px}
+.wf::before{top:10px;width:8px;height:8px}
+.wf h3{font-size:20px}
+.wf p{font-size:15px}
+.how-wrap .sec{padding:120px 40px}
+.flow-wrap{margin-top:64px;overflow:visible;padding-bottom:0;margin-left:0;margin-right:0;padding-left:0;padding-right:0;width:100%}
+.flow-svg{min-width:0;max-width:1120px;margin:0 auto}
+.code-block{border-radius:16px;padding:32px;margin-top:56px;max-width:560px}
+.code-block pre{font-size:13px}
+.code-dot{width:10px;height:10px}
+.feat-grid{grid-template-columns:repeat(3,1fr);gap:2px;margin-top:64px;border-radius:20px}
+.fc{padding:48px 32px}
+.fc h3{font-size:18px;margin-bottom:8px}
+.fc p{font-size:14px}
+.fc-dot{margin-bottom:20px}
+.ft{margin-top:16px}
+.pricing-grid{grid-template-columns:repeat(4,1fr);margin-top:48px}
+.price-card{padding:32px}
+.price-amount{font-size:36px}
+.price-note{margin-top:24px;font-size:13px}
+.built .sec{padding:120px 40px}
+.stack-grid{grid-template-columns:repeat(5,1fr);margin-top:64px}
+.sc{padding:40px 28px}
+.sc-logo{height:28px;margin-bottom:16px}
+.sc-logo img,.sc-logo svg{height:28px}
+.sc .sn{font-size:17px}
+.sc .sb{margin-bottom:14px}
+.stats{padding:64px 40px}
+.stats-inner{gap:40px}
+.sv{font-size:40px;letter-spacing:-2px}
+.cta{padding:160px 40px}
+.cta::before{width:800px;height:800px}
+.cta-icon{width:80px;height:80px;margin-bottom:32px}
+.cta .sec-title{margin-bottom:16px}
+.cta .sec-desc{margin-bottom:48px;font-size:18px}
+.cta-acts{flex-direction:row;justify-content:center;align-items:center;max-width:none}
+.cta-acts a{text-align:center}
+footer{padding:40px}
+.foot-inner{flex-direction:row;justify-content:space-between;text-align:left}
+.foot-l{font-size:13px}
+.foot-links a{font-size:13px}
+.foot-links{gap:24px}
+.proto-bar{padding:28px 40px}
+.proto-inner{gap:48px}
+.proto-item{font-size:14px;gap:8px}
+.proto-item svg,.proto-item img{width:18px;height:18px}
+}
+</style>
+</head>
+<body>
+
+<nav><div class="nav-inner">
+<a href="#" class="nav-logo">
+<svg viewBox="195 58 440 108" fill="var(--black)"><path d="M218.4,158.28v-56.57h-19.23v-12.12h19.23v-15.05c0-4.18,1.25-7.52,3.76-10.03,2.51-2.51,5.85-3.76,10.03-3.76h17.7v12.12h-13.1c-2.7,0-4.04,1.39-4.04,4.18v12.54h19.79v12.12h-19.79v56.57h-14.35Z"/><path d="M283.19,160.23c-4.92,0-9.31-.84-13.17-2.51-3.86-1.67-6.92-4.13-9.2-7.38-2.28-3.25-3.41-7.2-3.41-11.84s1.14-8.66,3.41-11.77c2.28-3.11,5.39-5.46,9.34-7.04,3.95-1.58,8.43-2.37,13.45-2.37h20.9v-4.46c0-3.99-1.21-7.2-3.62-9.61-2.42-2.41-6.13-3.62-11.15-3.62s-8.69,1.16-11.29,3.48c-2.6,2.32-4.32,5.34-5.16,9.06l-13.38-4.32c1.11-3.71,2.9-7.08,5.36-10.1,2.46-3.02,5.73-5.46,9.82-7.32,4.09-1.86,9.01-2.79,14.77-2.79,8.92,0,15.93,2.28,21.04,6.83,5.11,4.55,7.66,11.01,7.66,19.37v28.29c0,2.79,1.3,4.18,3.9,4.18h5.85v11.98h-10.73c-3.25,0-5.9-.84-7.94-2.51-2.04-1.67-3.07-3.95-3.07-6.83v-.42h-2.09c-.74,1.39-1.86,3.02-3.34,4.88-1.49,1.86-3.67,3.46-6.55,4.81-2.88,1.35-6.69,2.02-11.43,2.02ZM285.28,148.38c5.76,0,10.4-1.65,13.93-4.95,3.53-3.3,5.29-7.82,5.29-13.58v-1.39h-20.06c-3.81,0-6.88.81-9.2,2.44-2.32,1.63-3.48,4.02-3.48,7.18s1.21,5.67,3.62,7.52c2.41,1.86,5.71,2.79,9.89,2.79Z"/><path d="M376.69,160.23c-6.69,0-11.82-1.21-15.4-3.62-3.58-2.41-6.25-5.11-8.01-8.08h-2.23v9.75h-14.07V60.74h14.35v38.18h2.23c1.11-1.86,2.6-3.64,4.46-5.36,1.86-1.72,4.32-3.14,7.38-4.25,3.07-1.11,6.83-1.67,11.29-1.67,5.76,0,11.05,1.39,15.88,4.18,4.83,2.79,8.68,6.83,11.56,12.12,2.88,5.29,4.32,11.61,4.32,18.95v2.09c0,7.43-1.46,13.77-4.39,19.02-2.93,5.25-6.78,9.27-11.56,12.05-4.79,2.79-10.06,4.18-15.81,4.18ZM372.51,147.69c6.22,0,11.36-2,15.4-5.99,4.04-3.99,6.06-9.71,6.06-17.14v-1.25c0-7.34-2-13-5.99-17-4-3.99-9.15-5.99-15.47-5.99s-11.22,2-15.26,5.99c-4.04,3.99-6.06,9.66-6.06,17v1.25c0,7.43,2.02,13.15,6.06,17.14,4.04,4,9.13,5.99,15.26,5.99Z"/><path d="M420.58,158.28v-68.69h14.07v8.08h2.23c1.11-2.88,2.9-4.99,5.36-6.34,2.46-1.35,5.5-2.02,9.13-2.02h8.22v12.96h-8.78c-4.65,0-8.45,1.28-11.43,3.83-2.97,2.56-4.46,6.48-4.46,11.77v40.41h-14.35Z"/><path d="M478.68,80.25c-2.79,0-5.13-.91-7.04-2.72-1.91-1.81-2.86-4.16-2.86-7.04s.95-5.23,2.86-7.04c1.9-1.81,4.25-2.72,7.04-2.72s5.25.91,7.11,2.72c1.86,1.81,2.79,4.16,2.79,7.04s-.93,5.23-2.79,7.04c-1.86,1.81-4.23,2.72-7.11,2.72ZM471.43,158.28v-68.69h14.35v68.69h-14.35Z"/><path d="M532.74,160.23c-6.6,0-12.56-1.39-17.9-4.18-5.34-2.79-9.57-6.83-12.68-12.12-3.11-5.29-4.67-11.66-4.67-19.09v-1.81c0-7.43,1.55-13.77,4.67-19.02,3.11-5.25,7.34-9.29,12.68-12.12,5.34-2.83,11.31-4.25,17.9-4.25s12.21,1.21,16.86,3.62c4.64,2.42,8.38,5.62,11.22,9.61,2.83,3.99,4.67,8.41,5.5,13.24l-13.93,2.93c-.47-3.07-1.44-5.85-2.93-8.36-1.49-2.51-3.58-4.5-6.27-5.99-2.7-1.48-6.08-2.23-10.17-2.23s-7.59.91-10.8,2.72c-3.2,1.81-5.74,4.41-7.59,7.8-1.86,3.39-2.79,7.5-2.79,12.33v1.25c0,4.83.93,8.97,2.79,12.4,1.86,3.44,4.39,6.04,7.59,7.8,3.2,1.77,6.8,2.65,10.8,2.65,6.04,0,10.64-1.55,13.79-4.67,3.16-3.11,5.16-7.08,5.99-11.91l13.93,3.2c-1.11,4.74-3.09,9.1-5.92,13.1-2.83,4-6.57,7.18-11.22,9.54-4.65,2.37-10.27,3.55-16.86,3.55Z"/></svg>
+</a>
+<ul class="nav-links">
+<li><a href="#how">How it works</a></li>
+<li><a href="#features">Features</a></li>
+<li><a href="#pricing">Pricing</a></li>
+<li><a href="#stack">Stack</a></li>
+<li><a href="fabric-docs.html">Docs</a></li>
+<li><a href="#" class="nav-cta">Get started</a></li>
+</ul>
+<button class="mobile-nav-toggle" onclick="document.getElementById('mobileMenu').classList.toggle('open');this.classList.toggle('open')" aria-label="Menu">
+<span></span><span></span><span></span>
+</button>
+</div></nav>
+<div class="mobile-menu" id="mobileMenu">
+<a href="#how" onclick="closeMobile()">How it works</a>
+<a href="#features" onclick="closeMobile()">Features</a>
+<a href="#pricing" onclick="closeMobile()">Pricing</a>
+<a href="#stack" onclick="closeMobile()">Stack</a>
+<a href="fabric-docs.html">Docs</a>
+<a href="#" class="nav-cta">Get started</a>
+</div>
+
+<!-- HERO -->
+<section class="hero">
+<svg class="hero-icon" viewBox="0 0 250 250"><polygon points="136.46 192.26 112.19 148.94 112.04 192.1 98.6 192.16 98.59 146.98 125.31 146.92 150.97 192 136.46 192.26"/><polygon points="65.8 88.57 77.5 79.86 122.3 100.39 97.26 65.51 108.04 57.74 134.6 94.24 113.08 109.93 65.8 88.57"/><polygon points="174.45 81.12 185.22 88.89 158.67 125.48 137.18 109.81 142.86 58.17 154.74 66.73 149.1 115.71 174.45 81.12"/><polygon points="183.38 159.21 179.42 171.93 136.49 158.01 144.7 132.69 195.43 122.2 191.1 136.09 142.88 145.82 183.38 159.21"/><polygon points="66.11 157.52 99.68 121.04 58.72 134.14 54.57 121.53 97.52 107.61 105.73 132.89 70.79 171.25 66.11 157.52"/></svg>
+<h1>The trust layer for the<br><span class="grad">agent economy</span></h1>
+<p class="hero-sub">Fabric gives AI agents the ability to discover services, verify reputation on-chain via ERC-8004, and pay autonomously via x402. Smart contracts on Base. TypeScript &amp; Python SDKs. One gateway. Zero trust assumptions.</p>
+<div class="hero-actions"><a href="#" class="btn-p">Start building →</a><a href="#how" class="btn-s">How it works</a></div>
+<div class="code-block"><div class="code-hdr"><div class="code-dot"></div><div class="code-dot"></div><div class="code-dot"></div></div>
+<pre><span class="cmt">// Add Fabric to your agent in 3 lines</span>
+<span class="kw">import</span> { FabricServer } <span class="kw">from</span> <span class="str">'@usefabric/mcp'</span>
+
+<span class="kw">const</span> <span class="fn">fabric</span> = <span class="kw">new</span> <span class="fn">FabricServer</span>({
+  apiKey: process.env.<span class="fn">FABRIC_KEY</span>,
+  budget: <span class="str">'$5/day'</span>,
+  trustThreshold: <span class="str">0.8</span>
+})</pre></div>
+</section>
+
+<!-- PROTOCOL BAR -->
+<div class="proto-bar"><div class="proto-inner">
+<div class="proto-item"><svg viewBox="0 0 540 879.4"><path d="m269.9 325.2-269.9 122.7 269.9 159.6 270-159.6z" opacity=".6" fill="#555"/><path d="m0.1 447.8 269.9 159.6v-607.4z" opacity=".45" fill="#555"/><path d="m270 0v607.4l269.9-159.6z" opacity=".8" fill="#555"/><path d="m0 499 269.9 380.4v-220.9z" opacity=".45" fill="#555"/><path d="m269.9 658.5v220.9l270.1-380.4z" opacity=".8" fill="#555"/></svg>ERC-8004 Reputation</div>
+<div class="proto-item"><svg viewBox="0 0 249 249"><path d="M0 19.671C0 12.933 0 9.564 1.27 6.973A12 12 0 016.973 1.27C9.564 0 12.933 0 19.671 0h209.658c6.738 0 10.107 0 12.698 1.27a12 12 0 015.703 5.703C249 9.564 249 12.933 249 19.671v209.658c0 6.738 0 10.107-1.27 12.698a12 12 0 01-5.703 5.703c-2.591 1.27-5.96 1.27-12.698 1.27H19.671c-6.738 0-10.107 0-12.698-1.27a12 12 0 01-5.703-5.703C0 239.436 0 236.067 0 229.329V19.671z" fill="#999"/><path d="M124.5 183.75c-32.71 0-59.25-26.54-59.25-59.25s26.54-59.25 59.25-59.25c29.48 0 53.92 21.56 58.5 49.75h36.95C215.4 73.13 174.77 37 124.5 37 76.16 37 37 76.16 37 124.5S76.16 212 124.5 212c50.27 0 90.9-36.13 95.45-78h-36.95c-4.58 28.19-29.02 49.75-58.5 49.75z" fill="white"/></svg>x402 Protocol</div>
+<div class="proto-item"><svg viewBox="0 0 249 249" style="border-radius:4px"><path d="M0 19.671C0 12.933 0 9.564 1.27 6.973A12 12 0 016.973 1.27C9.564 0 12.933 0 19.671 0h209.658c6.738 0 10.107 0 12.698 1.27a12 12 0 015.703 5.703C249 9.564 249 12.933 249 19.671v209.658c0 6.738 0 10.107-1.27 12.698a12 12 0 01-5.703 5.703c-2.591 1.27-5.96 1.27-12.698 1.27H19.671c-6.738 0-10.107 0-12.698-1.27a12 12 0 01-5.703-5.703C0 239.436 0 236.067 0 229.329V19.671z" fill="#999"/></svg>Base L2</div>
+<div class="proto-item"><img src="data:image/jpeg;base64,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" alt="Anthropic" style="border-radius:4px;opacity:.55"/>Model Context Protocol</div>
+</div></div>
+
+<!-- WHAT IS FABRIC -->
+<section class="sec" id="what">
+<div class="sec-label">What is Fabric</div>
+<div class="sec-title">Your agent's<br>procurement layer</div>
+<div class="sec-desc">When your agent needs a service — image generation, data feed, code review — Fabric finds the best provider, verifies their reputation on-chain, and handles payment. Automatically.</div>
+<div class="what-grid">
+<div class="what-visual"><div class="term">
+<div class="tl"><span class="cmd">agent →</span> <span class="tfn">fabric.route</span>(<span class="tstr">"image-generation"</span>)</div>
+<div class="tl"><span class="tcmt">  // querying 8004 Identity Registry...</span></div>
+<div class="tl"><span class="tcmt">  // found 12 providers</span></div>
+<div class="tl"><span class="tcmt">  // scoring reputation...</span></div>
+<div class="tl">&nbsp;</div>
+<div class="tl">  Provider A  <span class="trust">★ 4.9</span>  <span class="price">$0.02</span>  99.8% uptime</div>
+<div class="tl">  Provider B  <span class="trust">★ 4.7</span>  <span class="price">$0.008</span>  97.1% uptime</div>
+<div class="tl">  Provider C  <span class="trust">★ 2.1</span>  <span class="price">$0.001</span>  <span class="blk">filtered</span></div>
+<div class="tl">&nbsp;</div>
+<div class="tl"><span class="res">→ Routed to Provider A via x402</span></div>
+<div class="tl"><span class="res">→ $0.02 USDC on Base · 240ms</span></div>
+</div></div>
+<div class="what-feats">
+<div class="wf"><h3>Discover</h3><p>Query the ERC-8004 Identity Registry to find agents and services by capability. No hardcoded integrations — your agent discovers what's available in real-time.</p></div>
+<div class="wf"><h3>Trust</h3><p>Every provider has an on-chain reputation built from real interactions — uptime, quality scores, success rates. Fabric's scoring engine aggregates these into a single trust signal.</p></div>
+<div class="wf"><h3>Route</h3><p>Automatically select the best provider based on your agent's priorities — quality, speed, or cost. If a provider fails, Fabric falls back instantly.</p></div>
+<div class="wf"><h3>Pay</h3><p>Execute x402 payments on Base with managed USDC wallets. Budget controls prevent runaway spend. Every transaction is logged.</p></div>
+</div></div>
+</section>
+
+<!-- HOW IT WORKS — 2-LEVEL SVG -->
+<div class="how-wrap" id="how"><div class="sec">
+<div class="sec-label">How it works</div>
+<div class="sec-title">Five steps, zero config</div>
+<div class="sec-desc">From agent request to verified result in under a second.</div>
+<div class="flow-wrap">
+<svg class="flow-svg" viewBox="0 0 1000 420" fill="none" xmlns="http://www.w3.org/2000/svg">
+<defs>
+<!-- The main flowing path connecting all 5 nodes -->
+<path id="flowPath" d="M100,100 L300,100 Q370,100 370,170 L370,250 Q370,320 300,320 L100,320"/>
+<path id="flowPath2" d="M500,100 L700,100 Q770,100 770,170 L770,250 Q770,320 700,320 L500,320"/>
+
+<!-- Gradient for the main path -->
+<linearGradient id="pathGrad" x1="0" y1="0" x2="1" y2="0">
+<stop offset="0%" stop-color="#068cff"/>
+<stop offset="100%" stop-color="#068cff"/>
+</linearGradient>
+
+<!-- Glow filter -->
+<filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+<feGaussianBlur stdDeviation="6" result="blur"/>
+<feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+</filter>
+</defs>
+
+<!-- ====== HORIZONTAL PIPELINE ====== -->
+<!-- Main continuous line -->
+<line x1="100" y1="160" x2="900" y2="160" stroke="#e5e5e5" stroke-width="1"/>
+
+<!-- Animated flowing dashes along the line -->
+<line x1="100" y1="160" x2="900" y2="160" stroke="url(#pathGrad)" stroke-width="2" stroke-dasharray="8 16" stroke-linecap="round">
+<animate attributeName="stroke-dashoffset" from="0" to="-48" dur="2s" repeatCount="indefinite"/>
+</line>
+
+<!-- ====== NODE 1: REQUEST ====== -->
+<g>
+<!-- Outer ring pulse -->
+<circle cx="100" cy="160" r="32" fill="none" stroke="#068cff" stroke-width="1" opacity="0">
+<animate attributeName="r" values="32;44;32" dur="3s" begin="0s" repeatCount="indefinite"/>
+<animate attributeName="opacity" values="0.3;0;0.3" dur="3s" begin="0s" repeatCount="indefinite"/>
+</circle>
+<!-- Node circle -->
+<circle cx="100" cy="160" r="32" fill="white" stroke="#068cff" stroke-width="2"/>
+<circle cx="100" cy="160" r="28" fill="#068cff" fill-opacity=".04"/>
+<!-- Icon -->
+<text x="100" y="167" text-anchor="middle" font-size="20">🔍</text>
+<!-- Step number -->
+<text x="100" y="112" text-anchor="middle" font-family="DM Mono,monospace" font-size="12" font-weight="500" fill="#068cff">01</text>
+<!-- Label -->
+<text x="100" y="218" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="16" font-weight="600" fill="#0a0a0a">Request</text>
+<text x="100" y="240" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="12" fill="#999">Agent calls</text>
+<text x="100" y="256" text-anchor="middle" font-family="DM Mono,monospace" font-size="11" fill="#068cff">fabric.route()</text>
+</g>
+
+<!-- ====== NODE 2: DISCOVER ====== -->
+<g>
+<circle cx="300" cy="160" r="32" fill="none" stroke="#068cff" stroke-width="1" opacity="0">
+<animate attributeName="r" values="32;44;32" dur="3s" begin="0.6s" repeatCount="indefinite"/>
+<animate attributeName="opacity" values="0.3;0;0.3" dur="3s" begin="0.6s" repeatCount="indefinite"/>
+</circle>
+<circle cx="300" cy="160" r="32" fill="white" stroke="#068cff" stroke-width="2"/>
+<circle cx="300" cy="160" r="28" fill="#068cff" fill-opacity=".04"/>
+<text x="300" y="167" text-anchor="middle" font-size="20">📡</text>
+<text x="300" y="112" text-anchor="middle" font-family="DM Mono,monospace" font-size="12" font-weight="500" fill="#068cff">02</text>
+<text x="300" y="218" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="16" font-weight="600" fill="#0a0a0a">Discover</text>
+<text x="300" y="240" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="12" fill="#999">Query 8004 Registry</text>
+<text x="300" y="256" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="12" fill="#999">for providers</text>
+</g>
+
+<!-- ====== NODE 3: SCORE (centre, larger) ====== -->
+<g>
+<!-- Double pulse for emphasis -->
+<circle cx="500" cy="160" r="40" fill="none" stroke="#068cff" stroke-width="1" opacity="0">
+<animate attributeName="r" values="40;56;40" dur="3s" begin="1.2s" repeatCount="indefinite"/>
+<animate attributeName="opacity" values="0.25;0;0.25" dur="3s" begin="1.2s" repeatCount="indefinite"/>
+</circle>
+<circle cx="500" cy="160" r="40" fill="none" stroke="#068cff" stroke-width="1" opacity="0">
+<animate attributeName="r" values="40;52;40" dur="3s" begin="1.8s" repeatCount="indefinite"/>
+<animate attributeName="opacity" values="0.15;0;0.15" dur="3s" begin="1.8s" repeatCount="indefinite"/>
+</circle>
+<!-- Slightly larger node -->
+<circle cx="500" cy="160" r="40" fill="white" stroke="#068cff" stroke-width="2"/>
+<circle cx="500" cy="160" r="35" fill="#068cff" fill-opacity=".04"/>
+<text x="500" y="168" text-anchor="middle" font-size="24">⚖️</text>
+<text x="500" y="104" text-anchor="middle" font-family="DM Mono,monospace" font-size="12" font-weight="500" fill="#068cff">03</text>
+<text x="500" y="226" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="16" font-weight="600" fill="#0a0a0a">Score</text>
+<text x="500" y="248" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="12" fill="#999">Trust-weighted</text>
+<text x="500" y="264" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="12" fill="#999">ranking</text>
+</g>
+
+<!-- ====== NODE 4: PAY ====== -->
+<g>
+<circle cx="700" cy="160" r="32" fill="none" stroke="#068cff" stroke-width="1" opacity="0">
+<animate attributeName="r" values="32;44;32" dur="3s" begin="1.8s" repeatCount="indefinite"/>
+<animate attributeName="opacity" values="0.3;0;0.3" dur="3s" begin="1.8s" repeatCount="indefinite"/>
+</circle>
+<circle cx="700" cy="160" r="32" fill="white" stroke="#068cff" stroke-width="2"/>
+<circle cx="700" cy="160" r="28" fill="#068cff" fill-opacity=".04"/>
+<text x="700" y="167" text-anchor="middle" font-size="20">💸</text>
+<text x="700" y="112" text-anchor="middle" font-family="DM Mono,monospace" font-size="12" font-weight="500" fill="#068cff">04</text>
+<text x="700" y="218" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="16" font-weight="600" fill="#0a0a0a">Pay</text>
+<text x="700" y="240" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="12" fill="#999">x402 USDC</text>
+<text x="700" y="256" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="12" fill="#999">on Base</text>
+</g>
+
+<!-- ====== NODE 5: VERIFY ====== -->
+<g>
+<circle cx="900" cy="160" r="32" fill="none" stroke="#068cff" stroke-width="1" opacity="0">
+<animate attributeName="r" values="32;44;32" dur="3s" begin="2.4s" repeatCount="indefinite"/>
+<animate attributeName="opacity" values="0.3;0;0.3" dur="3s" begin="2.4s" repeatCount="indefinite"/>
+</circle>
+<circle cx="900" cy="160" r="32" fill="white" stroke="#068cff" stroke-width="2"/>
+<circle cx="900" cy="160" r="28" fill="#068cff" fill-opacity=".04"/>
+<text x="900" y="167" text-anchor="middle" font-size="20">✓</text>
+<text x="900" y="112" text-anchor="middle" font-family="DM Mono,monospace" font-size="12" font-weight="500" fill="#068cff">05</text>
+<text x="900" y="218" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="16" font-weight="600" fill="#0a0a0a">Verify</text>
+<text x="900" y="240" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="12" fill="#999">Post feedback,</text>
+<text x="900" y="256" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="12" fill="#999">return result</text>
+</g>
+
+<!-- ====== TRAVELING PARTICLES ====== -->
+<!-- Particle 1: blue, fast -->
+<circle r="4" fill="#068cff" filter="url(#glow)">
+<animate attributeName="cx" values="100;300;500;700;900;900" dur="4s" repeatCount="indefinite" keyTimes="0;0.2;0.5;0.8;0.95;1"/>
+<animate attributeName="cy" values="160;160;160;160;160;160" dur="4s" repeatCount="indefinite"/>
+<animate attributeName="opacity" values="0;1;1;1;1;0" dur="4s" repeatCount="indefinite"/>
+<animate attributeName="r" values="3;4;5;4;3;3" dur="4s" repeatCount="indefinite"/>
+</circle>
+
+<!-- Particle 2: pink, offset -->
+<circle r="4" fill="#068cff" filter="url(#glow)">
+<animate attributeName="cx" values="100;300;500;700;900;900" dur="4s" begin="2s" repeatCount="indefinite" keyTimes="0;0.2;0.5;0.8;0.95;1"/>
+<animate attributeName="cy" values="160;160;160;160;160;160" dur="4s" begin="2s" repeatCount="indefinite"/>
+<animate attributeName="opacity" values="0;1;1;1;1;0" dur="4s" begin="2s" repeatCount="indefinite"/>
+<animate attributeName="r" values="3;4;5;4;3;3" dur="4s" begin="2s" repeatCount="indefinite"/>
+</circle>
+
+<!-- ====== SEGMENT LABELS (between nodes) ====== -->
+<text x="200" y="146" text-anchor="middle" font-family="DM Mono,monospace" font-size="9" fill="#ccc" letter-spacing="1">QUERY</text>
+<text x="400" y="146" text-anchor="middle" font-family="DM Mono,monospace" font-size="9" fill="#ccc" letter-spacing="1">RANK</text>
+<text x="600" y="146" text-anchor="middle" font-family="DM Mono,monospace" font-size="9" fill="#ccc" letter-spacing="1">SETTLE</text>
+<text x="800" y="146" text-anchor="middle" font-family="DM Mono,monospace" font-size="9" fill="#ccc" letter-spacing="1">CONFIRM</text>
+
+<!-- ====== TIMING BAR ====== -->
+<rect x="100" y="310" width="800" height="1" fill="#e5e5e5" rx="0.5"/>
+<rect x="100" y="310" width="800" height="1" fill="url(#pathGrad)" rx="0.5" opacity=".4">
+<animate attributeName="width" values="0;800;800" dur="3s" repeatCount="indefinite" keyTimes="0;0.8;1"/>
+<animate attributeName="opacity" values="0.6;0.3;0" dur="3s" repeatCount="indefinite" keyTimes="0;0.8;1"/>
+</rect>
+<text x="100" y="336" font-family="DM Mono,monospace" font-size="11" fill="#ccc">0ms</text>
+<text x="895" y="336" text-anchor="end" font-family="DM Mono,monospace" font-size="11" fill="#ccc">&lt;1000ms</text>
+
+</svg>
+</div>
+</div></div>
+
+<!-- STATS -->
+<div class="stats"><div class="stats-inner">
+<div><div class="sv pink">$50B</div><div class="sl">AI agent market by 2030</div></div>
+<div><div class="sv pink">46%</div><div class="sl">Annual market growth (CAGR)</div></div>
+<div><div class="sv pink">$500B</div><div class="sl">Agentic commerce by 2030</div></div>
+<div><div class="sv pink">0</div><div class="sl">Trust + payment layers today</div></div>
+</div></div>
+
+<!-- FEATURES -->
+<section class="sec" id="features">
+<div class="sec-label">Features</div>
+<div class="sec-title">Everything agents need<br>to transact with trust</div>
+<div class="feat-grid">
+<div class="fc"><div class="fc-dot" style="background:var(--blue)"></div><h3>On-chain identity</h3><p>ERC-721 identity NFTs + ERC-8004 registry on Base. Provider endpoints, categories, and reputation stored immutably. 40 Solidity test cases.</p><span class="ft ft-b">smart-contracts</span></div>
+<div class="fc"><div class="fc-dot" style="background:var(--pink)"></div><h3>Trust scoring engine</h3><p>Live scoring from DB feedback with time-decay, composite ranking (trust + favorites + preferences), circuit breaker fallback, and p50/p95/p99 latency tracking.</p><span class="ft ft-p">reputation</span></div>
+<div class="fc"><div class="fc-dot" style="background:var(--blue)"></div><h3>Auto-fallback routing</h3><p>Provider selection with retry logic (2 attempts), three-tier executor (x402 → direct → mock), and circuit breaker. Your agent never gets stuck.</p><span class="ft ft-b">routing</span></div>
+<div class="fc"><div class="fc-dot" style="background:var(--pink)"></div><h3>Stripe billing</h3><p>Checkout, portal, plan upgrades/downgrades with proration, metered overage at $0.001/request, webhook handlers for 6 event types, invoice generation.</p><span class="ft ft-p">billing</span></div>
+<div class="fc"><div class="fc-dot" style="background:var(--blue)"></div><h3>Budget controls</h3><p>Per-agent and per-task spending limits with daily/weekly/monthly resets. Hard caps, alert thresholds, automatic budget reset job. Never lose control.</p><span class="ft ft-b">cost-controller</span></div>
+<div class="fc"><div class="fc-dot" style="background:var(--pink)"></div><h3>Managed wallets</h3><p>Custodial USDC wallets on Base with KMS encryption (AWS/GCP/Vault). USDC transfers, balance checks, x402 payment protocol. No crypto knowledge needed.</p><span class="ft ft-p">payments</span></div>
+<div class="fc"><div class="fc-dot" style="background:var(--blue)"></div><h3>MCP + WebMCP + REST + SDKs</h3><p>6-tool MCP server, WebMCP browser bridge, 22-endpoint REST API, TypeScript SDK (zero-dep, typed), Python SDK (sync + async). Drop into Claude, Cursor, or any MCP client.</p><span class="ft ft-b">integration</span></div>
+<div class="fc"><div class="fc-dot" style="background:var(--pink)"></div><h3>Production-grade</h3><p>Sliding-window rate limiter, Prometheus metrics, Grafana dashboard, Sentry errors, deep health checks, non-root Docker, GitHub Actions CI/CD. Ship-ready.</p><span class="ft ft-p">infra</span></div>
+<div class="fc"><div class="fc-dot" style="background:var(--blue)"></div><h3>WebMCP browser bridge</h3><p>First trust layer for the W3C WebMCP spec. Index tool contracts from any origin, score providers, settle x402 payments — all through navigator.modelContext.</p><span class="ft ft-b">webmcp</span></div>
+</div>
+</section>
+
+<!-- PRICING -->
+<div class="pricing-wrap">
+<section class="sec" id="pricing">
+<div class="sec-label">Pricing</div>
+<div class="sec-title">Start free, scale with trust</div>
+<div class="sec-desc">Explore the registry at no cost. Pay only when your agents start routing and transacting.</div>
+<div class="pricing-grid">
+
+<div class="price-card">
+<span class="price-tag price-tag-free">Free</span>
+<div class="price-amount">$0</div>
+<div class="price-period">forever</div>
+<div class="price-feat">
+<span>50 requests/day</span>
+<span>Discovery + evaluate only</span>
+<span>Community trust scores</span>
+<span>No routing or payments</span>
+</div>
+<a href="#" class="price-btn price-btn-outline">Get started</a>
+</div>
+
+<div class="price-card">
+<span class="price-tag price-tag-builder">Builder</span>
+<div class="price-amount">$9<span style="font-size:16px;font-weight:400;color:var(--text-3)">/mo</span></div>
+<div class="price-period">+ 0.5% routing fee</div>
+<div class="price-feat">
+<span>5,000 requests/day</span>
+<span>Full routing + x402 payments</span>
+<span>3 managed USDC wallets</span>
+<span>Budget controls + feedback</span>
+</div>
+<a href="#" class="price-btn price-btn-fill">Start building</a>
+</div>
+
+<div class="price-card featured">
+<span class="price-tag price-tag-pro">Pro</span>
+<div class="price-amount">$39<span style="font-size:16px;font-weight:400;color:var(--text-3)">/mo</span></div>
+<div class="price-period">+ 0.4% routing fee</div>
+<div class="price-feat">
+<span>15,000 requests/day</span>
+<span>Custom trust weights</span>
+<span>10 wallets + analytics dashboard</span>
+<span>Stripe billing + overage</span>
+</div>
+<a href="#" class="price-btn price-btn-fill">Start building</a>
+</div>
+
+<div class="price-card">
+<span class="price-tag price-tag-team">Team</span>
+<div class="price-amount">$149<span style="font-size:16px;font-weight:400;color:var(--text-3)">/mo</span></div>
+<div class="price-period">+ 0.3% routing fee</div>
+<div class="price-feat">
+<span>50,000 requests/day</span>
+<span>50 wallets + multi-agent mgmt</span>
+<span>Custom weights + SLA guarantees</span>
+<span>Dedicated support + audit logs</span>
+</div>
+<a href="#" class="price-btn price-btn-pink">Contact sales</a>
+</div>
+
+</div>
+<p class="price-note">Overage beyond daily limit: <span>$0.001/request</span> · 7-day free trial on Builder & Pro</p>
+</section>
+</div>
+
+<!-- BUILT ON -->
+<div class="built" id="stack"><div class="sec">
+<div class="sec-label">Built on open protocols</div>
+<div class="sec-title">Standing on giants</div>
+<div class="sec-desc">Fabric assembles the best open infrastructure into a single developer experience.</div>
+<div class="stack-grid">
+<div class="sc">
+<div class="sc-logo"><svg viewBox="0 0 540 879.4" style="height:28px;width:auto"><path d="m269.9 325.2-269.9 122.7 269.9 159.6 270-159.6z" opacity=".6" fill="white"/><path d="m0.1 447.8 269.9 159.6v-607.4z" opacity=".45" fill="white"/><path d="m270 0v607.4l269.9-159.6z" opacity=".8" fill="white"/><path d="m0 499 269.9 380.4v-220.9z" opacity=".45" fill="white"/><path d="m269.9 658.5v220.9l270.1-380.4z" opacity=".8" fill="white"/></svg></div>
+<div class="sn">ERC-8004</div>
+<div class="sb">Ethereum Foundation · Coinbase · Google · MetaMask</div>
+<p>On-chain Identity + Reputation registries. Verifiable, portable, censorship-resistant agent identity with structured reputation history.</p>
+</div>
+<div class="sc">
+<div class="sc-logo"><img src="data:image/jpeg;base64,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" alt="Anthropic" style="height:28px;width:28px;border-radius:6px;filter:invert(1)"/></div>
+<div class="sn">MCP</div>
+<div class="sb">Anthropic · OpenAI · Google · Microsoft</div>
+<p>The standard for connecting AI agents to tools. 16,670+ servers. Fabric is an MCP server your agent connects to.</p>
+</div>
+<div class="sc">
+<div class="sc-logo"><img src="data:image/png;base64,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" alt="Chrome" style="height:28px;width:28px;border-radius:6px"/></div>
+<div class="sn">WebMCP</div>
+<div class="sb">Google · Microsoft · W3C WebML CG</div>
+<p>Browser-native API for AI agents. Sites register tools via navigator.modelContext. Fabric adds trust + payment on top.</p>
+</div>
+<div class="sc">
+<div class="sc-logo"><svg viewBox="0 0 249 249" style="height:28px;width:28px;border-radius:6px"><path d="M0 19.671C0 12.933 0 9.564 1.27 6.973A12 12 0 016.973 1.27C9.564 0 12.933 0 19.671 0h209.658c6.738 0 10.107 0 12.698 1.27a12 12 0 015.703 5.703C249 9.564 249 12.933 249 19.671v209.658c0 6.738 0 10.107-1.27 12.698a12 12 0 01-5.703 5.703c-2.591 1.27-5.96 1.27-12.698 1.27H19.671c-6.738 0-10.107 0-12.698-1.27a12 12 0 01-5.703-5.703C0 239.436 0 236.067 0 229.329V19.671z" fill="#0052FF"/><path d="M124.5 183.75c-32.71 0-59.25-26.54-59.25-59.25s26.54-59.25 59.25-59.25c29.48 0 53.92 21.56 58.5 49.75h36.95C215.4 73.13 174.77 37 124.5 37 76.16 37 37 76.16 37 124.5S76.16 212 124.5 212c50.27 0 90.9-36.13 95.45-78h-36.95c-4.58 28.19-29.02 49.75-58.5 49.75z" fill="white"/></svg></div>
+<div class="sn">x402 Protocol</div>
+<div class="sb">Coinbase · Cloudflare · x402 Foundation</div>
+<p>HTTP-native payments via USDC. APIs return 402, agent pays instantly, data flows. Near-zero fees on Base.</p>
+</div>
+<div class="sc">
+<div class="sc-logo"><svg viewBox="0 0 249 249" style="height:28px;width:28px;border-radius:6px"><path d="M0 19.671C0 12.933 0 9.564 1.27 6.973A12 12 0 016.973 1.27C9.564 0 12.933 0 19.671 0h209.658c6.738 0 10.107 0 12.698 1.27a12 12 0 015.703 5.703C249 9.564 249 12.933 249 19.671v209.658c0 6.738 0 10.107-1.27 12.698a12 12 0 01-5.703 5.703c-2.591 1.27-5.96 1.27-12.698 1.27H19.671c-6.738 0-10.107 0-12.698-1.27a12 12 0 01-5.703-5.703C0 239.436 0 236.067 0 229.329V19.671z" fill="#0000FF"/></svg></div>
+<div class="sn">Base L2</div>
+<div class="sb">Coinbase</div>
+<p>Ethereum L2 with $0.00025 transaction costs. Where agent wallets live and USDC payments settle.</p>
+</div>
+</div>
+</div></div>
+
+<!-- CTA -->
+<section class="cta">
+<svg class="cta-icon" viewBox="0 0 250 250"><polygon fill="var(--pink)" points="136.46 192.26 112.19 148.94 112.04 192.1 98.6 192.16 98.59 146.98 125.31 146.92 150.97 192 136.46 192.26"/><polygon fill="var(--pink)" points="65.8 88.57 77.5 79.86 122.3 100.39 97.26 65.51 108.04 57.74 134.6 94.24 113.08 109.93 65.8 88.57"/><polygon fill="var(--pink)" points="174.45 81.12 185.22 88.89 158.67 125.48 137.18 109.81 142.86 58.17 154.74 66.73 149.1 115.71 174.45 81.12"/><polygon fill="var(--pink)" points="183.38 159.21 179.42 171.93 136.49 158.01 144.7 132.69 195.43 122.2 191.1 136.09 142.88 145.82 183.38 159.21"/><polygon fill="var(--pink)" points="66.11 157.52 99.68 121.04 58.72 134.14 54.57 121.53 97.52 107.61 105.73 132.89 70.79 171.25 66.11 157.52"/></svg>
+<div class="sec-label">Get started</div>
+<div class="sec-title">Build agents that<br><span class="grad">transact with trust</span></div>
+<div class="sec-desc">Fabric is production-ready. Smart contracts deployed on Base, gateway hardened with rate limiting, monitoring, and CI/CD. Get your API key and start building agents that discover, evaluate, and pay for services autonomously.</div>
+<div class="cta-acts"><a href="#" class="btn-p">Get your API key →</a><a href="fabric-docs.html" class="btn-s">Read the docs</a></div>
+</section>
+
+<footer><div class="foot-inner">
+<div class="foot-l">© 2026 Fabric. Built by <a href="#">Motherbird</a>. All rights reserved.</div>
+<ul class="foot-links"><li><a href="fabric-docs.html">Docs</a></li><li><a href="#">GitHub</a></li><li><a href="#">Twitter</a></li><li><a href="#">Discord</a></li></ul>
+</div></footer>
+
+<script>function closeMobile(){document.getElementById('mobileMenu').classList.remove('open');document.querySelector('.mobile-nav-toggle').classList.remove('open')}</script>
+</body></html>
