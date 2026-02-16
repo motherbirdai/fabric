@@ -20,7 +20,7 @@ declare module 'fastify' {
 }
 
 // ─── Public routes that don't need auth ───
-const PUBLIC_PATHS = new Set(['/', '/health', '/healthz', '/ready']);
+const PUBLIC_PATHS = new Set(['/', '/health', '/healthz', '/ready', '/v1/discover', '/v1/search']);
 
 async function authPluginFn(app: FastifyInstance) {
   app.addHook('onRequest', async (request: FastifyRequest, reply: FastifyReply) => {
