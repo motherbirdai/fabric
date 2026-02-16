@@ -46,7 +46,7 @@ export interface ScoredProvider {
  * Uses Redis cache on the hot path, falls back to DB + live scoring.
  */
 export async function discoverAndScore(
-  category: string,
+  category?: string,
   options?: {
     limit?: number;
     minTrustScore?: number;
@@ -57,7 +57,7 @@ export async function discoverAndScore(
   const limit = options?.limit ?? 10;
 
   // ─── Try cache ───
-  const cached = await getCachedScores(category);
+  const cached = category ? await getCachedScores(category) : null;
   if (cached) {
     let results = cached;
     if (options?.minTrustScore) {
@@ -70,7 +70,8 @@ export async function discoverAndScore(
   }
 
   // ─── Fetch from DB ───
-  const where: any = { category };
+  const where: any = { active: true };
+  if (category) where.category = category;
   if (options?.maxPrice) where.basePrice = { lte: options.maxPrice };
 
   const providers = await prisma.provider.findMany({
@@ -98,7 +99,9 @@ export async function discoverAndScore(
   }
 
   // ─── Cache the full scored list for this category ───
-  await setCachedScores(category, scored);
+  if (category) {
+    await setCachedScores(category, scored);
+  }
 
   return filtered.slice(0, limit);
 }

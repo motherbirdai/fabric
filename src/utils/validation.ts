@@ -2,7 +2,7 @@ import { z } from 'zod';
 
 // ─── Discover ───
 export const discoverQuerySchema = z.object({
-  category: z.string().min(1).max(100),
+  category: z.string().min(1).max(100).optional(),
   limit: z.coerce.number().int().min(1).max(50).default(5),
   minTrustScore: z.coerce.number().min(0).max(5).optional(),
   maxPrice: z.coerce.number().min(0).optional(),
