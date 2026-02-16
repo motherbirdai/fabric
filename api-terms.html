@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>API Terms — Fabric</title>
+<meta name="description" content="API Terms of Use for Fabric — The trust layer for the agent economy">
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,300;1,9..40,400&display=swap" rel="stylesheet">
+<style>
+:root{--black:#000;--blue:#068cff;--pink:#fe83e0;--white:#fff;--bg:#f7f7f7;--text:#0a0a0a;--text-2:#555;--text-3:#999;--border:#e5e5e5;--sans:'DM Sans',-apple-system,BlinkMacSystemFont,sans-serif}
+*{margin:0;padding:0;box-sizing:border-box}html{scroll-behavior:smooth;overflow-y:scroll}
+body{background:var(--white);color:var(--text);font-family:var(--sans);font-size:16px;line-height:1.7;-webkit-font-smoothing:antialiased;overflow-x:hidden;padding-left:env(safe-area-inset-left);padding-right:env(safe-area-inset-right)}
+::selection{background:var(--blue);color:var(--white)}
+a{color:var(--blue);text-decoration:none;-webkit-tap-highlight-color:transparent}a:hover{text-decoration:underline}
+
+/* NAV — mobile first (matches index.html) */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(255,255,255,.9);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
+.nav-inner{max-width:1200px;margin:0 auto;padding:0 16px;height:52px;display:flex;align-items:center;justify-content:space-between}
+.nav-logo{display:flex;align-items:center;text-decoration:none}
+.nav-logo:hover{text-decoration:none}
+.nav-logo svg{height:12px;width:auto}
+.nav-links{display:none;align-items:center;gap:32px;list-style:none}
+.nav-links a{font-size:14px;font-weight:500;color:var(--text-2);transition:color .2s;text-decoration:none}
+.nav-links a:hover{color:var(--text);text-decoration:none}
+.nav-cta{background:var(--black);color:var(--white)!important;padding:8px 20px;border-radius:8px;font-weight:600!important;transition:all .2s!important}
+.nav-cta:hover{background:#222!important;text-decoration:none!important}
+.mobile-nav-toggle{display:block;background:none;border:none;cursor:pointer;padding:8px;-webkit-tap-highlight-color:transparent}
+.mobile-nav-toggle span{display:block;width:20px;height:2px;background:var(--text);margin:5px 0;transition:all .3s}
+.mobile-menu{display:none;position:fixed;top:52px;left:0;right:0;bottom:0;background:var(--white);z-index:99;padding:24px;flex-direction:column;gap:4px;overflow-y:auto;-webkit-overflow-scrolling:touch}
+.mobile-menu.open{display:flex}
+.mobile-menu a{display:block;padding:14px 0;font-size:18px;font-weight:500;color:var(--text);border-bottom:1px solid var(--border);text-decoration:none}
+.mobile-menu a:hover{text-decoration:none}
+.mobile-menu a:last-child{border-bottom:none}
+.mobile-menu .nav-cta{display:inline-block;margin-top:16px;text-align:center;padding:14px 28px;border-bottom:none}
+
+/* LEGAL CONTENT */
+.legal-container{max-width:780px;margin:0 auto;padding:88px 20px 60px}
+.legal-container h1{font-size:1.8rem;font-weight:700;margin-bottom:.5rem;letter-spacing:-.02em;line-height:1.3}
+.legal-updated{color:var(--text-3);font-size:.85rem;margin-bottom:2.5rem}
+.legal-container h2{font-size:1.2rem;font-weight:600;margin-top:2.2rem;margin-bottom:.7rem;color:var(--text)}
+.legal-container h3{font-size:1rem;font-weight:600;margin-top:1.3rem;margin-bottom:.4rem}
+.legal-container p{margin-bottom:.9rem;color:var(--text-2);line-height:1.8}
+.legal-container ul,.legal-container ol{margin-bottom:.9rem;padding-left:1.5rem;color:var(--text-2)}
+.legal-container li{margin-bottom:.4rem;line-height:1.7}
+.legal-container code{font-family:'DM Mono','SF Mono',monospace;font-size:.85em;background:var(--bg);padding:2px 6px;border-radius:4px}
+.legal-container table{width:100%;border-collapse:collapse;margin-bottom:1.5rem}
+.legal-container th,.legal-container td{text-align:left;padding:.5rem .7rem;border-bottom:1px solid var(--border);color:var(--text-2);font-size:.9rem}
+.legal-container th{font-weight:600;color:var(--text)}
+.legal-nav{display:flex;gap:12px;margin-bottom:2rem;flex-wrap:wrap}
+.legal-nav a{color:var(--text-3);font-size:.8rem;font-weight:500;padding:.35rem .7rem;border:1px solid var(--border);border-radius:6px}
+.legal-nav a:hover{color:var(--text);border-color:var(--text-3);text-decoration:none}
+.legal-nav a.active{color:var(--text);border-color:var(--text)}
+
+/* FOOTER (matches index.html) */
+footer{border-top:1px solid var(--border);padding:28px 20px}
+.foot-inner{max-width:1200px;margin:0 auto;display:flex;flex-direction:column;gap:12px;align-items:center;text-align:center}
+.foot-l{font-size:12px;color:var(--text-3)}
+.foot-l a{color:var(--text-2);text-decoration:none}
+.foot-l a:hover{color:var(--text)}
+.foot-links{display:flex;gap:20px;list-style:none;justify-content:center;flex-wrap:wrap}
+.foot-links a{font-size:12px;color:var(--text-3);text-decoration:none}
+.foot-links a:hover{color:var(--text)}
+.foot-legal{margin-top:4px;padding-top:8px;border-top:1px solid var(--border)}
+
+/* Desktop */
+@media(min-width:768px){
+.nav-inner{padding:0 40px;height:64px}
+.nav-logo svg{height:14px}
+.nav-links{display:flex}
+.mobile-nav-toggle{display:none}
+.mobile-menu{display:none!important}
+.legal-container{padding:120px 2rem 80px}
+.legal-container h1{font-size:2.2rem}
+footer{padding:40px}
+.foot-inner{flex-direction:row;flex-wrap:wrap;justify-content:space-between;text-align:left}
+.foot-l{font-size:13px}
+.foot-links a{font-size:13px}
+.foot-links{gap:24px}
+.foot-legal{width:100%;justify-content:center;padding-top:16px;margin-top:16px}
+}
+</style>
+</head>
+<body>
+
+<nav><div class="nav-inner">
+<a href="/" class="nav-logo">
+<svg viewBox="195 58 440 108" fill="var(--black)"><path d="M218.4,158.28v-56.57h-19.23v-12.12h19.23v-15.05c0-4.18,1.25-7.52,3.76-10.03,2.51-2.51,5.85-3.76,10.03-3.76h17.7v12.12h-13.1c-2.7,0-4.04,1.39-4.04,4.18v12.54h19.79v12.12h-19.79v56.57h-14.35Z"/><path d="M283.19,160.23c-4.92,0-9.31-.84-13.17-2.51-3.86-1.67-6.92-4.13-9.2-7.38-2.28-3.25-3.41-7.2-3.41-11.84s1.14-8.66,3.41-11.77c2.28-3.11,5.39-5.46,9.34-7.04,3.95-1.58,8.43-2.37,13.45-2.37h20.9v-4.46c0-3.99-1.21-7.2-3.62-9.61-2.42-2.41-6.13-3.62-11.15-3.62s-8.69,1.16-11.29,3.48c-2.6,2.32-4.32,5.34-5.16,9.06l-13.38-4.32c1.11-3.71,2.9-7.08,5.36-10.1,2.46-3.02,5.73-5.46,9.82-7.32,4.09-1.86,9.01-2.79,14.77-2.79,8.92,0,15.93,2.28,21.04,6.83,5.11,4.55,7.66,11.01,7.66,19.37v28.29c0,2.79,1.3,4.18,3.9,4.18h5.85v11.98h-10.73c-3.25,0-5.9-.84-7.94-2.51-2.04-1.67-3.07-3.95-3.07-6.83v-.42h-2.09c-.74,1.39-1.86,3.02-3.34,4.88-1.49,1.86-3.67,3.46-6.55,4.81-2.88,1.35-6.69,2.02-11.43,2.02ZM285.28,148.38c5.76,0,10.4-1.65,13.93-4.95,3.53-3.3,5.29-7.82,5.29-13.58v-1.39h-20.06c-3.81,0-6.88.81-9.2,2.44-2.32,1.63-3.48,4.02-3.48,7.18s1.21,5.67,3.62,7.52c2.41,1.86,5.71,2.79,9.89,2.79Z"/><path d="M376.69,160.23c-6.69,0-11.82-1.21-15.4-3.62-3.58-2.41-6.25-5.11-8.01-8.08h-2.23v9.75h-14.07V60.74h14.35v38.18h2.23c1.11-1.86,2.6-3.64,4.46-5.36,1.86-1.72,4.32-3.14,7.38-4.25,3.07-1.11,6.83-1.67,11.29-1.67,5.76,0,11.05,1.39,15.88,4.18,4.83,2.79,8.68,6.83,11.56,12.12,2.88,5.29,4.32,11.61,4.32,18.95v2.09c0,7.43-1.46,13.77-4.39,19.02-2.93,5.25-6.78,9.27-11.56,12.05-4.79,2.79-10.06,4.18-15.81,4.18ZM372.51,147.69c6.22,0,11.36-2,15.4-5.99,4.04-3.99,6.06-9.71,6.06-17.14v-1.25c0-7.34-2-13-5.99-17-4-3.99-9.15-5.99-15.47-5.99s-11.22,2-15.26,5.99c-4.04,3.99-6.06,9.66-6.06,17v1.25c0,7.43,2.02,13.15,6.06,17.14,4.04,4,9.13,5.99,15.26,5.99Z"/><path d="M420.58,158.28v-68.69h14.07v8.08h2.23c1.11-2.88,2.9-4.99,5.36-6.34,2.46-1.35,5.5-2.02,9.13-2.02h8.22v12.96h-8.78c-4.65,0-8.45,1.28-11.43,3.83-2.97,2.56-4.46,6.48-4.46,11.77v40.41h-14.35Z"/><path d="M478.68,80.25c-2.79,0-5.13-.91-7.04-2.72-1.91-1.81-2.86-4.16-2.86-7.04s.95-5.23,2.86-7.04c1.9-1.81,4.25-2.72,7.04-2.72s5.25.91,7.11,2.72c1.86,1.81,2.79,4.16,2.79,7.04s-.93,5.23-2.79,7.04c-1.86,1.81-4.23,2.72-7.11,2.72ZM471.43,158.28v-68.69h14.35v68.69h-14.35Z"/><path d="M532.74,160.23c-6.6,0-12.56-1.39-17.9-4.18-5.34-2.79-9.57-6.83-12.68-12.12-3.11-5.29-4.67-11.66-4.67-19.09v-1.81c0-7.43,1.55-13.77,4.67-19.02,3.11-5.25,7.34-9.29,12.68-12.12,5.34-2.83,11.31-4.25,17.9-4.25s12.21,1.21,16.86,3.62c4.64,2.42,8.38,5.62,11.22,9.61,2.83,3.99,4.67,8.41,5.5,13.24l-13.93,2.93c-.47-3.07-1.44-5.85-2.93-8.36-1.49-2.51-3.58-4.5-6.27-5.99-2.7-1.48-6.08-2.23-10.17-2.23s-7.59.91-10.8,2.72c-3.2,1.81-5.74,4.41-7.59,7.8-1.86,3.39-2.79,7.5-2.79,12.33v1.25c0,4.83.93,8.97,2.79,12.4,1.86,3.44,4.39,6.04,7.59,7.8,3.2,1.77,6.8,2.65,10.8,2.65,6.04,0,10.64-1.55,13.79-4.67,3.16-3.11,5.16-7.08,5.99-11.91l13.93,3.2c-1.11,4.74-3.09,9.1-5.92,13.1-2.83,4-6.57,7.18-11.22,9.54-4.65,2.37-10.27,3.55-16.86,3.55Z"/></svg>
+</a>
+<ul class="nav-links">
+<li><a href="/#how">How it works</a></li>
+<li><a href="/#features">Features</a></li>
+<li><a href="/#providers">Providers</a></li>
+<li><a href="/#pricing">Pricing</a></li>
+<li><a href="/#stack">Stack</a></li>
+<li><a href="docs.html">Docs</a></li>
+<li><a href="https://app.fabriclayer.dev" class="nav-cta">Get started</a></li>
+</ul>
+<button class="mobile-nav-toggle" onclick="document.getElementById('mobileMenu').classList.toggle('open');this.classList.toggle('open')" aria-label="Menu">
+<span></span><span></span><span></span>
+</button>
+</div></nav>
+<div class="mobile-menu" id="mobileMenu">
+<a href="/" onclick="closeMobile()">Home</a>
+<a href="/#how" onclick="closeMobile()">How it works</a>
+<a href="/#features" onclick="closeMobile()">Features</a>
+<a href="/#providers" onclick="closeMobile()">Providers</a>
+<a href="/#pricing" onclick="closeMobile()">Pricing</a>
+<a href="/#stack" onclick="closeMobile()">Stack</a>
+<a href="docs.html" onclick="closeMobile()">Docs</a>
+<a href="https://app.fabriclayer.dev" class="nav-cta">Get started</a>
+</div>
+
+<div class="legal-container">
+<div class="legal-nav">
+  <a href="terms.html">Terms of Service</a>
+  <a href="privacy.html">Privacy Policy</a>
+  <a href="aup.html">Acceptable Use</a>
+  <a href="api-terms.html" class="active">API Terms</a>
+  <a href="provider-terms.html">Provider Agreement</a>
+</div>
+
+<h1>API Terms of Use</h1>
+<p class="legal-updated">Last updated: February 17, 2026</p>
+
+<p>These API Terms of Use ("API Terms") supplement the Fabric <a href="terms.html">Terms of Service</a> and govern your use of the Fabric application programming interfaces, SDKs, and developer tools (the "API"). In the event of a conflict between these API Terms and the Terms of Service, these API Terms shall prevail with respect to API usage.</p>
+
+<h2>1. API Access and Authentication</h2>
+
+<p>Access to the API requires a valid API key issued through the Fabric dashboard. You agree to:</p>
+<ul>
+  <li>Keep your API keys confidential and not share them with unauthorised parties</li>
+  <li>Include your API key in the <code>x-api-key</code> header or <code>Authorization: Bearer</code> header as specified in the documentation</li>
+  <li>Immediately revoke and rotate any API key you suspect has been compromised</li>
+  <li>Not embed API keys in client-side code, public repositories, or any publicly accessible location</li>
+  <li>Use separate API keys for development, staging, and production environments</li>
+</ul>
+
+<p>API keys are issued to you and may not be transferred, sublicensed, or shared with third parties without our written consent.</p>
+
+<h2>2. Rate Limits and Quotas</h2>
+
+<p>API usage is subject to rate limits based on your subscription plan. Current default limits are:</p>
+
+<table>
+  <tr><th>Plan</th><th>Requests per minute</th><th>Requests per day</th></tr>
+  <tr><td>Free</td><td>60</td><td>1,000</td></tr>
+  <tr><td>Builder</td><td>300</td><td>50,000</td></tr>
+  <tr><td>Scale</td><td>1,000</td><td>500,000</td></tr>
+  <tr><td>Enterprise</td><td>Custom</td><td>Custom</td></tr>
+</table>
+
+<p>Rate limit information is returned in response headers (<code>X-RateLimit-Limit</code>, <code>X-RateLimit-Remaining</code>, <code>X-RateLimit-Reset</code>). You are responsible for implementing appropriate rate limit handling (backoff, retry logic) in your integration. Repeated intentional violation of rate limits may result in temporary or permanent suspension of API access.</p>
+
+<h2>3. Service Levels</h2>
+
+<p>Fabric aims to maintain high availability for the API but does not guarantee specific uptime percentages except as set forth in an Enterprise service agreement. Planned maintenance will be communicated at least 48 hours in advance where possible. Status and incident information is available at our status page.</p>
+
+<p>The API is provided "as is" and we do not warrant that it will be error-free, uninterrupted, or meet your specific requirements. Response times may vary based on network conditions, provider availability, and request complexity.</p>
+
+<h2>4. SDK Usage</h2>
+
+<p>Fabric provides official TypeScript and Python SDKs. These SDKs are provided under the terms of the BSL 1.1 licence as set out in the source repository. You may use the SDKs to integrate with the API in accordance with these API Terms. Fabric is not responsible for third-party or community-maintained SDK implementations.</p>
+
+<h2>5. MCP Integration</h2>
+
+<p>The Fabric API supports the Model Context Protocol (MCP) for AI agent tool discovery and execution via the <code>/mcp/tools</code> and <code>/mcp/execute</code> endpoints. When using MCP integration:</p>
+<ul>
+  <li>You are responsible for the actions taken by AI agents using your API credentials</li>
+  <li>Implement appropriate safeguards, spending limits, and oversight for autonomous agent operations</li>
+  <li>AI agents routing through Fabric are subject to all terms of this agreement including the Acceptable Use Policy</li>
+  <li>You acknowledge that AI agents may make routing and payment decisions autonomously and you accept liability for those decisions</li>
+</ul>
+
+<h2>6. Data Handling</h2>
+
+<p>When using the API:</p>
+<ul>
+  <li>Request and response data is logged for operational purposes (see our <a href="privacy.html">Privacy Policy</a>)</li>
+  <li>You are responsible for complying with applicable data protection laws when transmitting personal data through the API</li>
+  <li>Do not transmit sensitive personal data (e.g., government IDs, health records) through the API unless the selected provider is specifically designed for such data</li>
+  <li>Fabric may cache certain API responses for performance optimisation</li>
+</ul>
+
+<h2>7. Versioning and Deprecation</h2>
+
+<p>The API is versioned (currently <code>v1</code>). When we release a new major version:</p>
+<ul>
+  <li>The previous version will be supported for at least 6 months after the new version is released</li>
+  <li>Deprecation notices will be communicated via email and dashboard notifications</li>
+  <li>Breaking changes will only be introduced in new major versions</li>
+  <li>Minor updates, bug fixes, and new endpoints may be added to the current version without notice</li>
+</ul>
+
+<h2>8. Restrictions</h2>
+
+<p>In addition to the restrictions in the Acceptable Use Policy, you agree not to:</p>
+<ul>
+  <li>Use the API to build a competing service that replicates Fabric's core functionality</li>
+  <li>Resell API access without a written reseller agreement</li>
+  <li>Use the API for benchmarking or comparative testing intended for publication without our written consent</li>
+  <li>Misrepresent your application's relationship with Fabric (e.g., implying official endorsement)</li>
+  <li>Cache trust scores or provider data beyond the cache headers specified in API responses</li>
+</ul>
+
+<h2>9. Suspension and Revocation</h2>
+
+<p>We may suspend or revoke your API access at any time if:</p>
+<ul>
+  <li>Your usage violates these API Terms, the Terms of Service, or the Acceptable Use Policy</li>
+  <li>Your usage poses a security risk to the platform or other users</li>
+  <li>Your account has outstanding unpaid fees</li>
+  <li>Required by law or regulation</li>
+</ul>
+
+<p>Where possible, we will provide notice before suspension except in cases of imminent security risk or legal requirement.</p>
+
+<h2>10. Contact</h2>
+
+<p>For questions about these API Terms or technical support, contact us at:</p>
+<p>Fabric Technology Ltd.<br>
+Email: developers@fabriclayer.dev</p>
+</div>
+
+<footer><div class="foot-inner">
+<div class="foot-l">&copy; 2026 Fabric Technology Ltd. Built by <a href="https://motherbird.ai">Motherbird</a>. All rights reserved.</div>
+<ul class="foot-links"><li><a href="docs.html">Docs</a></li><li><a href="https://github.com/motherbirdai/fabric">GitHub</a></li><li><a href="#">Twitter</a></li><li><a href="#">Discord</a></li></ul>
+<ul class="foot-links foot-legal"><li><a href="terms.html">Terms</a></li><li><a href="privacy.html">Privacy</a></li><li><a href="aup.html">Acceptable Use</a></li><li><a href="api-terms.html">API Terms</a></li><li><a href="provider-terms.html">Provider Agreement</a></li></ul>
+</div></footer>
+
+<script>function closeMobile(){document.getElementById('mobileMenu').classList.remove('open');document.querySelector('.mobile-nav-toggle').classList.remove('open')}</script>
+</body></html>

@@ -192,6 +192,7 @@ footer{border-top:1px solid var(--border);padding:28px 20px}
 .foot-links{display:flex;gap:20px;list-style:none;justify-content:center}
 .foot-links a{font-size:12px;color:var(--text-3)}
 .foot-links a:hover{color:var(--text)}
+.foot-legal{margin-top:4px;padding-top:8px;border-top:1px solid var(--border);flex-wrap:wrap}
 
 /* Providers */
 .prov-wrap{background:var(--black);color:var(--white)}
@@ -345,10 +346,11 @@ h1{font-size:clamp(48px,7.5vw,80px);letter-spacing:-3px}
 .cta-acts{flex-direction:row;justify-content:center;align-items:center;max-width:none}
 .cta-acts a{text-align:center}
 footer{padding:40px}
-.foot-inner{flex-direction:row;justify-content:space-between;text-align:left}
+.foot-inner{flex-direction:row;flex-wrap:wrap;justify-content:space-between;text-align:left}
 .foot-l{font-size:13px}
 .foot-links a{font-size:13px}
 .foot-links{gap:24px}
+.foot-legal{width:100%;justify-content:center;border-top:1px solid var(--border);padding-top:16px;margin-top:16px}
 .proto-bar{padding:28px 40px}
 .proto-inner{gap:48px}
 .proto-item{font-size:14px;gap:8px}
@@ -798,8 +800,9 @@ footer{padding:40px}
 </section>
 
 <footer><div class="foot-inner">
-<div class="foot-l">© 2026 Fabric. Built by <a href="https://motherbird.ai">Motherbird</a>. All rights reserved.</div>
+<div class="foot-l">© 2026 Fabric Technology Ltd. Built by <a href="https://motherbird.ai">Motherbird</a>. All rights reserved.</div>
 <ul class="foot-links"><li><a href="docs.html">Docs</a></li><li><a href="https://github.com/motherbirdai/fabric">GitHub</a></li><li><a href="#">Twitter</a></li><li><a href="#">Discord</a></li></ul>
+<ul class="foot-links foot-legal"><li><a href="terms.html">Terms</a></li><li><a href="privacy.html">Privacy</a></li><li><a href="aup.html">Acceptable Use</a></li><li><a href="api-terms.html">API Terms</a></li><li><a href="provider-terms.html">Provider Agreement</a></li></ul>
 </div></footer>
 
 <script>function closeMobile(){document.getElementById('mobileMenu').classList.remove('open');document.querySelector('.mobile-nav-toggle').classList.remove('open')}</script>
