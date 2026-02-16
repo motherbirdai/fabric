@@ -1,0 +1,312 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ─── ACCOUNTS ───
+
+model Account {
+  id            String    @id @default(cuid())
+  email         String?   @unique
+  passwordHash  String?
+  walletAddress String?   @unique
+  plan          Plan      @default(FREE)
+  apiKey        String    @unique @default(cuid())
+  apiKeyPrefix  String    // first 8 chars, for display
+  apiKeyHash    String?   @unique // SHA-256 hash for SIWE sessions
+  dailyLimit    Int       @default(50)
+  routingFeePct Float     @default(0.5)
+
+  // Stripe
+  stripeCustomerId    String?   @unique
+  stripeSubscriptionId String?  @unique
+
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  agents        Agent[]
+  transactions  Transaction[]
+  budgets       Budget[]
+  invoices      Invoice[]
+  usageLogs     UsageLog[]
+  subscription  Subscription?
+  sessions      Session[]
+}
+
+enum Plan {
+  FREE
+  BUILDER
+  PRO
+  TEAM
+}
+
+// ─── AGENTS ───
+
+model Agent {
+  id            String    @id @default(cuid())
+  accountId     String
+  account       Account   @relation(fields: [accountId], references: [id])
+  name          String
+  walletAddress String?   @unique
+  identityNft   String?
+  createdAt     DateTime  @default(now())
+
+  transactions  Transaction[]
+  feedback      Feedback[]
+  favorites     Favorite[]
+  budgets       Budget[]
+
+  @@index([accountId])
+}
+
+// ─── PROVIDERS ───
+
+model Provider {
+  id              String    @id @default(cuid())
+  registryId      String    @unique
+  name            String
+  category        String
+  endpoint        String
+  description     String?
+  pricingModel    String    @default("x402")
+  paymentType     String    @default("x402") // x402, free, api_key
+  basePrice       Float     @default(0)
+  priceUsd        Float     @default(0)
+  currency        String    @default("USDC")
+  walletAddress   String?
+  x402Wallet      String?
+
+  // Cached trust metrics
+  trustScore      Float     @default(3.0)
+  totalRequests   Int       @default(0)
+  totalInteractions Int     @default(0)
+  successRate     Float     @default(0)
+  avgLatencyMs    Int       @default(0)
+  uptimePercent   Float     @default(0)
+  active          Boolean   @default(true)
+  onChainStatus   String    @default("PENDING") // PENDING, COMMITTED, FAILED
+  lastSeen        DateTime?
+  registeredAt    DateTime  @default(now())
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  transactions    Transaction[]
+  feedback        Feedback[]
+  favorites       Favorite[]
+
+  @@index([category])
+  @@index([trustScore])
+  @@index([active])
+  @@index([onChainStatus])
+}
+
+// ─── ON-CHAIN QUEUE ───
+
+model OnChainQueue {
+  id              String    @id
+  action          String    // REGISTER_AGENT, UPDATE_AGENT, DEACTIVATE_AGENT, BATCH_REPUTATION
+  providerId      String?
+  registryId      String?
+  payload         String    // JSON
+  status          String    @default("PENDING") // PENDING, PROCESSING, COMMITTED, FAILED
+  txHash          String?
+  errorMessage    String?
+  attempts        Int       @default(0)
+  createdAt       DateTime  @default(now())
+  processedAt     DateTime?
+
+  @@index([status])
+  @@index([action])
+}
+
+// ─── TRANSACTIONS ───
+
+model Transaction {
+  id              String    @id @default(cuid())
+  agentId         String
+  agent           Agent     @relation(fields: [agentId], references: [id])
+  accountId       String
+  account         Account   @relation(fields: [accountId], references: [id])
+  providerId      String
+  provider        Provider  @relation(fields: [providerId], references: [id])
+
+  category        String
+  inputTokens     Int?
+  outputTokens    Int?
+
+  providerCost    Float
+  routingFee      Float
+  gasCost         Float
+  totalCost       Float
+  x402TxHash      String?
+  paymentStatus   PaymentStatus @default(PENDING)
+
+  latencyMs       Int?
+  success         Boolean   @default(true)
+  errorCode       String?
+  errorMessage    String?
+
+  createdAt       DateTime  @default(now())
+  feedback        Feedback?
+
+  @@index([accountId])
+  @@index([agentId])
+  @@index([providerId])
+  @@index([createdAt])
+}
+
+enum PaymentStatus {
+  PENDING
+  COMPLETED
+  FAILED
+  REFUNDED
+}
+
+// ─── FEEDBACK ───
+
+model Feedback {
+  id              String    @id @default(cuid())
+  transactionId   String    @unique
+  transaction     Transaction @relation(fields: [transactionId], references: [id])
+  agentId         String
+  agent           Agent     @relation(fields: [agentId], references: [id])
+  providerId      String
+  provider        Provider  @relation(fields: [providerId], references: [id])
+
+  score           Int       // 1-5
+  tags            String[]
+  comment         String?
+  createdAt       DateTime  @default(now())
+
+  @@index([providerId])
+  @@index([createdAt])
+}
+
+// ─── BUDGETS ───
+
+model Budget {
+  id              String    @id @default(cuid())
+  accountId       String
+  account         Account   @relation(fields: [accountId], references: [id])
+  agentId         String?
+  agent           Agent?    @relation(fields: [agentId], references: [id])
+
+  limitUsd        Float
+  spentUsd        Float     @default(0)
+  periodType      String    @default("daily")
+  hardCap         Boolean   @default(false)
+  alertThreshold  Float     @default(0.8)
+  resetAt         DateTime
+  createdAt       DateTime  @default(now())
+
+  @@index([accountId])
+}
+
+// ─── FAVORITES ───
+
+model Favorite {
+  id              String    @id @default(cuid())
+  agentId         String
+  agent           Agent     @relation(fields: [agentId], references: [id])
+  providerId      String
+  provider        Provider  @relation(fields: [providerId], references: [id])
+  priority        Int       @default(0)
+  createdAt       DateTime  @default(now())
+
+  @@unique([agentId, providerId])
+}
+
+// ─── BILLING ───
+
+model Subscription {
+  id                  String    @id @default(cuid())
+  accountId           String    @unique
+  account             Account   @relation(fields: [accountId], references: [id])
+  stripeSubscriptionId String   @unique
+  stripePriceId       String
+  plan                Plan
+  status              SubscriptionStatus @default(ACTIVE)
+  currentPeriodStart  DateTime
+  currentPeriodEnd    DateTime
+  cancelAtPeriodEnd   Boolean   @default(false)
+  trialEnd            DateTime?
+  overageEnabled      Boolean   @default(true)
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime  @updatedAt
+
+  @@index([status])
+}
+
+enum SubscriptionStatus {
+  ACTIVE
+  PAST_DUE
+  CANCELED
+  TRIALING
+  INCOMPLETE
+  PAUSED
+}
+
+model Invoice {
+  id              String    @id @default(cuid())
+  accountId       String
+  account         Account   @relation(fields: [accountId], references: [id])
+  stripeInvoiceId String?   @unique
+  periodStart     DateTime
+  periodEnd       DateTime
+  subscriptionUsd Float
+  overageUsd      Float
+  overageCount    Int       @default(0)
+  routingFeesUsd  Float
+  totalUsd        Float
+  status          InvoiceStatus @default(DRAFT)
+  paidAt          DateTime?
+  createdAt       DateTime  @default(now())
+
+  @@index([accountId])
+  @@index([status])
+}
+
+enum InvoiceStatus {
+  DRAFT
+  OPEN
+  PAID
+  VOID
+  UNCOLLECTIBLE
+}
+
+// ─── USAGE TRACKING ───
+
+model UsageLog {
+  id              String    @id @default(cuid())
+  accountId       String
+  account         Account   @relation(fields: [accountId], references: [id])
+  date            DateTime  @db.Date
+  requestCount    Int       @default(0)
+  routeCount      Int       @default(0)
+  discoverCount   Int       @default(0)
+  evaluateCount   Int       @default(0)
+  totalSpendUsd   Float     @default(0)
+  overageCount    Int       @default(0)
+
+  @@unique([accountId, date])
+}
+
+// ─── SIWE Auth Sessions ───
+
+model Session {
+  id            String    @id @default(cuid())
+  accountId     String
+  token         String    @unique // SHA-256 of session key
+  walletAddress String
+  expiresAt     DateTime
+  createdAt     DateTime  @default(now())
+
+  account       Account   @relation(fields: [accountId], references: [id])
+
+  @@index([accountId])
+  @@index([expiresAt])
+}
