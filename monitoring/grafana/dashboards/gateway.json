@@ -1,0 +1,79 @@
+{
+  "dashboard": {
+    "title": "Fabric Gateway",
+    "uid": "fabric-gateway",
+    "panels": [
+      {
+        "title": "Request Rate",
+        "type": "timeseries",
+        "gridPos": { "h": 8, "w": 12, "x": 0, "y": 0 },
+        "targets": [
+          { "expr": "rate(fabric_http_requests_total[1m])", "legendFormat": "req/s" }
+        ]
+      },
+      {
+        "title": "Error Rate",
+        "type": "timeseries",
+        "gridPos": { "h": 8, "w": 12, "x": 12, "y": 0 },
+        "targets": [
+          { "expr": "rate(fabric_http_5xx[1m])", "legendFormat": "5xx/s" },
+          { "expr": "rate(fabric_http_4xx[1m])", "legendFormat": "4xx/s" }
+        ]
+      },
+      {
+        "title": "Response Time (p99)",
+        "type": "gauge",
+        "gridPos": { "h": 6, "w": 6, "x": 0, "y": 8 },
+        "targets": [
+          { "expr": "fabric_http_response_time_ms", "legendFormat": "p99 ms" }
+        ]
+      },
+      {
+        "title": "Memory Usage",
+        "type": "timeseries",
+        "gridPos": { "h": 6, "w": 6, "x": 6, "y": 8 },
+        "targets": [
+          { "expr": "fabric_memory_rss_bytes / 1024 / 1024", "legendFormat": "RSS (MB)" },
+          { "expr": "fabric_memory_heap_used_bytes / 1024 / 1024", "legendFormat": "Heap (MB)" }
+        ]
+      },
+      {
+        "title": "Routes by Payment Mode",
+        "type": "timeseries",
+        "gridPos": { "h": 6, "w": 6, "x": 12, "y": 8 },
+        "targets": [
+          { "expr": "rate(fabric_routes_payment_x402[5m])", "legendFormat": "x402" },
+          { "expr": "rate(fabric_routes_payment_direct[5m])", "legendFormat": "direct" },
+          { "expr": "rate(fabric_routes_payment_mock[5m])", "legendFormat": "mock" }
+        ]
+      },
+      {
+        "title": "Database & Redis",
+        "type": "stat",
+        "gridPos": { "h": 6, "w": 6, "x": 18, "y": 8 },
+        "targets": [
+          { "expr": "fabric_db_connected", "legendFormat": "DB" },
+          { "expr": "fabric_redis_connected", "legendFormat": "Redis" }
+        ]
+      },
+      {
+        "title": "Uptime",
+        "type": "stat",
+        "gridPos": { "h": 4, "w": 6, "x": 0, "y": 14 },
+        "targets": [
+          { "expr": "fabric_uptime_seconds / 3600", "legendFormat": "hours" }
+        ]
+      },
+      {
+        "title": "Stripe Webhooks",
+        "type": "timeseries",
+        "gridPos": { "h": 4, "w": 6, "x": 6, "y": 14 },
+        "targets": [
+          { "expr": "rate(fabric_stripe_webhooks[5m])", "legendFormat": "events/s" }
+        ]
+      }
+    ],
+    "time": { "from": "now-1h", "to": "now" },
+    "refresh": "10s"
+  }
+}
