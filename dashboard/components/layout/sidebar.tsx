@@ -13,7 +13,6 @@ import {
   Globe,
   Plus,
   LogOut,
-  Shield,
   Activity,
   Settings,
 } from 'lucide-react';
@@ -41,8 +40,8 @@ function NavItem({ href, icon: Icon, label, active }: {
       href={href}
       className={`flex items-center gap-3 px-3 py-2 rounded-lg text-[13px] transition-colors ${
         active
-          ? 'bg-fabric-gray-800 text-white'
-          : 'hover:bg-fabric-gray-800/50 hover:text-white'
+          ? 'bg-fabric-green/10 text-fabric-green'
+          : 'text-fabric-gray-500 hover:bg-fabric-gray-300/50 hover:text-fabric-white'
       }`}
     >
       <Icon className="w-4 h-4" />
@@ -59,14 +58,12 @@ export function Sidebar() {
     pathname === href || (href !== '/dashboard' && pathname?.startsWith(href));
 
   return (
-    <aside className="w-56 min-h-screen bg-fabric-gray-900 text-fabric-gray-400 flex flex-col">
+    <aside className="w-56 min-h-screen bg-fabric-gray-900 border-r border-fabric-gray-300 flex flex-col">
       {/* Logo */}
-      <div className="px-5 py-6 border-b border-fabric-gray-800">
+      <div className="px-5 py-6 border-b border-fabric-gray-300">
         <Link href="/dashboard" className="flex items-center gap-2">
-          <div className="w-7 h-7 bg-fabric-blue rounded-md flex items-center justify-center">
-            <Shield className="w-4 h-4 text-white" />
-          </div>
-          <span className="text-white font-semibold text-sm tracking-wide">fabric</span>
+          <span className="text-fabric-green font-bold text-sm tracking-wider">fabric</span>
+          <span className="text-[10px] text-fabric-gray-500 font-normal">dashboard</span>
         </Link>
       </div>
 
@@ -78,12 +75,12 @@ export function Sidebar() {
           ))}
         </div>
 
-        <div className="my-4 mx-3 border-t border-fabric-gray-800" />
+        <div className="my-4 mx-3 border-t border-fabric-gray-300" />
 
         {/* Provider onboarding */}
         <Link
           href="/dashboard/providers/register"
-          className="flex items-center gap-3 px-3 py-2 rounded-lg text-[13px] text-fabric-blue hover:bg-fabric-gray-800/50 transition-colors mb-4"
+          className="flex items-center gap-3 px-3 py-2 rounded-lg text-[13px] text-fabric-green hover:bg-fabric-green/10 transition-colors mb-4"
         >
           <Plus className="w-4 h-4" />
           Register Provider
@@ -104,15 +101,15 @@ export function Sidebar() {
       <div className="px-3 pb-4">
         <button
           onClick={logout}
-          className="flex items-center gap-3 px-3 py-2 rounded-lg text-[13px] w-full hover:bg-fabric-gray-800/50 hover:text-white transition-colors"
+          className="flex items-center gap-3 px-3 py-2 rounded-lg text-[13px] w-full text-fabric-gray-500 hover:bg-fabric-gray-300/50 hover:text-fabric-white transition-colors"
         >
           <LogOut className="w-4 h-4" />
           Sign out
         </button>
       </div>
 
-      <div className="px-5 py-3 border-t border-fabric-gray-800 text-[10px] text-fabric-gray-600">
-        Fabric v1.0 · Base L2
+      <div className="px-5 py-3 border-t border-fabric-gray-300 text-[10px] text-fabric-gray-600">
+        v1.0 &middot; Base L2
       </div>
     </aside>
   );
