@@ -86,3 +86,11 @@ export const trustWeightsSchema = z.object({
 });
 
 export type TrustWeights = z.infer<typeof trustWeightsSchema>;
+
+// ─── Web Search ───
+export const webSearchBodySchema = z.object({
+  query: z.string().min(1).max(500),
+  count: z.number().int().min(1).max(20).default(10),
+});
+
+export type WebSearchBody = z.infer<typeof webSearchBodySchema>;

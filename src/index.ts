@@ -20,6 +20,7 @@ import { chainRoutes } from './routes/v1/chain.js';
 import { billingRoutes } from './routes/v1/billing.js';
 import { providerRoutes } from './routes/v1/providers.js';
 import { webmcpRoutes } from './routes/v1/webmcp.js';
+import { webSearchRoutes } from './routes/v1/web-search.js';
 import { siweRoutes } from './routes/auth/siwe.js';
 import { websocketRoutes } from './services/events/websocket.js';
 import { mcpRoutes } from './routes/mcp/handler.js';
@@ -89,6 +90,7 @@ await app.register(chainRoutes, { prefix: '/v1' });
 await app.register(billingRoutes, { prefix: '/v1' });
 await app.register(providerRoutes, { prefix: '/v1' });
 await app.register(webmcpRoutes, { prefix: '/v1' });      // /v1/webmcp/*
+await app.register(webSearchRoutes, { prefix: '/v1' });   // /v1/web-search
 await app.register(siweRoutes, { prefix: '/' });          // /auth/siwe/*
 await app.register(websocketRoutes, { prefix: '/' });     // /ws, /events (SSE)
 await app.register(mcpRoutes, { prefix: '/' });           // /mcp/tools, /mcp/execute

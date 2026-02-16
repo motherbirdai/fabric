@@ -24,6 +24,7 @@ const PUBLIC_PATHS = new Set([
   '/', '/health', '/healthz', '/ready',
   '/discover', '/search',             // prefix-stripped (inside /v1 scope)
   '/v1/discover', '/v1/search',       // full path (direct access)
+  '/web-search', '/v1/web-search',   // Brave web search proxy
 ]);
 
 async function authPluginFn(app: FastifyInstance) {
