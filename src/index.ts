@@ -9,6 +9,7 @@ import { rateLimitPlugin } from './middleware/rate-limit.js';
 import { securityPlugin } from './middleware/security.js';
 import { sentryPlugin, initSentry } from './services/monitoring/sentry.js';
 import { discoverRoutes } from './routes/v1/discover.js';
+import { searchRoutes } from './routes/v1/search.js';
 import { evaluateRoutes } from './routes/v1/evaluate.js';
 import { routeRoutes } from './routes/v1/route.js';
 import { feedbackRoutes } from './routes/v1/feedback.js';
@@ -77,6 +78,7 @@ await app.register(healthRoutes, { prefix: '/' });        // /health, /healthz, 
 await app.register(metricsRoutes, { prefix: '/' });       // /metrics (Prometheus)
 await app.register(webhookRoutes, { prefix: '/' });       // /webhooks/stripe
 await app.register(discoverRoutes, { prefix: '/v1' });
+await app.register(searchRoutes, { prefix: '/v1' });
 await app.register(evaluateRoutes, { prefix: '/v1' });
 await app.register(routeRoutes, { prefix: '/v1' });
 await app.register(feedbackRoutes, { prefix: '/v1' });

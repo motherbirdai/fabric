@@ -10,6 +10,17 @@ export const discoverQuerySchema = z.object({
 
 export type DiscoverQuery = z.infer<typeof discoverQuerySchema>;
 
+// ─── Search ───
+export const searchBodySchema = z.object({
+  query: z.string().min(1).max(500),
+  category: z.string().min(1).max(100).optional(),
+  limit: z.number().int().min(1).max(50).default(10),
+  minTrustScore: z.number().min(0).max(5).optional(),
+  maxPrice: z.number().min(0).optional(),
+});
+
+export type SearchBody = z.infer<typeof searchBodySchema>;
+
 // ─── Evaluate ───
 export const evaluateParamsSchema = z.object({
   providerId: z.string().min(1),
