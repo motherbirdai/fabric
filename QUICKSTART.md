@@ -32,7 +32,7 @@ The defaults work for local dev — Postgres at `localhost:5432`, Redis at `loca
 
 Optional: add your Brave Search API key to `.env`:
 ```
-BRAVE_API_KEY=BSAvdaxnEDgGcs8Ul_z3Psrro6_nuvl
+BRAVE_API_KEY=your_brave_api_key_here
 ```
 
 ## 4. Setup database
