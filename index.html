@@ -193,6 +193,41 @@ footer{border-top:1px solid var(--border);padding:28px 20px}
 .foot-links a{font-size:12px;color:var(--text-3)}
 .foot-links a:hover{color:var(--text)}
 
+/* Providers */
+.prov-wrap{background:var(--black);color:var(--white)}
+.prov-wrap .sec-label{color:rgba(255,255,255,.3)}
+.prov-wrap .sec-title{color:var(--white)}
+.prov-wrap .sec-desc{color:rgba(255,255,255,.5)}
+.prov-wrap .sec{padding:56px 20px}
+.prov-grid{display:grid;grid-template-columns:1fr;gap:1px;margin-top:40px;background:rgba(255,255,255,.06);border-radius:16px;overflow:hidden}
+.pc{background:rgba(255,255,255,.03);padding:24px 20px;transition:background .3s;position:relative}
+.pc:hover{background:rgba(255,255,255,.06)}
+.pc-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.pc-logo{width:32px;height:32px;border-radius:8px;flex-shrink:0;margin-right:12px;object-fit:contain}
+.pc-logo-svg{width:32px;height:32px;border-radius:8px;flex-shrink:0;margin-right:12px}
+.pc-hdr-left{display:flex;align-items:center}
+.pc-name{font-size:16px;font-weight:600;letter-spacing:-.3px}
+.pc-score{font-family:var(--mono);font-size:13px;color:#00e676;font-weight:500}
+.pc-cat{display:inline-block;font-family:var(--mono);font-size:10px;letter-spacing:.5px;padding:3px 8px;border-radius:4px;margin-bottom:10px;text-transform:uppercase}
+.pc-cat-search{color:var(--blue);background:rgba(6,140,255,.12)}
+.pc-cat-data{color:var(--pink);background:rgba(254,131,224,.12)}
+.pc-cat-scrape{color:#ffab00;background:rgba(255,171,0,.12)}
+.pc-cat-email{color:#00e5ff;background:rgba(0,229,255,.12)}
+.pc-desc{font-size:13px;color:rgba(255,255,255,.4);line-height:1.5}
+.pc-meta{display:flex;gap:16px;margin-top:12px;font-family:var(--mono);font-size:11px;color:rgba(255,255,255,.25)}
+.pc-live{display:inline-flex;align-items:center;gap:5px;font-family:var(--mono);font-size:10px;color:#00e676;letter-spacing:.5px}
+.pc-live::before{content:'';width:6px;height:6px;border-radius:50%;background:#00e676;animation:livePulse 2s ease-in-out infinite}
+@keyframes livePulse{0%,100%{opacity:1}50%{opacity:.3}}
+
+/* Try it live */
+.try-block{margin-top:40px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:24px 20px;position:relative;overflow:hidden}
+.try-block::before{content:'';position:absolute;top:-40px;right:-40px;width:120px;height:120px;background:radial-gradient(circle,rgba(6,140,255,.1) 0%,transparent 70%);pointer-events:none}
+.try-label{font-family:var(--mono);font-size:11px;color:var(--blue);text-transform:uppercase;letter-spacing:1px;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.try-block pre{font-family:var(--mono);font-size:11px;line-height:1.9;color:rgba(255,255,255,.6);overflow-x:auto;-webkit-overflow-scrolling:touch;position:relative;z-index:1}
+.try-block .kw{color:var(--blue)}.try-block .str{color:var(--pink)}.try-block .cmt{color:rgba(255,255,255,.2)}
+.try-resp{margin-top:12px;padding-top:12px;border-top:1px solid rgba(255,255,255,.06)}
+.try-resp pre{font-size:11px;color:rgba(255,255,255,.35);line-height:1.7}
+
 /* ============ TABLET ============ */
 @media(min-width:600px){
 .stats-inner{grid-template-columns:repeat(4,1fr);gap:32px}
@@ -201,6 +236,12 @@ footer{border-top:1px solid var(--border);padding:28px 20px}
 .pricing-grid{grid-template-columns:repeat(2,1fr)}
 .feat-grid{grid-template-columns:repeat(2,1fr)}
 .stack-grid{grid-template-columns:repeat(2,1fr)}
+.prov-grid{grid-template-columns:repeat(2,1fr)}
+.prov-wrap .sec{padding:80px 32px}
+.pc{padding:28px 24px}
+.pc-name{font-size:17px}
+.try-block{padding:28px 24px}
+.try-block pre{font-size:12px}
 .hero-icon{width:148px;height:148px;margin-bottom:44px}
 h1{font-size:44px;letter-spacing:-2px}
 .hero-sub{font-size:17px;max-width:480px}
@@ -282,6 +323,12 @@ h1{font-size:clamp(48px,7.5vw,80px);letter-spacing:-3px}
 .price-note{margin-top:24px;font-size:13px}
 .built .sec{padding:120px 40px}
 .stack-grid{grid-template-columns:repeat(5,1fr);margin-top:64px}
+.prov-grid{grid-template-columns:repeat(3,1fr);margin-top:64px}
+.prov-wrap .sec{padding:120px 40px}
+.pc{padding:36px 28px}
+.pc-name{font-size:18px}
+.try-block{padding:32px;border-radius:16px;max-width:640px}
+.try-block pre{font-size:13px}
 .sc{padding:40px 28px}
 .sc-logo{height:28px;margin-bottom:16px}
 .sc-logo img,.sc-logo svg{height:28px}
@@ -318,10 +365,11 @@ footer{padding:40px}
 <ul class="nav-links">
 <li><a href="#how">How it works</a></li>
 <li><a href="#features">Features</a></li>
+<li><a href="#providers">Providers</a></li>
 <li><a href="#pricing">Pricing</a></li>
 <li><a href="#stack">Stack</a></li>
 <li><a href="docs.html">Docs</a></li>
-<li><a href="#" class="nav-cta">Get started</a></li>
+<li><a href="https://app.fabriclayer.dev" class="nav-cta">Get started</a></li>
 </ul>
 <button class="mobile-nav-toggle" onclick="document.getElementById('mobileMenu').classList.toggle('open');this.classList.toggle('open')" aria-label="Menu">
 <span></span><span></span><span></span>
@@ -330,27 +378,28 @@ footer{padding:40px}
 <div class="mobile-menu" id="mobileMenu">
 <a href="#how" onclick="closeMobile()">How it works</a>
 <a href="#features" onclick="closeMobile()">Features</a>
+<a href="#providers" onclick="closeMobile()">Providers</a>
 <a href="#pricing" onclick="closeMobile()">Pricing</a>
 <a href="#stack" onclick="closeMobile()">Stack</a>
 <a href="docs.html">Docs</a>
-<a href="#" class="nav-cta">Get started</a>
+<a href="https://app.fabriclayer.dev" class="nav-cta">Get started</a>
 </div>
 
 <!-- HERO -->
 <section class="hero">
 <svg class="hero-icon" viewBox="0 0 250 250"><polygon points="136.46 192.26 112.19 148.94 112.04 192.1 98.6 192.16 98.59 146.98 125.31 146.92 150.97 192 136.46 192.26"/><polygon points="65.8 88.57 77.5 79.86 122.3 100.39 97.26 65.51 108.04 57.74 134.6 94.24 113.08 109.93 65.8 88.57"/><polygon points="174.45 81.12 185.22 88.89 158.67 125.48 137.18 109.81 142.86 58.17 154.74 66.73 149.1 115.71 174.45 81.12"/><polygon points="183.38 159.21 179.42 171.93 136.49 158.01 144.7 132.69 195.43 122.2 191.1 136.09 142.88 145.82 183.38 159.21"/><polygon points="66.11 157.52 99.68 121.04 58.72 134.14 54.57 121.53 97.52 107.61 105.73 132.89 70.79 171.25 66.11 157.52"/></svg>
 <h1>The trust layer for the<br><span class="grad">agent economy</span></h1>
-<p class="hero-sub">Fabric gives AI agents the ability to discover services, verify reputation on-chain via ERC-8004, and pay autonomously via x402. Smart contracts on Base. TypeScript &amp; Python SDKs. One gateway. Zero trust assumptions.</p>
-<div class="hero-actions"><a href="#" class="btn-p">Start building →</a><a href="#how" class="btn-s">How it works</a></div>
+<p class="hero-sub">Fabric gives AI agents the ability to discover services, verify reputation on-chain via ERC-8004, and pay autonomously via x402. Smart contracts on Base Sepolia. TypeScript &amp; Python SDKs. Live gateway at api.fabriclayer.dev.</p>
+<div class="hero-actions"><a href="https://app.fabriclayer.dev" class="btn-p">Start building →</a><a href="#how" class="btn-s">How it works</a></div>
 <div class="code-block"><div class="code-hdr"><div class="code-dot"></div><div class="code-dot"></div><div class="code-dot"></div></div>
-<pre><span class="cmt">// Add Fabric to your agent in 3 lines</span>
-<span class="kw">import</span> { FabricServer } <span class="kw">from</span> <span class="str">'@usefabric/mcp'</span>
+<pre><span class="cmt"># Try it now — no API key needed</span>
+<span class="kw">curl</span> <span class="str">https://api.fabriclayer.dev/v1/discover</span>
 
-<span class="kw">const</span> <span class="fn">fabric</span> = <span class="kw">new</span> <span class="fn">FabricServer</span>({
-  apiKey: process.env.<span class="fn">FABRIC_KEY</span>,
-  budget: <span class="str">'$5/day'</span>,
-  trustThreshold: <span class="str">0.8</span>
-})</pre></div>
+<span class="cmt"># Route through Fabric with trust scoring</span>
+<span class="kw">curl</span> -X POST <span class="str">https://api.fabriclayer.dev/v1/route</span> \
+  -H <span class="str">"Authorization: Bearer fab_your_key"</span> \
+  -H <span class="str">"Content-Type: application/json"</span> \
+  -d <span class="str">'{"category": "web-search", "trustThreshold": 0.8}'</span></pre></div>
 </section>
 
 <!-- PROTOCOL BAR -->
@@ -368,17 +417,17 @@ footer{padding:40px}
 <div class="sec-desc">When your agent needs a service — image generation, data feed, code review — Fabric finds the best provider, verifies their reputation on-chain, and handles payment. Automatically.</div>
 <div class="what-grid">
 <div class="what-visual"><div class="term">
-<div class="tl"><span class="cmd">agent →</span> <span class="tfn">fabric.route</span>(<span class="tstr">"image-generation"</span>)</div>
-<div class="tl"><span class="tcmt">  // querying 8004 Identity Registry...</span></div>
-<div class="tl"><span class="tcmt">  // found 12 providers</span></div>
+<div class="tl"><span class="cmd">agent →</span> <span class="tfn">fabric.route</span>(<span class="tstr">"web-search"</span>)</div>
+<div class="tl"><span class="tcmt">  // querying Fabric registry...</span></div>
+<div class="tl"><span class="tcmt">  // found 11 providers</span></div>
 <div class="tl"><span class="tcmt">  // scoring reputation...</span></div>
 <div class="tl">&nbsp;</div>
-<div class="tl">  Provider A  <span class="trust">★ 4.9</span>  <span class="price">$0.02</span>  99.8% uptime</div>
-<div class="tl">  Provider B  <span class="trust">★ 4.7</span>  <span class="price">$0.008</span>  97.1% uptime</div>
-<div class="tl">  Provider C  <span class="trust">★ 2.1</span>  <span class="price">$0.001</span>  <span class="blk">filtered</span></div>
+<div class="tl">  Brave Search   <span class="trust">★ 3.15</span>  <span class="price">$0.002</span>  99.8% uptime</div>
+<div class="tl">  Tavily AI      <span class="trust">★ 3.13</span>  <span class="price">$0.003</span>  97.1% uptime</div>
+<div class="tl">  Provider C     <span class="trust">★ 1.8</span>   <span class="price">$0.001</span>  <span class="blk">filtered</span></div>
 <div class="tl">&nbsp;</div>
-<div class="tl"><span class="res">→ Routed to Provider A via x402</span></div>
-<div class="tl"><span class="res">→ $0.02 USDC on Base · 240ms</span></div>
+<div class="tl"><span class="res">→ Routed to Brave Search via x402</span></div>
+<div class="tl"><span class="res">→ $0.002 USDC on Base · 240ms</span></div>
 </div></div>
 <div class="what-feats">
 <div class="wf"><h3>Discover</h3><p>Query the ERC-8004 Identity Registry to find agents and services by capability. No hardcoded integrations — your agent discovers what's available in real-time.</p></div>
@@ -549,7 +598,7 @@ footer{padding:40px}
 <div><div class="sv pink">$50B</div><div class="sl">AI agent market by 2030</div></div>
 <div><div class="sv pink">46%</div><div class="sl">Annual market growth (CAGR)</div></div>
 <div><div class="sv pink">$500B</div><div class="sl">Agentic commerce by 2030</div></div>
-<div><div class="sv pink">0</div><div class="sl">Trust + payment layers today</div></div>
+<div><div class="sv pink">11</div><div class="sl">Live providers on network</div></div>
 </div></div>
 
 <!-- FEATURES -->
@@ -563,11 +612,77 @@ footer{padding:40px}
 <div class="fc"><div class="fc-dot" style="background:var(--pink)"></div><h3>Stripe billing</h3><p>Checkout, portal, plan upgrades/downgrades with proration, metered overage at $0.001/request, webhook handlers for 6 event types, invoice generation.</p><span class="ft ft-p">billing</span></div>
 <div class="fc"><div class="fc-dot" style="background:var(--blue)"></div><h3>Budget controls</h3><p>Per-agent and per-task spending limits with daily/weekly/monthly resets. Hard caps, alert thresholds, automatic budget reset job. Never lose control.</p><span class="ft ft-b">cost-controller</span></div>
 <div class="fc"><div class="fc-dot" style="background:var(--pink)"></div><h3>Managed wallets</h3><p>Custodial USDC wallets on Base with KMS encryption (AWS/GCP/Vault). USDC transfers, balance checks, x402 payment protocol. No crypto knowledge needed.</p><span class="ft ft-p">payments</span></div>
-<div class="fc"><div class="fc-dot" style="background:var(--blue)"></div><h3>MCP + WebMCP + REST + SDKs</h3><p>6-tool MCP server, WebMCP browser bridge, 22-endpoint REST API, TypeScript SDK (zero-dep, typed), Python SDK (sync + async). Drop into Claude, Cursor, or any MCP client.</p><span class="ft ft-b">integration</span></div>
+<div class="fc"><div class="fc-dot" style="background:var(--blue)"></div><h3>MCP + WebMCP + REST + SDKs</h3><p>9-tool MCP server, WebMCP browser bridge, 22-endpoint REST API, TypeScript SDK (zero-dep, typed), Python SDK (sync + async). Drop into Claude, Cursor, or any MCP client.</p><span class="ft ft-b">integration</span></div>
 <div class="fc"><div class="fc-dot" style="background:var(--pink)"></div><h3>Production-grade</h3><p>Sliding-window rate limiter, Prometheus metrics, Grafana dashboard, Sentry errors, deep health checks, non-root Docker, GitHub Actions CI/CD. Ship-ready.</p><span class="ft ft-p">infra</span></div>
 <div class="fc"><div class="fc-dot" style="background:var(--blue)"></div><h3>WebMCP browser bridge</h3><p>First trust layer for the W3C WebMCP spec. Index tool contracts from any origin, score providers, settle x402 payments — all through navigator.modelContext.</p><span class="ft ft-b">webmcp</span></div>
 </div>
 </section>
+
+<!-- PROVIDER NETWORK -->
+<div class="prov-wrap" id="providers"><div class="sec">
+<div class="sec-label">Provider Network</div>
+<div class="sec-title">Live providers,<br>real trust scores</div>
+<div class="sec-desc">Fabric isn't theoretical. These providers are live on the network right now — discoverable, scored, and routable via the gateway at api.fabriclayer.dev.</div>
+
+<div class="prov-grid">
+<div class="pc">
+<div class="pc-hdr"><div class="pc-hdr-left"><svg class="pc-logo-svg" viewBox="0 0 56 64" style="background:linear-gradient(135deg,#FF5500,#FF2000);border-radius:8px;padding:4px"><path fill-rule="evenodd" clip-rule="evenodd" d="M53.292 15.321l1.5-3.676s-1.909-2.043-4.227-4.358c-2.317-2.315-7.225-.953-7.225-.953L37.751 0H18.12l-5.589 6.334s-4.908-1.362-7.225.953C2.988 9.602 1.08 11.645 1.08 11.645l1.5 3.676-1.91 5.447s5.614 21.236 6.272 23.83c1.295 5.106 2.181 7.08 5.862 9.668 3.68 2.587 10.36 7.08 11.45 7.762 1.091.68 2.455 1.84 3.682 1.84 1.227 0 2.59-1.16 3.68-1.84 1.091-.681 7.77-5.175 11.452-7.762 3.68-2.587 4.567-4.562 5.862-9.668.657-2.594 6.27-23.83 6.27-23.83l-1.908-5.447z" fill="url(#braveg1)"/><path fill-rule="evenodd" clip-rule="evenodd" d="M34.888 11.508c.818 0 6.885-1.157 6.885-1.157s7.189 8.68 7.189 10.536c0 1.534-.619 2.134-1.347 2.842-.152.148-.31.3-.467.468l-5.39 5.717a9.42 9.42 0 01-.176.18c-.538.54-1.33 1.336-.772 2.658l.115.269c.613 1.432 1.37 3.2.407 4.99-1.025 1.906-2.78 3.178-3.905 2.967-1.124-.21-3.766-1.589-4.737-2.218-.971-.63-4.05-3.166-4.05-4.137 0-.809 2.214-2.155 3.29-2.81.214-.13.383-.232.48-.298.111-.075.297-.19.526-.332.981-.61 2.754-1.71 2.799-2.197.055-.602.034-.778-.758-2.264-.168-.316-.365-.654-.568-1.004-.754-1.295-1.598-2.745-1.41-3.784.21-1.173 2.05-1.845 3.608-2.415.194-.07.385-.14.567-.209l1.623-.609c1.556-.582 3.284-1.229 3.57-1.36.394-.181.292-.355-.903-.468a54.655 54.655 0 01-.58-.06c-1.48-.157-4.209-.446-5.535-.077-.261.073-.553.152-.86.235-1.49.403-3.317.897-3.493 1.182-.03.05-.06.093-.089.133-.168.238-.277.394-.091 1.406.055.302.169.895.31 1.629.41 2.148 1.053 5.498 1.134 6.25.011.106.024.207.036.305.103.84.171 1.399-.805 1.622l-.255.058c-1.102.252-2.717.623-3.3.623-.584 0-2.2-.37-3.302-.623l-.254-.058c-.976-.223-.907-.782-.804-1.622.012-.098.024-.2.035-.305.081-.753.725-4.112 1.137-6.259.14-.73.253-1.32.308-1.62.185-1.012.076-1.168-.092-1.406a3.743 3.743 0 01-.09-.133c-.174-.285-2-.779-3.491-1.182-.307-.083-.6-.162-.86-.235-1.327-.37-4.055-.08-5.535.077-.226.024-.422.045-.58.06-1.196.113-1.297.287-.903.468.285.131 2.013.778 3.568 1.36.597.223 1.17.437 1.624.609.183.069.373.138.568.21 1.558.57 3.398 1.241 3.608 2.414.187 1.039-.657 2.489-1.41 3.784-.204.35-.4.688-.569 1.004-.791 1.486-.812 1.662-.757 2.264.044.488 1.816 1.587 2.798 2.197.229.142.415.257.526.332.098.066.266.168.48.298 1.076.654 3.29 2 3.29 2.81 0 .97-3.078 3.507-4.05 4.137-.97.63-3.612 2.008-4.737 2.218-1.124.21-2.88-1.061-3.904-2.966-.963-1.791-.207-3.559.406-4.99l.115-.27c.559-1.322-.233-2.118-.772-2.658a9.377 9.377 0 01-.175-.18l-5.39-5.717c-.158-.167-.316-.32-.468-.468-.728-.707-1.346-1.308-1.346-2.842 0-1.855 7.189-10.536 7.189-10.536s6.066 1.157 6.884 1.157c.653 0 1.913-.433 3.227-.885.333-.114.669-.23 1-.34 1.635-.545 2.726-.549 2.726-.549s1.09.004 2.726.549c.33.11.667.226 1 .34 1.313.452 2.574.885 3.226.885zm-1.041 30.706c1.282.66 2.192 1.128 2.536 1.343.445.278.174.803-.232 1.09-.405.285-5.853 4.499-6.381 4.965l-.215.191c-.509.459-1.159 1.044-1.62 1.044-.46 0-1.11-.586-1.62-1.044l-.213-.191c-.53-.466-5.977-4.68-6.382-4.966-.405-.286-.677-.81-.232-1.09.344-.214 1.255-.683 2.539-1.344l1.22-.629c1.92-.992 4.315-1.837 4.689-1.837.373 0 2.767.844 4.689 1.837.436.226.845.437 1.222.63z" fill="#fff"/><defs><linearGradient id="braveg1" x1=".671" y1="64.319" x2="55.2" y2="64.319" gradientUnits="userSpaceOnUse"><stop stop-color="#F50"/><stop offset=".41" stop-color="#F50"/><stop offset=".582" stop-color="#FF2000"/><stop offset="1" stop-color="#FF2000"/></linearGradient></defs></svg><span class="pc-name">Brave Web Search</span></div><span class="pc-score">★ 3.15</span></div>
+<span class="pc-cat pc-cat-search">web-search</span>
+<p class="pc-desc">Privacy-first web search API. Returns ranked results with descriptions, URLs, and metadata. No tracking.</p>
+<div class="pc-meta"><span>$0.002/req</span><span class="pc-live">LIVE</span></div>
+</div>
+
+<div class="pc">
+<div class="pc-hdr"><div class="pc-hdr-left"><svg class="pc-logo-svg" viewBox="0 0 507 512" style="border-radius:8px;overflow:hidden"><path d="M506.621 253.985C507.254 394.894 394.35 509.631 254.463 510.268C114.557 510.906 0.636 397.194 0.003 256.286C-0.631 115.377 112.273 0.64 252.179 0.003C392.066-0.616 505.987 113.077 506.621 253.985Z" fill="#FFE866"/><path d="M381.781 163.839C363.395 158.485 344.357 150.869 325.05 143.195C323.937 138.325 319.658 132.255 310.983 124.814C298.374 113.796 274.692 114.086 254.234 118.957C231.645 113.603 209.326 111.689 187.908 116.869C12.766 165.482 112.063 284.026 47.752 403.228C56.906 422.77 157.872 516.658 298.24 506.233C298.24 506.233 249.436 388.113 359.576 331.402C448.913 285.418 513.454 200.023 381.761 163.819Z" fill="#4BCC00"/><path d="M266.363 192.26C266.363 219.514 244.427 241.588 217.386 241.588C190.345 241.588 168.409 219.514 168.409 192.26C168.409 165.006 190.345 142.952 217.386 142.952C244.427 142.952 266.363 165.025 266.363 192.26Z" fill="white"/><path d="M443.077 263.251C403.408 291.413 358.25 312.771 294.247 312.771C264.289 312.771 258.205 280.705 238.399 296.419C228.17 304.537 192.129 322.687 163.514 321.315C134.65 319.923 88.571 303.03 75.617 241.544C70.493 303.03 67.883 348.337 44.949 400.254C101.246 482.993 199.405 524.157 298.239 506.255C287.626 431.587 352.416 358.465 388.919 321.044C402.736 306.876 429.221 283.739 443.077 263.251Z" fill="#4BCC00"/><ellipse cx="238.03" cy="191.923" rx="28.74" ry="40.236" fill="#0D1217"/><path d="M249.526 118.863C265.206 125.131 322.467 144.203 347.242 151.689C321.947 109.717 283.613 112.139 249.526 118.863Z" fill="#35AF00"/><path d="M238.03 191.918L203.541 168.926V214.91L238.03 191.918Z" fill="white"/></svg><span class="pc-name">CoinGecko Prices</span></div><span class="pc-score">★ 3.15</span></div>
+<span class="pc-cat pc-cat-data">market-data</span>
+<p class="pc-desc">Real-time and historical cryptocurrency market data. Prices, volumes, market caps across 10,000+ tokens.</p>
+<div class="pc-meta"><span>$0.001/req</span><span class="pc-live">LIVE</span></div>
+</div>
+
+<div class="pc">
+<div class="pc-hdr"><div class="pc-hdr-left"><img class="pc-logo" src="data:image/png;base64,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" alt="Tavily"/><span class="pc-name">Tavily AI Search</span></div><span class="pc-score">★ 3.13</span></div>
+<span class="pc-cat pc-cat-search">web-search</span>
+<p class="pc-desc">Search engine optimised for AI agents. Returns structured, LLM-ready answers with source attribution.</p>
+<div class="pc-meta"><span>$0.003/req</span><span class="pc-live">LIVE</span></div>
+</div>
+
+<div class="pc">
+<div class="pc-hdr"><div class="pc-hdr-left"><img class="pc-logo" src="data:image/png;base64,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" alt="Firecrawl"/><span class="pc-name">Firecrawl Scraper</span></div><span class="pc-score">★ 2.99</span></div>
+<span class="pc-cat pc-cat-scrape">web-scraping</span>
+<p class="pc-desc">Intelligent web scraping that returns clean markdown. Handles JavaScript rendering, pagination, and anti-bot measures.</p>
+<div class="pc-meta"><span>$0.005/req</span><span class="pc-live">LIVE</span></div>
+</div>
+
+<div class="pc">
+<div class="pc-hdr"><div class="pc-hdr-left"><img class="pc-logo" src="data:image/png;base64,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" alt="SendGrid"/><span class="pc-name">SendGrid Email</span></div><span class="pc-score">★ 3.15</span></div>
+<span class="pc-cat pc-cat-email">email</span>
+<p class="pc-desc">Transactional and marketing email delivery. Templates, scheduling, analytics, and deliverability tracking.</p>
+<div class="pc-meta"><span>$0.003/req</span><span class="pc-live">LIVE</span></div>
+</div>
+
+<div class="pc" style="display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;min-height:160px">
+<div class="pc-name" style="color:rgba(255,255,255,.25);margin-bottom:8px">+ 6 more providers</div>
+<p class="pc-desc">Image generation, translation, code review, transcription, and sentiment analysis. Register yours via the dashboard.</p>
+</div>
+</div>
+
+<!-- TRY IT LIVE -->
+<div class="try-block">
+<div class="try-label">Try it live</div>
+<pre><span class="cmt"># Discover all providers on the Fabric network</span>
+<span class="kw">curl</span> <span class="str">https://api.fabriclayer.dev/v1/discover</span>
+
+<span class="cmt"># Search by capability</span>
+<span class="kw">curl</span> -X POST <span class="str">https://api.fabriclayer.dev/v1/search</span> \
+  -H <span class="str">"Content-Type: application/json"</span> \
+  -d <span class="str">'{"name": "brave"}'</span></pre>
+<div class="try-resp">
+<pre><span class="cmt">// → Returns 11 providers with trust scores, pricing, and categories</span>
+<span class="cmt">// No API key needed for discovery. Try it now.</span></pre>
+</div>
+</div>
+
+</div></div>
 
 <!-- PRICING -->
 <div class="pricing-wrap">
@@ -587,7 +702,7 @@ footer{padding:40px}
 <span>Community trust scores</span>
 <span>No routing or payments</span>
 </div>
-<a href="#" class="price-btn price-btn-outline">Get started</a>
+<a href="https://app.fabriclayer.dev" class="price-btn price-btn-outline">Get started</a>
 </div>
 
 <div class="price-card">
@@ -600,7 +715,7 @@ footer{padding:40px}
 <span>3 managed USDC wallets</span>
 <span>Budget controls + feedback</span>
 </div>
-<a href="#" class="price-btn price-btn-fill">Start building</a>
+<a href="https://app.fabriclayer.dev" class="price-btn price-btn-fill">Start building</a>
 </div>
 
 <div class="price-card featured">
@@ -613,7 +728,7 @@ footer{padding:40px}
 <span>10 wallets + analytics dashboard</span>
 <span>Stripe billing + overage</span>
 </div>
-<a href="#" class="price-btn price-btn-fill">Start building</a>
+<a href="https://app.fabriclayer.dev" class="price-btn price-btn-fill">Start building</a>
 </div>
 
 <div class="price-card">
@@ -626,7 +741,7 @@ footer{padding:40px}
 <span>Custom weights + SLA guarantees</span>
 <span>Dedicated support + audit logs</span>
 </div>
-<a href="#" class="price-btn price-btn-pink">Contact sales</a>
+<a href="https://app.fabriclayer.dev" class="price-btn price-btn-pink">Contact sales</a>
 </div>
 
 </div>
@@ -678,13 +793,13 @@ footer{padding:40px}
 <svg class="cta-icon" viewBox="0 0 250 250"><polygon fill="var(--pink)" points="136.46 192.26 112.19 148.94 112.04 192.1 98.6 192.16 98.59 146.98 125.31 146.92 150.97 192 136.46 192.26"/><polygon fill="var(--pink)" points="65.8 88.57 77.5 79.86 122.3 100.39 97.26 65.51 108.04 57.74 134.6 94.24 113.08 109.93 65.8 88.57"/><polygon fill="var(--pink)" points="174.45 81.12 185.22 88.89 158.67 125.48 137.18 109.81 142.86 58.17 154.74 66.73 149.1 115.71 174.45 81.12"/><polygon fill="var(--pink)" points="183.38 159.21 179.42 171.93 136.49 158.01 144.7 132.69 195.43 122.2 191.1 136.09 142.88 145.82 183.38 159.21"/><polygon fill="var(--pink)" points="66.11 157.52 99.68 121.04 58.72 134.14 54.57 121.53 97.52 107.61 105.73 132.89 70.79 171.25 66.11 157.52"/></svg>
 <div class="sec-label">Get started</div>
 <div class="sec-title">Build agents that<br><span class="grad">transact with trust</span></div>
-<div class="sec-desc">Fabric is production-ready. Smart contracts deployed on Base, gateway hardened with rate limiting, monitoring, and CI/CD. Get your API key and start building agents that discover, evaluate, and pay for services autonomously.</div>
-<div class="cta-acts"><a href="#" class="btn-p">Get your API key →</a><a href="docs.html" class="btn-s">Read the docs</a></div>
+<div class="sec-desc">Fabric is live. Gateway running at api.fabriclayer.dev with 11 providers, smart contracts on Base Sepolia, and a full dashboard at app.fabriclayer.dev. Get your API key and start building.</div>
+<div class="cta-acts"><a href="https://app.fabriclayer.dev" class="btn-p">Get your API key →</a><a href="docs.html" class="btn-s">Read the docs</a></div>
 </section>
 
 <footer><div class="foot-inner">
-<div class="foot-l">© 2026 Fabric. Built by <a href="#">Motherbird</a>. All rights reserved.</div>
-<ul class="foot-links"><li><a href="docs.html">Docs</a></li><li><a href="#">GitHub</a></li><li><a href="#">Twitter</a></li><li><a href="#">Discord</a></li></ul>
+<div class="foot-l">© 2026 Fabric. Built by <a href="https://motherbird.ai">Motherbird</a>. All rights reserved.</div>
+<ul class="foot-links"><li><a href="docs.html">Docs</a></li><li><a href="https://github.com/motherbirdai/fabric">GitHub</a></li><li><a href="#">Twitter</a></li><li><a href="#">Discord</a></li></ul>
 </div></footer>
 
 <script>function closeMobile(){document.getElementById('mobileMenu').classList.remove('open');document.querySelector('.mobile-nav-toggle').classList.remove('open')}</script>
