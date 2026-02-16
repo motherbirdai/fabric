@@ -52,6 +52,7 @@
     "typescript": "^5.7.0",
     "vitest": "^3.0.0"
   },
+  "license": "BUSL-1.1",
   "engines": {
     "node": ">=20.0.0"
   }
