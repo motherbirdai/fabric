@@ -1,13 +1,16 @@
 services:
   # ─── Core ───
+  # ⚠️  BEFORE DEPLOYING: Set POSTGRES_PASSWORD and GRAFANA_PASSWORD via env vars.
+  #     Do NOT use the default "fabric" password in production.
+  #     Example:  POSTGRES_PASSWORD=strong_random_pw docker compose -f docker-compose.prod.yml up
   gateway:
     build: .
     ports:
       - "3100:3100"
     environment:
       - NODE_ENV=production
-      - DATABASE_URL=postgresql://fabric:fabric@postgres:5432/fabric
-      - REDIS_URL=redis://redis:6379
+      - DATABASE_URL=${DATABASE_URL:-postgresql://fabric:fabric@postgres:5432/fabric}
+      - REDIS_URL=${REDIS_URL:-redis://redis:6379}
       - SENTRY_DSN=${SENTRY_DSN:-}
       - STRIPE_SECRET_KEY=${STRIPE_SECRET_KEY:-}
       - STRIPE_WEBHOOK_SECRET=${STRIPE_WEBHOOK_SECRET:-}
@@ -43,7 +46,7 @@ services:
     environment:
       POSTGRES_DB: fabric
       POSTGRES_USER: fabric
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-fabric}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD for production}
     ports:
       - "5432:5432"
     volumes:
@@ -94,7 +97,7 @@ services:
     ports:
       - "3300:3000"
     environment:
-      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD:-fabric}
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD:?Set GRAFANA_PASSWORD for production}
       - GF_USERS_ALLOW_SIGN_UP=false
     volumes:
       - ./monitoring/grafana/dashboards:/etc/grafana/provisioning/dashboards:ro
