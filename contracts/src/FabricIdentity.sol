@@ -151,23 +151,23 @@ contract FabricIdentity {
      * @notice Transfer is disabled — tokens are soulbound.
      */
     function transferFrom(address, address, uint256) external pure {
-        revert("FabricIdentity: soulbound — transfer disabled");
+        revert("FabricIdentity: soulbound - transfer disabled");
     }
 
     function safeTransferFrom(address, address, uint256) external pure {
-        revert("FabricIdentity: soulbound — transfer disabled");
+        revert("FabricIdentity: soulbound - transfer disabled");
     }
 
     function safeTransferFrom(address, address, uint256, bytes calldata) external pure {
-        revert("FabricIdentity: soulbound — transfer disabled");
+        revert("FabricIdentity: soulbound - transfer disabled");
     }
 
     function approve(address, uint256) external pure {
-        revert("FabricIdentity: soulbound — approval disabled");
+        revert("FabricIdentity: soulbound - approval disabled");
     }
 
     function setApprovalForAll(address, bool) external pure {
-        revert("FabricIdentity: soulbound — approval disabled");
+        revert("FabricIdentity: soulbound - approval disabled");
     }
 
     function getApproved(uint256) external pure returns (address) {

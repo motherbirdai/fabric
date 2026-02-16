@@ -21,8 +21,8 @@ export const USE_TESTNET = process.env.USE_TESTNET !== 'false';
 // ─── Contract Addresses ───
 // Base Sepolia testnet defaults — override for mainnet
 export const USDC_ADDRESS = (process.env.USDC_ADDRESS || '0x036CbD53842c5426634e7929541eC2318f3dCF7e') as `0x${string}`; // Base Sepolia USDC
-export const FABRIC_IDENTITY_ADDRESS = (process.env.FABRIC_IDENTITY_ADDRESS || '0x0000000000000000000000000000000000000000') as `0x${string}`;
-export const FABRIC_REGISTRY_ADDRESS = (process.env.FABRIC_REGISTRY_ADDRESS || '0x0000000000000000000000000000000000000000') as `0x${string}`;
+export const FABRIC_IDENTITY_ADDRESS = (process.env.FABRIC_IDENTITY_ADDRESS || '0xa87df8b26393e48173530648a0baf7495bd6a66a') as `0x${string}`;
+export const FABRIC_REGISTRY_ADDRESS = (process.env.FABRIC_REGISTRY_ADDRESS || '0x1ed343eec726ac3212d3ffe7c456617cf561b9f2') as `0x${string}`;
 
 // ─── Wallet Management ───
 export const FABRIC_OPERATOR_KEY = process.env.FABRIC_OPERATOR_KEY || ''; // Private key for fee collection
