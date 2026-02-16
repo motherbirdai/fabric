@@ -26,7 +26,7 @@ export async function ensureStripeCustomer(accountId: string): Promise<string> {
 
   const stripe = getStripe();
   const customer = await stripe.customers.create({
-    email: account.email,
+    email: account.email ?? undefined,
     metadata: {
       fabricAccountId: accountId,
       plan: account.plan,

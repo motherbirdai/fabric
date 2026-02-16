@@ -94,8 +94,9 @@ export async function siweRoutes(app: FastifyInstance) {
       const apiKey = `fab_sk_${randomBytes(24).toString('hex')}`;
       account = await prisma.account.create({
         data: {
-          name: `Wallet ${address.slice(0, 6)}...${address.slice(-4)}`,
           walletAddress: addrLower,
+          apiKey: apiKey,
+          apiKeyPrefix: apiKey.slice(0, 8),
           apiKeyHash: createHash('sha256').update(apiKey).digest('hex'),
           plan: 'FREE',
         },
@@ -107,7 +108,6 @@ export async function siweRoutes(app: FastifyInstance) {
         apiKey,
         account: {
           id: account.id,
-          name: account.name,
           plan: account.plan,
           address: addrLower,
           isNew: true,
@@ -133,7 +133,6 @@ export async function siweRoutes(app: FastifyInstance) {
       apiKey: sessionKey,
       account: {
         id: account.id,
-        name: account.name,
         plan: account.plan,
         address: addrLower,
         isNew: false,

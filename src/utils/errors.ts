@@ -66,10 +66,10 @@ export interface ErrorResponse {
   };
 }
 
-export function toErrorResponse(err: FabricError): ErrorResponse {
+export function toErrorResponse(err: FabricError | Error): ErrorResponse {
   return {
     error: {
-      code: err.code,
+      code: err instanceof FabricError ? err.code : 'INTERNAL_ERROR',
       message: err.message,
     },
   };

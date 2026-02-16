@@ -1,4 +1,4 @@
-import { publicClient, operatorWalletClient, operatorAccount } from '../chain/client.js';
+import { publicClient, operatorWalletClient, operatorAccount, chain } from '../chain/client.js';
 import { ERC8004_REGISTRY_ABI, FABRIC_IDENTITY_ABI } from '../chain/abis.js';
 import { FABRIC_REGISTRY_ADDRESS, FABRIC_IDENTITY_ADDRESS } from '../../config.js';
 
@@ -21,6 +21,8 @@ export async function registerAgentOnChain(
 
   try {
     const txHash = await operatorWalletClient.writeContract({
+      chain,
+      account: operatorAccount!,
       address: FABRIC_REGISTRY_ADDRESS,
       abi: ERC8004_REGISTRY_ABI,
       functionName: 'registerAgent',
@@ -68,6 +70,8 @@ export async function updateReputationOnChain(
     // Score stored as basis points × 100: 4.5 → 45000
     const scoreScaled = BigInt(Math.round(score * 10000));
     const txHash = await operatorWalletClient.writeContract({
+      chain,
+      account: operatorAccount!,
       address: FABRIC_REGISTRY_ADDRESS,
       abi: ERC8004_REGISTRY_ABI,
       functionName: 'updateReputation',
@@ -96,6 +100,8 @@ export async function batchUpdateReputationOnChain(
     const interactions = updates.map((u) => BigInt(u.interactions));
 
     const txHash = await operatorWalletClient.writeContract({
+      chain,
+      account: operatorAccount!,
       address: FABRIC_REGISTRY_ADDRESS,
       abi: ERC8004_REGISTRY_ABI,
       functionName: 'batchUpdateReputation',
@@ -121,6 +127,8 @@ export async function mintIdentityOnChain(
 
   try {
     const txHash = await operatorWalletClient.writeContract({
+      chain,
+      account: operatorAccount!,
       address: FABRIC_IDENTITY_ADDRESS,
       abi: FABRIC_IDENTITY_ABI,
       functionName: 'mintIdentity',

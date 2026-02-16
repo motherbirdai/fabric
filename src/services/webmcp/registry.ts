@@ -44,7 +44,6 @@ export async function registerWebMCPTools(
       updatedAt: new Date(),
     },
     create: {
-      accountId,
       name: req.metadata?.name ?? originToName(origin),
       category: 'webmcp',
       endpoint: origin,
@@ -58,7 +57,6 @@ export async function registerWebMCPTools(
       avgLatencyMs: 0,
       uptimePercent: 100,
       totalRequests: 0,
-      verified: false,
     },
   });
 
@@ -144,7 +142,7 @@ export async function registerFromManifest(
     throw new Error(`Failed to fetch manifest: ${response.status} ${response.statusText}`);
   }
 
-  const manifest: WebMCPManifest = await response.json();
+  const manifest = await response.json() as WebMCPManifest;
 
   if (manifest.version !== '1.0') {
     throw new Error(`Unsupported manifest version: ${manifest.version}`);
@@ -334,11 +332,10 @@ function generateToolId(origin: string, toolName: string): string {
 
 async function findProviderIdByOrigin(
   origin: string,
-  accountId: string
+  _accountId?: string
 ): Promise<string | null> {
   const provider = await prisma.provider.findFirst({
     where: {
-      accountId,
       endpoint: origin,
       registryId: { startsWith: 'webmcp:' },
     },

@@ -1,5 +1,5 @@
 import { parseUnits, type Hash } from 'viem';
-import { publicClient } from '../chain/client.js';
+import { publicClient, chain } from '../chain/client.js';
 import { ERC20_ABI } from '../chain/abis.js';
 import { USDC_ADDRESS } from '../../config.js';
 import { getAgentWalletClient } from './wallets.js';
@@ -40,6 +40,8 @@ export async function transferUsdc(
 
   // Execute USDC transfer
   const txHash = await walletClient.writeContract({
+    chain,
+    account: account,
     address: USDC_ADDRESS,
     abi: ERC20_ABI,
     functionName: 'transfer',
@@ -120,6 +122,8 @@ export async function ensureAllowance(
 
   // Approve max to avoid repeated approvals
   const txHash = await walletClient.writeContract({
+    chain,
+    account: walletClient.account!,
     address: USDC_ADDRESS,
     abi: ERC20_ABI,
     functionName: 'approve',

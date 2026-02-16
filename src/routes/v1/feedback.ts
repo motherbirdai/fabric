@@ -70,7 +70,7 @@ export async function feedbackRoutes(app: FastifyInstance) {
     // Queue on-chain reputation update (batched)
     await queueReputationUpdate(
       transaction.providerId,
-      transaction.provider.registryId,
+      null,
       score
     );
 

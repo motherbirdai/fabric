@@ -226,7 +226,7 @@ async function executePayment(
     });
 
     const receipt = await publicClient.waitForTransactionReceipt({
-      hash: providerTxHash,
+      hash: providerTxHash!,
       confirmations: 1,
     });
 
@@ -252,7 +252,7 @@ async function executePayment(
         });
 
         await publicClient.waitForTransactionReceipt({
-          hash: feeTxHash,
+          hash: feeTxHash!,
           confirmations: 1,
         });
       } catch (err) {

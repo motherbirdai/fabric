@@ -9,7 +9,7 @@ declare module 'fastify' {
   interface FastifyRequest {
     account?: {
       id: string;
-      email: string;
+      email: string | null;
       plan: PlanName;
       apiKey: string;
       dailyLimit: number;

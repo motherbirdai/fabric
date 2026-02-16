@@ -1,4 +1,4 @@
-import { publicClient, operatorWalletClient, operatorAccount } from '../chain/client.js';
+import { publicClient, operatorWalletClient, operatorAccount, chain } from '../chain/client.js';
 import { FABRIC_IDENTITY_ABI } from '../chain/abis.js';
 import { FABRIC_IDENTITY_ADDRESS } from '../../config.js';
 
@@ -29,15 +29,18 @@ export async function mintAgentIdentity(
   }
 
   try {
-    const registryIdBytes = registryId.startsWith('0x')
-      ? (registryId as `0x${string}`)
-      : (`0x${Buffer.from(registryId).toString('hex').padEnd(64, '0')}` as `0x${string}`);
+    // Convert registryId string to uint256 for on-chain call
+    const registryIdBigInt = registryId.startsWith('0x')
+      ? BigInt(registryId)
+      : BigInt(`0x${Buffer.from(registryId).toString('hex')}`);
 
     const txHash = await operatorWalletClient.writeContract({
+      chain,
+      account: operatorAccount!,
       address: FABRIC_IDENTITY_ADDRESS,
       abi: FABRIC_IDENTITY_ABI,
-      functionName: 'mint',
-      args: [toAddress, agentName, registryIdBytes],
+      functionName: 'mintIdentity',
+      args: [toAddress, registryIdBigInt],
     });
 
     // Wait for confirmation
@@ -73,12 +76,12 @@ export async function getAgentIdentity(tokenId: string): Promise<AgentIdentity |
   }
 
   try {
-    const [agentName, registryId, createdAt] = (await publicClient.readContract({
+    const registryId = (await publicClient.readContract({
       address: FABRIC_IDENTITY_ADDRESS,
       abi: FABRIC_IDENTITY_ABI,
-      functionName: 'getAgentData',
+      functionName: 'registryIdOf',
       args: [BigInt(tokenId)],
-    })) as [string, `0x${string}`, bigint];
+    })) as bigint;
 
     const owner = (await publicClient.readContract({
       address: FABRIC_IDENTITY_ADDRESS,
@@ -90,9 +93,9 @@ export async function getAgentIdentity(tokenId: string): Promise<AgentIdentity |
     return {
       tokenId,
       owner,
-      agentName,
-      registryId,
-      createdAt: Number(createdAt),
+      agentName: '',
+      registryId: `0x${registryId.toString(16)}`,
+      createdAt: 0,
     };
   } catch {
     return null;

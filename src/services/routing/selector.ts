@@ -29,7 +29,7 @@ export interface ScoredProvider {
   pricingModel: string;
   basePrice: number;
   currency: string;
-  walletAddress: string;
+  walletAddress: string | null;
   trustScore: number;
   compositeScore: number;
   trustBreakdown: TrustBreakdown;

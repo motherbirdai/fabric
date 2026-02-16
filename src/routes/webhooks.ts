@@ -1,8 +1,8 @@
 import { FastifyInstance, FastifyRequest, FastifyReply } from 'fastify';
-import { getStripe, isStripeConfigured } from '../../services/billing/stripe-client.js';
-import { handleWebhookEvent } from '../../services/billing/webhooks.js';
-import { STRIPE_WEBHOOK_SECRET } from '../../config.js';
-import { increment } from '../../utils/metrics.js';
+import { getStripe, isStripeConfigured } from '../services/billing/stripe-client.js';
+import { handleWebhookEvent } from '../services/billing/webhooks.js';
+import { STRIPE_WEBHOOK_SECRET } from '../config.js';
+import { increment } from '../utils/metrics.js';
 
 export async function webhookRoutes(app: FastifyInstance) {
   // Add raw body content type parser for webhook

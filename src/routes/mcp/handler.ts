@@ -305,7 +305,7 @@ async function handleFeedback(args: Record<string, any>, request: FastifyRequest
   await invalidateScores(transaction.provider.category);
   await queueReputationUpdate(
     transaction.providerId,
-    transaction.provider.registryId,
+    null,
     args.score
   );
 

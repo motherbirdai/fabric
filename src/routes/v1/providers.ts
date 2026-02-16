@@ -111,7 +111,6 @@ export async function providerRoutes(app: FastifyInstance) {
       txHash,
     });
   });
-  });
 
   // ─── List providers ───
   app.get('/providers/list', async (request: FastifyRequest, reply: FastifyReply) => {
