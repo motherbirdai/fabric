@@ -51,7 +51,7 @@ export default function DashboardPage() {
         <MetricCard
           label="Plan"
           value={sub.data?.plan || '—'}
-          sub={sub.data ? `${sub.data.usedToday.toLocaleString()} / ${sub.data.dailyLimit.toLocaleString()} today` : undefined}
+          sub={sub.data?.usedToday != null ? `${sub.data.usedToday.toLocaleString()} / ${sub.data.dailyLimit.toLocaleString()} today` : undefined}
           icon={<Shield className="w-4 h-4" />}
           color="text-fabric-blue"
         />
@@ -64,13 +64,13 @@ export default function DashboardPage() {
         <MetricCard
           label="Overage Today"
           value={overage.data ? String(overage.data.todayCount) : '0'}
-          sub={overage.data ? `$${overage.data.periodCost.toFixed(3)} this period` : undefined}
+          sub={overage.data?.periodCost != null ? `$${overage.data.periodCost.toFixed(3)} this period` : undefined}
           icon={<Zap className="w-4 h-4" />}
         />
         <MetricCard
           label="Uptime"
-          value={health.data ? `${Math.floor(health.data.uptime / 3600)}h` : '—'}
-          sub={health.data ? `${health.data.memoryMb.toFixed(0)}MB memory` : undefined}
+          value={health.data?.uptime != null ? `${Math.floor(health.data.uptime / 3600)}h` : '—'}
+          sub={health.data?.memoryMb != null ? `${health.data.memoryMb.toFixed(0)}MB memory` : undefined}
           icon={<Clock className="w-4 h-4" />}
         />
       </div>
@@ -107,12 +107,12 @@ export default function DashboardPage() {
             {budgets.data?.budgets.length ? (
               <div className="space-y-3">
                 {budgets.data.budgets.slice(0, 4).map((b) => {
-                  const pct = Math.min(100, (b.spentUsd / b.limitUsd) * 100);
+                  const pct = b.limitUsd ? Math.min(100, ((b.spentUsd ?? 0) / b.limitUsd) * 100) : 0;
                   return (
                     <div key={b.id}>
                       <div className="flex justify-between text-[12px] mb-1">
                         <span>{b.label || b.periodType}</span>
-                        <span className="text-fabric-gray-500">${b.spentUsd.toFixed(2)} / ${b.limitUsd.toFixed(2)}</span>
+                        <span className="text-fabric-gray-500">${(b.spentUsd ?? 0).toFixed(2)} / ${(b.limitUsd ?? 0).toFixed(2)}</span>
                       </div>
                       <div className="w-full bg-fabric-gray-100 rounded-full h-2">
                         <div
