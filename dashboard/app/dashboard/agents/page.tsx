@@ -5,12 +5,14 @@ import { Bot } from 'lucide-react';
 export default function AgentsPage() {
   return (
     <div>
-      <div className="flex items-center justify-between" style={{ padding: '28px 36px', borderBottom: '1px solid var(--border)', background: 'var(--card)' }}>
+      <div className="page-header-bar">
         <div>
-          <h1 style={{ fontSize: '22px', fontWeight: 700, letterSpacing: '-.8px' }}>Agents</h1>
+          <h1>Agents</h1>
           <p style={{ fontSize: '13px', color: 'var(--text-3)', marginTop: '2px' }}>Manage your registered agents and their identities</p>
         </div>
-        <button className="btn-sm btn-primary-fixed" style={{ padding: '9px 20px', fontWeight: 600 }}>+ New Agent</button>
+        <div className="header-actions">
+          <button className="btn-sm btn-primary-fixed" style={{ padding: '9px 20px', fontWeight: 600 }}>+ New Agent</button>
+        </div>
       </div>
       <div className="animate-fade-in" style={{ padding: '24px 36px 48px' }}>
         <div className="stat-grid">

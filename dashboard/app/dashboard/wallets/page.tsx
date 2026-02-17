@@ -5,12 +5,14 @@ import { Wallet } from 'lucide-react';
 export default function WalletsPage() {
   return (
     <div>
-      <div className="flex items-center justify-between" style={{ padding: 'clamp(20px, 5vw, 28px) clamp(16px, 4vw, 36px)', borderBottom: '1px solid var(--border)', background: 'var(--card)' }}>
+      <div className="page-header-bar">
         <div>
-          <h1 style={{ fontSize: '22px', fontWeight: 700, letterSpacing: '-.8px' }}>Wallets</h1>
+          <h1>Wallets</h1>
           <p style={{ fontSize: '13px', color: 'var(--text-3)', marginTop: '2px' }}>Managed USDC wallets on Base L2 for agent payments</p>
         </div>
-        <button className="btn-sm btn-primary-fixed" style={{ padding: '9px 20px', fontWeight: 600 }}>+ Create Wallet</button>
+        <div className="header-actions">
+          <button className="btn-sm btn-primary-fixed" style={{ padding: '9px 20px', fontWeight: 600 }}>+ Create Wallet</button>
+        </div>
       </div>
       <div className="animate-fade-in" style={{ padding: 'clamp(16px, 4vw, 24px) clamp(16px, 4vw, 36px) 48px' }}>
         <div className="stat-grid">

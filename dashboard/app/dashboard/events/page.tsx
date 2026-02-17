@@ -7,15 +7,15 @@ const FILTERS = ['All events', 'Routes 0', 'Failures 0', 'Trust updates 0', 'Bud
 export default function EventsPage() {
   return (
     <div>
-      <div className="flex items-center justify-between" style={{ padding: 'clamp(20px, 5vw, 28px) clamp(16px, 4vw, 36px)', borderBottom: '1px solid var(--border)', background: 'var(--card)' }}>
+      <div className="page-header-bar">
         <div>
-          <h1 className="flex items-center gap-2" style={{ fontSize: '22px', fontWeight: 700, letterSpacing: '-.8px' }}>
+          <h1 className="flex items-center gap-2">
             Events
             <span className="inline-block rounded-full" style={{ width: '8px', height: '8px', background: 'var(--red)' }} />
           </h1>
           <p style={{ fontSize: '13px', color: 'var(--text-3)', marginTop: '2px' }}>Real-time gateway events via WebSocket · 0 events buffered</p>
         </div>
-        <div className="flex gap-2">
+        <div className="header-actions" style={{ display: 'flex', gap: '8px' }}>
           <button className="btn-sm flex items-center justify-center" style={{ padding: '7px 12px', width: '42px', height: '42px' }} title="Pause stream"><Pause size={21} /></button>
           <button className="btn-sm flex items-center justify-center" style={{ padding: '7px 12px', width: '42px', height: '42px' }} title="Export events"><Download size={21} /></button>
           <button className="btn-sm flex items-center justify-center" style={{ padding: '7px 12px', width: '42px', height: '42px' }} title="Clear events"><Trash2 size={21} /></button>
