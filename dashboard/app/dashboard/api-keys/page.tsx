@@ -56,20 +56,24 @@ export default function ApiKeysPage() {
             </h3>
           </div>
           <div className="card-body">
-            <div className="flex items-center justify-between gap-3">
-              <div className="flex items-center gap-3" style={{ flex: 1, minWidth: 0 }}>
-                <code style={{
-                  fontFamily: 'var(--font-mono)',
-                  fontSize: '13px',
-                  color: 'var(--text)',
-                  background: 'var(--bg)',
-                  padding: '10px 16px',
-                  borderRadius: '8px',
-                  flex: 1,
-                  letterSpacing: '.3px',
-                }}>
-                  {revealed ? SESSION_KEY_FULL : SESSION_KEY_MASKED}
-                </code>
+            <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '8px' }}>
+              <code style={{
+                fontFamily: 'var(--font-mono)',
+                fontSize: '13px',
+                color: 'var(--text)',
+                background: 'var(--bg)',
+                padding: '10px 16px',
+                borderRadius: '8px',
+                flex: '1 1 200px',
+                minWidth: 0,
+                letterSpacing: '.3px',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                whiteSpace: 'nowrap',
+              }}>
+                {revealed ? SESSION_KEY_FULL : SESSION_KEY_MASKED}
+              </code>
+              <div style={{ display: 'flex', gap: '8px', flexShrink: 0 }}>
                 <button
                   className="flex items-center justify-center"
                   style={{
@@ -80,7 +84,6 @@ export default function ApiKeysPage() {
                     background: 'var(--card)',
                     cursor: 'pointer',
                     transition: 'all .15s',
-                    flexShrink: 0,
                   }}
                   onClick={() => setRevealed(!revealed)}
                   title={revealed ? 'Hide key' : 'Reveal key'}
@@ -101,7 +104,6 @@ export default function ApiKeysPage() {
                     background: 'var(--card)',
                     cursor: 'pointer',
                     transition: 'all .15s',
-                    flexShrink: 0,
                   }}
                   onClick={() => handleCopy(SESSION_KEY_FULL, 'session')}
                   title="Copy key"
@@ -112,11 +114,11 @@ export default function ApiKeysPage() {
                     <Copy size={15} style={{ color: 'var(--text-3)' }} />
                   )}
                 </button>
+                <button className="btn-sm flex items-center gap-2" style={{ fontSize: '12px', padding: '7px 16px' }}>
+                  <RefreshCw size={13} />
+                  Regenerate
+                </button>
               </div>
-              <button className="btn-sm flex items-center gap-2" style={{ fontSize: '12px', padding: '7px 16px', flexShrink: 0 }}>
-                <RefreshCw size={13} />
-                Regenerate
-              </button>
             </div>
           </div>
         </div>
@@ -129,7 +131,7 @@ export default function ApiKeysPage() {
           <div className="card-body-flush">
             {KEYS.map((k) => (
               <div key={k.id} className="setting-row">
-                <div className="flex items-center gap-3">
+                <div style={{ display: 'flex', alignItems: 'center', gap: '12px', minWidth: 0 }}>
                   <div
                     className="flex items-center justify-center rounded-lg"
                     style={{
@@ -141,8 +143,8 @@ export default function ApiKeysPage() {
                   >
                     <Key size={16} style={{ color: k.type === 'Live' ? 'var(--green)' : 'var(--amber)' }} />
                   </div>
-                  <div>
-                    <div className="flex items-center gap-2">
+                  <div style={{ minWidth: 0 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
                       <span style={{ fontFamily: 'var(--font-mono)', fontSize: '13px', letterSpacing: '.3px' }}>{k.key}</span>
                       <span
                         style={{

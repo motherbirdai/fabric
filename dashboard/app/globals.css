@@ -370,6 +370,7 @@ h3 { font-size: 16px; font-weight: 600; letter-spacing: -.3px; }
   flex: 1;
   margin-left: var(--sidebar-w);
   min-height: 100vh;
+  overflow-x: hidden;
 }
 .page-header-bar {
   display: flex;
@@ -1038,5 +1039,5 @@ h3 { font-size: 16px; font-weight: 600; letter-spacing: -.3px; }
   }
   .grid-4col { grid-template-columns: 1fr !important; }
   .grid-5col { grid-template-columns: 1fr !important; }
-  .code-block { font-size: 12px; }
+  .code-block { font-size: 11px; margin: 8px 12px; padding: 12px 14px; word-break: break-all; }
 }
