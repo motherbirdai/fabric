@@ -7,18 +7,20 @@ import { ErrorCard } from '@/components/ui/error';
 import { EmptyState } from '@/components/ui/empty';
 
 export default function AgentsPage() {
-  const { data: wallets, loading, error, refetch } = useWallets();
+  const { data: walletsData, loading, error, refetch } = useWallets();
 
-  // Derive agents from wallets — each wallet with an agent_id represents an agent
-  const agents = (wallets || [])
-    .filter((w) => w.agent_id)
+  const walletList = walletsData?.wallets || [];
+
+  // Derive agents from wallets — each wallet with an agentId represents an agent
+  const agents = walletList
+    .filter((w) => w.agentId)
     .map((w) => ({
-      id: w.agent_id!,
+      id: w.agentId,
+      name: w.agentName,
       address: w.address,
-      created_at: w.created_at,
     }));
 
-  // Deduplicate by agent_id
+  // Deduplicate by agentId
   const uniqueAgents = Array.from(new Map(agents.map((a) => [a.id, a])).values());
 
   return (
@@ -53,7 +55,7 @@ export default function AgentsPage() {
             </div>
             <div className="stat-card">
               <div style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', textTransform: 'uppercase', letterSpacing: '.8px', color: 'var(--text-3)', marginBottom: '8px' }}>Total Wallets</div>
-              <div style={{ fontSize: '22px', fontWeight: 700, letterSpacing: '-.5px' }}>{wallets?.length || 0}</div>
+              <div style={{ fontSize: '22px', fontWeight: 700, letterSpacing: '-.5px' }}>{walletList.length}</div>
               <div style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--text-3)', marginTop: '4px' }}>managed wallets</div>
             </div>
             <div className="stat-card">
@@ -72,7 +74,7 @@ export default function AgentsPage() {
             <div className="card-header"><h3>Registered Agents</h3></div>
             <div className="card-body-flush">
               {uniqueAgents.map((agent) => {
-                const shortAddr = `${agent.address.slice(0, 6)}...${agent.address.slice(-4)}`;
+                const shortAddr = agent.address ? `${agent.address.slice(0, 6)}...${agent.address.slice(-4)}` : 'No address';
                 return (
                   <div key={agent.id} className="setting-row" style={{ cursor: 'pointer' }}>
                     <div className="flex items-center gap-3">
@@ -80,10 +82,9 @@ export default function AgentsPage() {
                         <Bot size={18} style={{ color: 'var(--blue)' }} />
                       </div>
                       <div>
-                        <div style={{ fontSize: '14px' }}>{agent.id}</div>
+                        <div style={{ fontSize: '14px' }}>{agent.name || agent.id}</div>
                         <div style={{ fontSize: '12px', color: 'var(--text-3)', marginTop: '2px' }}>
-                          {agent.created_at && `Created ${new Date(agent.created_at).toLocaleDateString()} · `}
-                          Wallet: {shortAddr}
+                          {agent.id} · Wallet: {shortAddr}
                         </div>
                       </div>
                     </div>

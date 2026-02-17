@@ -18,26 +18,31 @@ function nameToGradient(name: string): string {
 }
 
 const CAT_CLASS_MAP: Record<string, string> = {
-  'search': 'cat-search',
-  'image generation': 'cat-image',
-  'data analysis': 'cat-data',
-  'code review': 'cat-code',
+  'web-search': 'cat-search',
+  'image-generation': 'cat-image',
+  'data-analysis': 'cat-data',
+  'market-data': 'cat-data',
+  'code-review': 'cat-code',
   'translation': 'cat-translation',
   'transcription': 'cat-transcription',
-  'text generation': 'cat-text',
+  'text-generation': 'cat-text',
   'embedding': 'cat-embedding',
+  'web-scraping': 'cat-data',
+  'email': 'cat-code',
 };
 
+function formatCategory(cat: string): string {
+  return cat.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+}
+
 const BREAKDOWN_COLORS: Record<string, string> = {
-  reliability: 'var(--blue)',
-  success_rate: 'var(--blue)',
+  successRate: 'var(--blue)',
   latency: 'var(--blue)',
-  cost: 'var(--green)',
-  accuracy: 'var(--pink)',
   uptime: 'var(--green)',
   feedback: 'var(--amber)',
-  on_chain: 'var(--blue)',
+  onChainRep: 'var(--pink)',
   longevity: 'var(--green)',
+  volumeConsistency: 'var(--blue)',
 };
 
 export default function ProviderDetailPage() {
@@ -72,21 +77,25 @@ export default function ProviderDetailPage() {
     );
   }
 
-  const score = evaluation?.trust_score ?? provider.trust_score;
-  const scoreStr = score != null ? score.toFixed(2) : '—';
-  const cat = provider.category || 'Unknown';
-  const cc = CAT_CLASS_MAP[cat.toLowerCase()] || 'cat-search';
+  const trustScore = evaluation?.trust?.score ?? provider.trustScore;
+  const scoreStr = trustScore != null ? trustScore.toFixed(2) : '—';
+  const cat = formatCategory(provider.category || 'Unknown');
+  const cc = CAT_CLASS_MAP[provider.category?.toLowerCase() || ''] || 'cat-search';
   const gradient = nameToGradient(provider.name);
   const letter = provider.name.charAt(0).toUpperCase();
 
   // Build trust breakdown rows from evaluation
-  const breakdownRows = evaluation?.breakdown
-    ? Object.entries(evaluation.breakdown).map(([key, value]) => ({
-        label: key.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase()),
-        pct: Math.round(Number(value) * 100),
+  const breakdownRows = evaluation?.trust?.breakdown
+    ? Object.entries(evaluation.trust.breakdown).map(([key, item]) => ({
+        label: key.replace(/([A-Z])/g, ' $1').replace(/^./, c => c.toUpperCase()).trim(),
+        pct: Math.round(item.raw * 100),
         color: BREAKDOWN_COLORS[key] || 'var(--blue)',
+        weight: item.weight,
+        weighted: item.weighted,
       }))
     : [];
+
+  const stats = evaluation?.stats;
 
   return (
     <div>
@@ -95,7 +104,7 @@ export default function ProviderDetailPage() {
           <Link href="/dashboard/providers" className="p-1"><ArrowLeft size={18} style={{ color: 'var(--text-3)' }} /></Link>
           <h1 style={{ fontSize: '22px', fontWeight: 700, letterSpacing: '-.8px' }}>{provider.name}</h1>
         </div>
-        {provider.status === 'active' && (
+        {provider.active && (
           <span className="inline-flex items-center gap-[5px]" style={{ fontFamily: 'var(--font-mono)', fontSize: '12px', color: 'var(--green)', letterSpacing: '.5px' }}>
             <span className="inline-block w-[5px] h-[5px] rounded-full animate-live-pulse" style={{ background: 'var(--green)' }} />
             LIVE ON FABRIC
@@ -116,10 +125,10 @@ export default function ProviderDetailPage() {
         <div className="stat-grid grid-5col" style={{ gridTemplateColumns: 'repeat(5, 1fr)', marginBottom: '28px' }}>
           {[
             { label: 'Trust Score', value: scoreStr, color: 'var(--blue)' },
-            { label: 'Price', value: provider.price_per_request != null ? `$${provider.price_per_request}` : provider.price_per_token != null ? `$${provider.price_per_token}` : '—' },
-            { label: 'Pricing Model', value: provider.pricing_model || '—' },
-            { label: 'Status', value: provider.status || '—', color: provider.status === 'active' ? 'var(--green)' : undefined },
-            { label: 'Category', value: cat },
+            { label: 'Price', value: provider.basePrice != null ? `$${provider.basePrice}` : '—' },
+            { label: 'Avg Latency', value: stats?.avgLatencyMs != null ? `${stats.avgLatencyMs}ms` : '—' },
+            { label: 'Success Rate', value: stats?.successRate != null ? `${(stats.successRate * 100).toFixed(1)}%` : '—', color: 'var(--green)' },
+            { label: 'Total Requests', value: stats?.totalRequests != null ? stats.totalRequests.toLocaleString() : '—' },
           ].map((s) => (
             <div key={s.label} className="stat-card">
               <div style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', textTransform: 'uppercase', letterSpacing: '.8px', color: 'var(--text-3)', marginBottom: '8px' }}>{s.label}</div>
@@ -140,7 +149,7 @@ export default function ProviderDetailPage() {
               {breakdownRows.length > 0 ? (
                 breakdownRows.map((r) => (
                   <div key={r.label} className="flex items-center gap-[14px]" style={{ padding: '12px 0', borderBottom: '1px solid var(--bg)' }}>
-                    <div style={{ width: '100px', fontSize: '13px', color: 'var(--text-2)' }}>{r.label}</div>
+                    <div style={{ width: '120px', fontSize: '13px', color: 'var(--text-2)' }}>{r.label}</div>
                     <div className="trust-bar-bg">
                       <div className="trust-bar" style={{ width: `${r.pct}%`, background: r.color }} />
                     </div>
@@ -149,6 +158,11 @@ export default function ProviderDetailPage() {
                 ))
               ) : (
                 <div style={{ fontSize: '13px', color: 'var(--text-3)', padding: '12px 0' }}>No trust breakdown available yet.</div>
+              )}
+              {evaluation?.trust?.penalties && evaluation.trust.penalties.length > 0 && (
+                <div style={{ marginTop: '12px', padding: '10px 14px', background: 'var(--amber-subtle)', borderRadius: '8px', fontSize: '12px', color: 'var(--amber)' }}>
+                  Penalties: {evaluation.trust.penalties.join(', ')}
+                </div>
               )}
             </div>
           </div>
@@ -159,9 +173,9 @@ export default function ProviderDetailPage() {
               <div className="card-header"><span>Provider Info</span></div>
               <div className="card-body" style={{ fontSize: '13px', color: 'var(--text-2)', lineHeight: 2 }}>
                 {[
-                  { label: 'Registry ID', value: provider.id, mono: true },
-                  { label: 'Pricing Model', value: provider.pricing_model || '—' },
-                  { label: 'Currency', value: 'USDC' },
+                  { label: 'Registry ID', value: provider.registryId, mono: true },
+                  { label: 'Pricing Model', value: provider.pricingModel || evaluation?.provider?.pricingModel || '—' },
+                  { label: 'Currency', value: evaluation?.provider?.currency || 'USDC' },
                   { label: 'Chain', value: 'Base' },
                 ].map((r) => (
                   <div key={r.label} className="flex justify-between">

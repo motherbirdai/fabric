@@ -9,8 +9,8 @@ import { EmptyState } from '@/components/ui/empty';
 export default function BudgetsPage() {
   const { data: budgets, loading, error, refetch } = useBudgets();
 
-  const totalLimit = (budgets || []).reduce((sum, b) => sum + b.limit_usd, 0);
-  const totalSpent = (budgets || []).reduce((sum, b) => sum + b.spent_usd, 0);
+  const totalLimit = (budgets || []).reduce((sum, b) => sum + b.limitUsd, 0);
+  const totalSpent = (budgets || []).reduce((sum, b) => sum + b.spentUsd, 0);
   const spentPct = totalLimit > 0 ? ((totalSpent / totalLimit) * 100).toFixed(1) : '0';
 
   return (
@@ -56,12 +56,12 @@ export default function BudgetsPage() {
             <div className="card-header"><h3>Active Budgets</h3></div>
             <div className="card-body-flush">
               {budgets.map((b) => {
-                const pct = b.limit_usd > 0 ? (b.spent_usd / b.limit_usd) * 100 : 0;
+                const pct = b.limitUsd > 0 ? (b.spentUsd / b.limitUsd) * 100 : 0;
                 const barColor = pct > 80 ? 'var(--red)' : pct > 50 ? 'var(--amber)' : 'var(--blue)';
                 const iconColor = pct > 80 ? 'var(--red)' : pct > 50 ? 'var(--amber)' : 'var(--blue)';
                 const iconBg = pct > 80 ? 'var(--red-subtle)' : pct > 50 ? 'var(--amber-subtle)' : 'var(--blue-subtle)';
                 const periodLabel = b.period === 'daily' ? 'Daily' : b.period === 'monthly' ? 'Monthly' : b.period;
-                const capLabel = b.cap_type === 'hard' ? 'Hard cap' : b.cap_type === 'soft' ? 'Soft cap (alert only)' : b.cap_type || 'Budget';
+                const capLabel = b.capType === 'hard' ? 'Hard cap' : b.capType === 'soft' ? 'Soft cap (alert only)' : b.capType || 'Budget';
 
                 return (
                   <div key={b.id} className="setting-row">
@@ -70,18 +70,18 @@ export default function BudgetsPage() {
                         <PiggyBank size={18} style={{ color: iconColor }} />
                       </div>
                       <div>
-                        <div style={{ fontSize: '14px' }}>{b.agent_id || 'All Agents'} — {periodLabel}</div>
+                        <div style={{ fontSize: '14px' }}>{b.agentId || 'All Agents'} — {periodLabel}</div>
                         <div style={{ fontSize: '12px', color: 'var(--text-3)', marginTop: '2px' }}>
-                          {capLabel} · ${b.limit_usd.toFixed(2)}/{b.period}
-                          {b.alert_threshold_pct ? ` · Alert at ${b.alert_threshold_pct}%` : ''}
+                          {capLabel} · ${b.limitUsd.toFixed(2)}/{b.period}
+                          {b.alertThresholdPct ? ` · Alert at ${b.alertThresholdPct}%` : ''}
                         </div>
                       </div>
                     </div>
                     <div className="budget-controls">
                       <div style={{ width: '100%' }}>
                         <div className="budget-digits" style={{ display: 'flex', justifyContent: 'space-between', fontFamily: 'var(--font-mono)', color: 'var(--text-3)', marginBottom: '3px' }}>
-                          <span>${b.spent_usd.toFixed(2)}</span>
-                          <span>${b.limit_usd.toFixed(2)}</span>
+                          <span>${b.spentUsd.toFixed(2)}</span>
+                          <span>${b.limitUsd.toFixed(2)}</span>
                         </div>
                         <div style={{ width: '100%', height: '4px', background: 'var(--bg)', borderRadius: '2px', overflow: 'hidden' }}>
                           <div style={{ width: `${Math.min(pct, 100)}%`, height: '100%', background: barColor, borderRadius: '2px' }} />

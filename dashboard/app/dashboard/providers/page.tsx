@@ -19,22 +19,26 @@ function nameToGradient(name: string): string {
 }
 
 const CAT_CLASS_MAP: Record<string, string> = {
+  'web-search': 'cat-search',
   'search': 'cat-search',
-  'image generation': 'cat-image',
-  'image': 'cat-image',
-  'data analysis': 'cat-data',
-  'data': 'cat-data',
-  'code review': 'cat-code',
-  'code': 'cat-code',
+  'image-generation': 'cat-image',
+  'data-analysis': 'cat-data',
+  'market-data': 'cat-data',
+  'code-review': 'cat-code',
   'translation': 'cat-translation',
   'transcription': 'cat-transcription',
-  'text generation': 'cat-text',
-  'text': 'cat-text',
+  'text-generation': 'cat-text',
   'embedding': 'cat-embedding',
+  'web-scraping': 'cat-data',
+  'email': 'cat-code',
 };
 
 function catClass(category: string): string {
   return CAT_CLASS_MAP[category.toLowerCase()] || 'cat-search';
+}
+
+function formatCategory(cat: string): string {
+  return cat.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
 }
 
 export default function ProvidersPage() {
@@ -86,11 +90,11 @@ export default function ProvidersPage() {
           ) : (
             <div className="provider-grid">
               {filtered.map((p) => {
-                const score = p.trust_score != null ? p.trust_score.toFixed(2) : '—';
+                const score = p.trustScore != null ? p.trustScore.toFixed(2) : '—';
                 const letter = p.name.charAt(0).toUpperCase();
                 const gradient = nameToGradient(p.name);
-                const cat = p.category || 'Unknown';
-                const cc = catClass(cat);
+                const cat = formatCategory(p.category || 'Unknown');
+                const cc = catClass(p.category || '');
 
                 return (
                   <Link
@@ -111,9 +115,8 @@ export default function ProvidersPage() {
                       <div style={{ fontSize: '13px', color: 'var(--text-2)', lineHeight: 1.5, marginBottom: '14px' }}>{p.description}</div>
                     )}
                     <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px 16px', fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--text-3)' }}>
-                      {p.price_per_request != null && <span>${p.price_per_request}/req</span>}
-                      {p.price_per_token != null && <span>${p.price_per_token}/token</span>}
-                      {p.status === 'active' && (
+                      {p.basePrice != null && p.basePrice > 0 && <span>${p.basePrice}/{p.pricingModel === 'per-token' ? 'token' : 'req'}</span>}
+                      {p.active && (
                         <span className="inline-flex items-center gap-[5px]" style={{ color: 'var(--green)', letterSpacing: '.5px' }}>
                           <span className="inline-block w-[5px] h-[5px] rounded-full animate-live-pulse" style={{ background: 'var(--green)' }} />
                           LIVE

@@ -68,37 +68,21 @@ export default function BillingPage() {
               <div className="grid-4col" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '24px' }}>
                 <div>
                   <div style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', textTransform: 'uppercase', letterSpacing: '.8px', color: 'var(--text-3)', marginBottom: '6px' }}>Monthly Price</div>
-                  <div style={{ fontSize: '20px', fontWeight: 700, letterSpacing: '-.5px' }}>${currentPlanDef.price}<span style={{ fontSize: '13px', fontWeight: 400, color: 'var(--text-3)' }}>/mo</span></div>
+                  <div style={{ fontSize: '20px', fontWeight: 700, letterSpacing: '-.5px' }}>${sub?.priceUsd ?? currentPlanDef.price}<span style={{ fontSize: '13px', fontWeight: 400, color: 'var(--text-3)' }}>/mo</span></div>
                 </div>
                 <div>
-                  <div style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', textTransform: 'uppercase', letterSpacing: '.8px', color: 'var(--text-3)', marginBottom: '6px' }}>Requests Today</div>
-                  <div style={{ fontSize: '20px', fontWeight: 700, letterSpacing: '-.5px' }}>
-                    {sub?.requests_today ?? 0}
-                    <span style={{ fontSize: '13px', fontWeight: 400, color: 'var(--text-3)' }}> / {sub?.requests_limit ?? '—'}</span>
-                  </div>
+                  <div style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', textTransform: 'uppercase', letterSpacing: '.8px', color: 'var(--text-3)', marginBottom: '6px' }}>Stripe</div>
+                  <div style={{ fontSize: '20px', fontWeight: 700, letterSpacing: '-.5px' }}>{sub?.stripeConfigured ? 'Connected' : 'Not configured'}</div>
                 </div>
                 <div>
-                  <div style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', textTransform: 'uppercase', letterSpacing: '.8px', color: 'var(--text-3)', marginBottom: '6px' }}>Wallets Limit</div>
-                  <div style={{ fontSize: '20px', fontWeight: 700, letterSpacing: '-.5px' }}>{sub?.wallets_limit ?? '—'}</div>
+                  <div style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', textTransform: 'uppercase', letterSpacing: '.8px', color: 'var(--text-3)', marginBottom: '6px' }}>Plan Tier</div>
+                  <div style={{ fontSize: '20px', fontWeight: 700, letterSpacing: '-.5px', color: 'var(--blue)' }}>{currentPlanDef.name}</div>
                 </div>
                 <div>
-                  <div style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', textTransform: 'uppercase', letterSpacing: '.8px', color: 'var(--text-3)', marginBottom: '6px' }}>Agents Limit</div>
-                  <div style={{ fontSize: '20px', fontWeight: 700, letterSpacing: '-.5px' }}>{sub?.agents_limit ?? '—'}</div>
+                  <div style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', textTransform: 'uppercase', letterSpacing: '.8px', color: 'var(--text-3)', marginBottom: '6px' }}>Status</div>
+                  <div style={{ fontSize: '20px', fontWeight: 700, letterSpacing: '-.5px', color: 'var(--green)' }}>Active</div>
                 </div>
               </div>
-              {sub?.requests_limit && (
-                <div style={{ marginTop: '16px' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '6px' }}>
-                    <span style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--text-3)' }}>Daily usage</span>
-                    <span style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--text-3)' }}>
-                      {Math.round(((sub.requests_today || 0) / sub.requests_limit) * 100)}%
-                    </span>
-                  </div>
-                  <div className="trust-bar-bg">
-                    <div className="trust-bar" style={{ width: `${Math.min(((sub.requests_today || 0) / sub.requests_limit) * 100, 100)}%`, background: 'var(--blue)' }} />
-                  </div>
-                </div>
-              )}
             </div>
           </div>
 

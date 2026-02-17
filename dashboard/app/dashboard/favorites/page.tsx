@@ -8,12 +8,12 @@ import { ErrorCard } from '@/components/ui/error';
 import { EmptyState } from '@/components/ui/empty';
 
 export default function FavoritesPage() {
-  const { data: wallets, loading: walletsLoading } = useWallets();
+  const { data: walletsData, loading: walletsLoading } = useWallets();
   const [selectedAgent, setSelectedAgent] = useState<string | null>(null);
 
   // Derive unique agent IDs from wallets
-  const agentIds = (wallets || [])
-    .map((w) => w.agent_id)
+  const agentIds = (walletsData?.wallets || [])
+    .map((w) => w.agentId)
     .filter((id): id is string => !!id);
 
   // Auto-select first agent
@@ -70,11 +70,11 @@ export default function FavoritesPage() {
                         <Star size={18} style={{ color: 'var(--blue)' }} />
                       </div>
                       <div>
-                        <div style={{ fontSize: '14px' }}>{f.provider_name || f.provider_id}</div>
+                        <div style={{ fontSize: '14px' }}>{f.providerName || f.providerId}</div>
                         <div style={{ fontSize: '12px', color: 'var(--text-3)', marginTop: '2px' }}>
                           {f.category || 'Provider'}
-                          {f.trust_score != null && ` · Trust: ${f.trust_score.toFixed(2)}`}
-                          {f.created_at && ` · Added ${new Date(f.created_at).toLocaleDateString()}`}
+                          {f.trustScore != null && ` · Trust: ${f.trustScore.toFixed(2)}`}
+                          {f.createdAt && ` · Added ${new Date(f.createdAt).toLocaleDateString()}`}
                         </div>
                       </div>
                     </div>

@@ -22,10 +22,8 @@ export default function OverviewPage() {
   const loading = subLoading || walletsLoading || healthLoading || budgetsLoading;
 
   const plan = sub?.plan || '—';
-  const requestsToday = sub?.requests_today ?? 0;
-  const requestsLimit = sub?.requests_limit ?? 0;
-  const walletCount = wallets?.length ?? 0;
-  const walletsLimit = sub?.wallets_limit ?? '—';
+  const walletCount = wallets?.wallets?.length ?? 0;
+  const maxWallets = wallets?.maxWallets ?? 0;
 
   // Health checks
   const checks = healthData?.checks || {};
@@ -64,7 +62,7 @@ export default function OverviewPage() {
                   {plan}
                 </div>
                 <div style={{ fontSize: '12px', color: 'var(--text-3)', marginTop: '6px' }}>
-                  {requestsToday} / {requestsLimit || '—'} requests today
+                  ${sub?.priceUsd ?? 0}/mo
                 </div>
               </div>
 
@@ -79,22 +77,22 @@ export default function OverviewPage() {
                   {walletCount}
                 </div>
                 <div style={{ fontSize: '12px', color: 'var(--text-3)', marginTop: '6px' }}>
-                  {walletsLimit} max on plan
+                  {maxWallets} max on plan
                 </div>
               </div>
 
               <div className="metric-card">
                 <div className="flex items-center justify-between" style={{ marginBottom: '10px' }}>
                   <span style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', textTransform: 'uppercase', letterSpacing: '.8px', color: 'var(--text-3)' }}>
-                    Overage Today
+                    Stripe
                   </span>
                   <Zap size={14} style={{ opacity: 0.35 }} />
                 </div>
                 <div style={{ fontSize: '26px', fontWeight: 700, letterSpacing: '-1px', lineHeight: 1 }}>
-                  {requestsLimit > 0 && requestsToday > requestsLimit ? requestsToday - requestsLimit : 0}
+                  {sub?.stripeConfigured ? 'Yes' : 'No'}
                 </div>
                 <div style={{ fontSize: '12px', color: 'var(--text-3)', marginTop: '6px' }}>
-                  extra requests this period
+                  payment integration
                 </div>
               </div>
 
@@ -133,7 +131,7 @@ export default function OverviewPage() {
                           {name}
                         </div>
                         <div style={{ fontFamily: 'var(--font-mono)', fontSize: '12px', color: 'var(--text-3)' }}>
-                          {check.latency_ms != null ? `${check.latency_ms}ms` : check.status}
+                          {check.latencyMs != null ? `${check.latencyMs}ms` : check.status}
                         </div>
                       </div>
                     );
@@ -160,13 +158,13 @@ export default function OverviewPage() {
               <div className="card-body">
                 {budgets && budgets.length > 0 ? (
                   budgets.slice(0, 3).map((b) => {
-                    const pct = b.limit_usd > 0 ? (b.spent_usd / b.limit_usd) * 100 : 0;
+                    const pct = b.limitUsd > 0 ? (b.spentUsd / b.limitUsd) * 100 : 0;
                     return (
                       <div key={b.id} style={{ marginBottom: '12px' }}>
                         <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '13px', marginBottom: '4px' }}>
-                          <span>{b.agent_id || 'All Agents'} — {b.period}</span>
+                          <span>{b.agentId || 'All Agents'} — {b.period}</span>
                           <span style={{ fontFamily: 'var(--font-mono)', fontSize: '12px', color: 'var(--text-3)' }}>
-                            ${b.spent_usd.toFixed(2)} / ${b.limit_usd.toFixed(2)}
+                            ${b.spentUsd.toFixed(2)} / ${b.limitUsd.toFixed(2)}
                           </span>
                         </div>
                         <div style={{ width: '100%', height: '4px', background: 'var(--bg)', borderRadius: '2px', overflow: 'hidden' }}>

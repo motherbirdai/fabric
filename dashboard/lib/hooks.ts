@@ -5,13 +5,13 @@ import * as api from './api';
 import type {
   Provider,
   ProviderEvaluation,
-  Wallet,
+  WalletItem,
+  WalletsResponse,
   Budget,
   Favorite,
   Subscription,
   Invoice,
   HealthStatus,
-  DiscoverResult,
 } from './api';
 
 // ─── Generic Hook ────────────────────────────────────────────────
@@ -65,7 +65,7 @@ export function useApi<T>(
 // ─── Data Hooks ──────────────────────────────────────────────────
 
 export function useProviders(): UseApiResult<Provider[]> {
-  return useApi(() => api.listProviders(), []);
+  return useApi(() => api.listProviders().then((r) => r.providers), []);
 }
 
 export function useProvider(id: string): UseApiResult<Provider> {
@@ -76,17 +76,17 @@ export function useProviderEvaluation(id: string): UseApiResult<ProviderEvaluati
   return useApi(() => api.evaluateProvider(id), [id]);
 }
 
-export function useWallets(): UseApiResult<Wallet[]> {
+export function useWallets(): UseApiResult<WalletsResponse> {
   return useApi(() => api.listWallets(), []);
 }
 
 export function useBudgets(): UseApiResult<Budget[]> {
-  return useApi(() => api.listBudgets(), []);
+  return useApi(() => api.listBudgets().then((r) => r.budgets), []);
 }
 
 export function useFavorites(agentId: string | null): UseApiResult<Favorite[]> {
   return useApi(
-    () => (agentId ? api.listFavorites(agentId) : Promise.resolve([])),
+    () => (agentId ? api.listFavorites(agentId).then((r) => r.favorites) : Promise.resolve([])),
     [agentId],
   );
 }
@@ -96,18 +96,11 @@ export function useSubscription(): UseApiResult<Subscription> {
 }
 
 export function useInvoices(): UseApiResult<Invoice[]> {
-  return useApi(() => api.listInvoices(), []);
+  return useApi(() => api.listInvoices().then((r) => r.invoices), []);
 }
 
 export function useHealth(): UseApiResult<HealthStatus> {
   return useApi(() => api.health(), []);
-}
-
-export function useDiscover(category?: string): UseApiResult<DiscoverResult> {
-  return useApi(
-    () => api.discover(category ? { category } : undefined),
-    [category],
-  );
 }
 
 // ─── SSE Event Stream ────────────────────────────────────────────
@@ -159,7 +152,6 @@ export function useEventStream(): UseEventStreamResult {
         const parsed = JSON.parse(e.data) as GatewayEvent;
         setEvents((prev) => [parsed, ...prev].slice(0, 500));
       } catch {
-        // If not JSON, wrap raw data
         setEvents((prev) =>
           [{ type: 'message', data: e.data, timestamp: new Date().toISOString() }, ...prev].slice(0, 500),
         );
@@ -170,7 +162,6 @@ export function useEventStream(): UseEventStreamResult {
       setConnected(false);
       setError('Connection lost. Reconnecting...');
       es.close();
-      // Reconnect after 3 seconds
       setTimeout(() => {
         if (esRef.current === es) {
           connect();
@@ -190,16 +181,8 @@ export function useEventStream(): UseEventStreamResult {
   }, [connect]);
 
   const clear = useCallback(() => setEvents([]), []);
-
-  const pause = useCallback(() => {
-    pausedRef.current = true;
-    setPaused(true);
-  }, []);
-
-  const resume = useCallback(() => {
-    pausedRef.current = false;
-    setPaused(false);
-  }, []);
+  const pause = useCallback(() => { pausedRef.current = true; setPaused(true); }, []);
+  const resume = useCallback(() => { pausedRef.current = false; setPaused(false); }, []);
 
   return { events, connected, error, clear, pause, resume, paused };
 }

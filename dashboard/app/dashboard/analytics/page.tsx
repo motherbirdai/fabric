@@ -9,7 +9,6 @@ export default function AnalyticsPage() {
 
   const loading = provLoading || subLoading;
   const providerCount = providers?.length ?? 0;
-  const requestsToday = sub?.requests_today ?? 0;
 
   return (
     <div>
@@ -23,9 +22,9 @@ export default function AnalyticsPage() {
         ) : (
           <div className="stat-grid">
             {[
-              { label: 'Requests (24h)', value: String(requestsToday), color: 'var(--blue)', sub: 'from subscription' },
+              { label: 'Plan', value: sub?.plan || '—', color: 'var(--blue)', sub: `$${sub?.priceUsd ?? 0}/mo` },
               { label: 'Providers', value: String(providerCount), sub: 'in registry' },
-              { label: 'Plan', value: sub?.plan || '—', color: 'var(--green)', sub: `${sub?.requests_limit || '—'} daily limit` },
+              { label: 'Stripe', value: sub?.stripeConfigured ? 'Connected' : 'No', color: 'var(--green)', sub: 'payment integration' },
               { label: 'Total Spend (24h)', value: '—', sub: 'no aggregation endpoint' },
             ].map((s) => (
               <div key={s.label} className="stat-card">
@@ -94,12 +93,12 @@ export default function AnalyticsPage() {
                     <div style={{ fontSize: '12px', color: 'var(--text-3)', marginTop: '2px' }}>{p.category || 'Unknown'}</div>
                   </div>
                   <div className="flex items-center gap-3">
-                    {p.trust_score != null && (
+                    {p.trustScore != null && (
                       <span style={{ fontFamily: 'var(--font-mono)', fontSize: '12px', color: 'var(--green)' }}>
-                        {p.trust_score.toFixed(2)}
+                        {p.trustScore.toFixed(2)}
                       </span>
                     )}
-                    {p.status === 'active' && (
+                    {p.active && (
                       <span style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', padding: '2px 8px', borderRadius: '4px', background: 'var(--green-subtle)', color: 'var(--green)' }}>
                         Active
                       </span>

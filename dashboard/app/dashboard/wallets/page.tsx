@@ -10,20 +10,24 @@ import { ErrorCard } from '@/components/ui/error';
 import { EmptyState } from '@/components/ui/empty';
 
 export default function WalletsPage() {
-  const { data: wallets, loading, error, refetch } = useWallets();
+  const { data: walletsData, loading, error, refetch } = useWallets();
   const [balances, setBalances] = useState<Record<string, WalletBalance>>({});
+
+  const walletList = walletsData?.wallets || [];
+  const maxWallets = walletsData?.maxWallets ?? 0;
 
   // Fetch balances once wallets load
   useEffect(() => {
-    if (!wallets || wallets.length === 0) return;
-    wallets.forEach((w) => {
-      getWalletBalance(w.address)
-        .then((bal) => setBalances((prev) => ({ ...prev, [w.address]: bal })))
+    if (walletList.length === 0) return;
+    walletList.forEach((w) => {
+      if (!w.agentId) return;
+      getWalletBalance(w.agentId)
+        .then((bal) => setBalances((prev) => ({ ...prev, [w.agentId]: bal })))
         .catch(() => { /* ignore balance fetch errors */ });
     });
-  }, [wallets]);
+  }, [walletList]);
 
-  const totalBalance = Object.values(balances).reduce((sum, b) => sum + parseFloat(b.balance || '0'), 0);
+  const totalBalance = Object.values(balances).reduce((sum, b) => sum + parseFloat(b.balances?.usdc || '0'), 0);
 
   return (
     <div>
@@ -43,7 +47,7 @@ export default function WalletsPage() {
         <div style={{ padding: 'clamp(16px, 4vw, 24px) clamp(16px, 4vw, 36px) 48px' }}>
           <ErrorCard message={error.message} onRetry={refetch} />
         </div>
-      ) : !wallets || wallets.length === 0 ? (
+      ) : walletList.length === 0 ? (
         <div style={{ padding: 'clamp(16px, 4vw, 24px) clamp(16px, 4vw, 36px) 48px' }}>
           <EmptyState icon={Wallet} title="No wallets yet" description="Create your first wallet to start making payments." />
         </div>
@@ -52,8 +56,8 @@ export default function WalletsPage() {
           <div className="stat-grid">
             <div className="stat-card">
               <div style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', textTransform: 'uppercase', letterSpacing: '.8px', color: 'var(--text-3)', marginBottom: '8px' }}>Wallets</div>
-              <div style={{ fontSize: '22px', fontWeight: 700, letterSpacing: '-.5px', color: 'var(--blue)' }}>{wallets.length}</div>
-              <div style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--text-3)', marginTop: '4px' }}>managed wallets</div>
+              <div style={{ fontSize: '22px', fontWeight: 700, letterSpacing: '-.5px', color: 'var(--blue)' }}>{walletList.length}</div>
+              <div style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--text-3)', marginTop: '4px' }}>{maxWallets} max on plan</div>
             </div>
             <div className="stat-card">
               <div style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', textTransform: 'uppercase', letterSpacing: '.8px', color: 'var(--text-3)', marginBottom: '8px' }}>Total Balance</div>
@@ -75,22 +79,22 @@ export default function WalletsPage() {
           <div className="card" style={{ marginTop: '20px' }}>
             <div className="card-header"><h3>Managed Wallets</h3></div>
             <div className="card-body-flush">
-              {wallets.map((w) => {
-                const bal = balances[w.address];
-                const balStr = bal ? `$${parseFloat(bal.balance || '0').toFixed(2)}` : '...';
-                const shortAddr = `${w.address.slice(0, 6)}...${w.address.slice(-4)}`;
+              {walletList.map((w) => {
+                const bal = balances[w.agentId];
+                const balStr = bal ? `$${parseFloat(bal.balances?.usdc || '0').toFixed(2)}` : '...';
+                const shortAddr = w.address ? `${w.address.slice(0, 6)}...${w.address.slice(-4)}` : 'No address';
 
                 return (
-                  <div key={w.id} className="wallet-row">
+                  <div key={w.agentId} className="wallet-row">
                     <div className="flex items-center gap-3">
                       <div className="flex items-center justify-center rounded-lg" style={{ width: '36px', height: '36px', background: 'var(--green-subtle)' }}>
                         <Wallet size={18} style={{ color: 'var(--green)' }} />
                       </div>
                       <div>
-                        <div style={{ fontSize: '14px' }}>{w.agent_id || 'Wallet'}</div>
+                        <div style={{ fontSize: '14px' }}>{w.agentName || w.agentId || 'Wallet'}</div>
                         <div style={{ fontFamily: 'var(--font-mono)', fontSize: '12px', color: 'var(--text-3)', marginTop: '2px' }}>
                           {shortAddr}
-                          {w.agent_id && ` · Linked to ${w.agent_id}`}
+                          {w.agentId && ` · ${w.agentId}`}
                         </div>
                       </div>
                     </div>
