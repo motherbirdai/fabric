@@ -16,7 +16,7 @@ export default function AnalyticsPage() {
   useEffect(() => {
     if (!providers || providers.length === 0) return;
     setEvalLoading(true);
-    Promise.allSettled(providers.map(p => evaluateProvider(p.id)))
+    Promise.allSettled(providers.slice(0, 5).map(p => evaluateProvider(p.id)))
       .then(results => {
         const evals = results
           .filter((r): r is PromiseFulfilledResult<ProviderEvaluation> => r.status === 'fulfilled')

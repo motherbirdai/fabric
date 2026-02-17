@@ -14,7 +14,7 @@ interface RateLimitConfig {
 
 const DEFAULT_CONFIG: RateLimitConfig = {
   perKey: RATE_LIMIT_MAX,     // 100/min per key
-  perIp: 20,                   // 20/min per IP (unauthenticated)
+  perIp: RATE_LIMIT_MAX,        // same limit per IP (Vercel proxy shares IPs)
   windowMs: RATE_LIMIT_WINDOW, // 60s
 };
 
