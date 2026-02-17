@@ -137,7 +137,7 @@ export function Sidebar({
         </nav>
 
         <div className="sidebar-branding">
-          <FabricLogo style={{ height: '33px', width: 'auto' }} />
+          <FabricLogo style={{ height: '25px', width: 'auto' }} />
         </div>
         <div className="sidebar-footer">
           <div className="sidebar-footer-row">
