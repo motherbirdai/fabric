@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useAuth } from '@/lib/auth';
+import { useTitle } from '@/lib/hooks';
 
 const TRUST_WEIGHTS = [
   { key: 'successRate', label: 'Success Rate', desc: 'Weight for provider success rate (last 30d)', default: 30 },
@@ -15,6 +16,7 @@ const TRUST_WEIGHTS = [
 const WEBHOOK_EVENTS = ['route.completed', 'route.failed', 'budget.exceeded', 'trust.updated'];
 
 export default function SettingsPage() {
+  useTitle('Settings');
   const { plan } = useAuth();
   const [weights, setWeights] = useState<Record<string, number>>(
     Object.fromEntries(TRUST_WEIGHTS.map((w) => [w.key, w.default]))

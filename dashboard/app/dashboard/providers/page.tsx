@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useState } from 'react';
-import { useProviders } from '@/lib/hooks';
+import { useTitle, useProviders } from '@/lib/hooks';
 import { PageSkeleton } from '@/components/ui/loading';
 import { ErrorCard } from '@/components/ui/error';
 import { EmptyState } from '@/components/ui/empty';
@@ -42,6 +42,7 @@ function formatCategory(cat: string): string {
 }
 
 export default function ProvidersPage() {
+  useTitle('Providers');
   const [search, setSearch] = useState('');
   const { data: providers, loading, error, refetch } = useProviders();
 

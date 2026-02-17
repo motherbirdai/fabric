@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { Check, Shield, DollarSign, FileCheck } from 'lucide-react';
 import Link from 'next/link';
 import { registerProvider, ApiError } from '@/lib/api';
+import { useTitle } from '@/lib/hooks';
 
 const STEPS = [
   { num: 1, label: 'Identity' },
@@ -30,6 +31,7 @@ const PRICING_MODELS = [
 ];
 
 export default function RegisterPage() {
+  useTitle('Register Provider');
   const [step, setStep] = useState(1);
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState('');

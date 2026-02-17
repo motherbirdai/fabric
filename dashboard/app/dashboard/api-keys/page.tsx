@@ -3,8 +3,10 @@
 import { useState } from 'react';
 import { Key, Copy, Check, Eye, EyeOff } from 'lucide-react';
 import { useAuth } from '@/lib/auth';
+import { useTitle } from '@/lib/hooks';
 
 export default function ApiKeysPage() {
+  useTitle('API Keys');
   const { apiKey } = useAuth();
   const [copied, setCopied] = useState(false);
   const [revealed, setRevealed] = useState(false);
@@ -100,6 +102,9 @@ export default function ApiKeysPage() {
             <p style={{ fontSize: '12px', color: 'var(--text-3)', marginTop: '12px' }}>
               This is the API key you used to log in. Key management (list, generate, revoke) is not yet available from the dashboard.
             </p>
+            <p style={{ fontSize: '12px', color: 'var(--text-3)', marginTop: '6px' }}>
+              To rotate your key, log out and create a new account via SIWE.
+            </p>
           </div>
         </div>
 
@@ -112,7 +117,7 @@ export default function ApiKeysPage() {
             <div className="code-block">
               <div className="code-comment"># cURL</div>
               <div>
-                curl <span className="code-string">https://your-gateway/v1/route</span> \
+                curl <span className="code-string">https://api.fabriclayer.dev/v1/route</span> \
               </div>
               <div>
                 {'  '}-H <span className="code-string">&quot;Authorization: Bearer {apiKey ? `${apiKey.slice(0, 10)}...` : 'fab_...'}&quot;</span> \

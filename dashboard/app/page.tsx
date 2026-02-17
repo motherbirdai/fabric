@@ -4,10 +4,9 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { AuthProvider, useAuth } from '@/lib/auth';
 import { FabricLogo } from '@/components/layout/FabricLogo';
-import { Key, Building, ArrowRight } from 'lucide-react';
+import { Key, ArrowRight, Lock } from 'lucide-react';
 
 function LoginForm() {
-  const [mode, setMode] = useState<'apikey' | 'wallet'>('apikey');
   const [value, setValue] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -25,14 +24,20 @@ function LoginForm() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!value.trim()) return;
+    const trimmed = value.trim();
+    if (!trimmed) return;
     setLoading(true);
     setError('');
-    const ok = await login(value.trim());
+    if (!trimmed.startsWith('fab_')) {
+      setError('Invalid format. API keys start with fab_');
+      setLoading(false);
+      return;
+    }
+    const ok = await login(trimmed);
     if (ok) {
       router.push('/dashboard');
     } else {
-      setError('Invalid API key. Keys start with fab_');
+      setError('Authentication failed. Check that your API key is correct and active.');
       setLoading(false);
     }
   };
@@ -47,29 +52,31 @@ function LoginForm() {
 
         <div className="login-tabs">
           <button
-            className={`login-tab${mode === 'apikey' ? ' active' : ''}`}
-            onClick={() => { setMode('apikey'); setValue(''); setError(''); }}
+            className="login-tab active"
           >
             <Key size={14} />
             API Key
           </button>
           <button
-            className={`login-tab${mode === 'wallet' ? ' active' : ''}`}
-            onClick={() => { setMode('wallet'); setValue(''); setError(''); }}
+            className="login-tab"
+            style={{ opacity: 0.45, cursor: 'not-allowed', position: 'relative' }}
+            disabled
+            title="Coming soon"
           >
-            <Building size={14} />
+            <Lock size={12} />
             Wallet
+            <span style={{ fontSize: '9px', fontFamily: 'var(--font-mono)', letterSpacing: '.5px', marginLeft: '4px', opacity: 0.7 }}>SOON</span>
           </button>
         </div>
 
         <form onSubmit={handleSubmit}>
           <div className="login-field">
-            <label>{mode === 'apikey' ? 'API Key' : 'Wallet Address'}</label>
+            <label>API Key</label>
             <input
-              type={mode === 'apikey' ? 'password' : 'text'}
+              type="password"
               value={value}
               onChange={(e) => setValue(e.target.value)}
-              placeholder={mode === 'apikey' ? 'fab_...' : '0x...'}
+              placeholder="fab_..."
               autoFocus
             />
           </div>

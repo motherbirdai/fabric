@@ -1,12 +1,13 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useProviders, useSubscription } from '@/lib/hooks';
+import { useTitle, useProviders, useSubscription } from '@/lib/hooks';
 import { evaluateProvider } from '@/lib/api';
 import type { ProviderEvaluation } from '@/lib/api';
 import { StatGridSkeleton } from '@/components/ui/loading';
 
 export default function AnalyticsPage() {
+  useTitle('Analytics');
   const { data: providers, loading: provLoading } = useProviders();
   const { data: sub, loading: subLoading } = useSubscription();
 

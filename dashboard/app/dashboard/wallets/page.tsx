@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { Wallet } from 'lucide-react';
-import { useWallets } from '@/lib/hooks';
+import { useTitle, useWallets } from '@/lib/hooks';
 import { getWalletBalance, createWallet, ApiError } from '@/lib/api';
 import type { WalletBalance } from '@/lib/api';
 import { PageSkeleton } from '@/components/ui/loading';
@@ -10,6 +10,7 @@ import { ErrorCard } from '@/components/ui/error';
 import { EmptyState } from '@/components/ui/empty';
 
 export default function WalletsPage() {
+  useTitle('Wallets');
   const { data: walletsData, loading, error, refetch } = useWallets();
   const [balances, setBalances] = useState<Record<string, WalletBalance>>({});
 

@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { CreditCard, Check, Download } from 'lucide-react';
 import { useSearchParams } from 'next/navigation';
-import { useSubscription, useInvoices } from '@/lib/hooks';
+import { useTitle, useSubscription, useInvoices } from '@/lib/hooks';
 import { PageSkeleton } from '@/components/ui/loading';
 import { ErrorCard } from '@/components/ui/error';
 import { createCheckout, createPortalSession, changePlan, ApiError } from '@/lib/api';
@@ -38,6 +38,7 @@ const PLANS = [
 ];
 
 export default function BillingPage() {
+  useTitle('Billing');
   const searchParams = useSearchParams();
   const { data: sub, loading: subLoading, error: subError, refetch: subRefetch } = useSubscription();
   const { data: invoices, loading: invLoading } = useInvoices();

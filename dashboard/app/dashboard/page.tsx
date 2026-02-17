@@ -1,8 +1,8 @@
 'use client';
 
 import Link from 'next/link';
-import { Shield, DollarSign, Zap, Clock } from 'lucide-react';
-import { useSubscription, useWallets, useHealth, useBudgets } from '@/lib/hooks';
+import { Shield, DollarSign, Layers, Clock } from 'lucide-react';
+import { useTitle, useSubscription, useWallets, useHealth, useBudgets, useProviders } from '@/lib/hooks';
 import { StatGridSkeleton, CardSkeleton } from '@/components/ui/loading';
 
 function formatUptime(seconds?: number): string {
@@ -14,12 +14,14 @@ function formatUptime(seconds?: number): string {
 }
 
 export default function OverviewPage() {
+  useTitle('Overview');
   const { data: sub, loading: subLoading } = useSubscription();
   const { data: wallets, loading: walletsLoading } = useWallets();
   const { data: healthData, loading: healthLoading } = useHealth();
   const { data: budgets, loading: budgetsLoading } = useBudgets();
+  const { data: providers, loading: providersLoading } = useProviders();
 
-  const loading = subLoading || walletsLoading || healthLoading || budgetsLoading;
+  const loading = subLoading || walletsLoading || healthLoading || budgetsLoading || providersLoading;
 
   const plan = sub?.plan || '—';
   const walletCount = wallets?.wallets?.length ?? 0;
@@ -84,15 +86,15 @@ export default function OverviewPage() {
               <div className="metric-card">
                 <div className="flex items-center justify-between" style={{ marginBottom: '10px' }}>
                   <span style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', textTransform: 'uppercase', letterSpacing: '.8px', color: 'var(--text-3)' }}>
-                    Stripe
+                    Providers
                   </span>
-                  <Zap size={14} style={{ opacity: 0.35 }} />
+                  <Layers size={14} style={{ opacity: 0.35 }} />
                 </div>
                 <div style={{ fontSize: '26px', fontWeight: 700, letterSpacing: '-1px', lineHeight: 1 }}>
-                  {sub?.stripeConfigured ? 'Yes' : 'No'}
+                  {providers?.length ?? 0}
                 </div>
                 <div style={{ fontSize: '12px', color: 'var(--text-3)', marginTop: '6px' }}>
-                  payment integration
+                  registered services
                 </div>
               </div>
 
@@ -154,6 +156,9 @@ export default function OverviewPage() {
             <div className="card" style={{ marginTop: '20px' }}>
               <div className="card-header">
                 <span>Active Budgets</span>
+                {budgets && budgets.length > 0 && (
+                  <Link href="/dashboard/budgets" style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--blue)', textDecoration: 'none' }}>View all</Link>
+                )}
               </div>
               <div className="card-body">
                 {budgets && budgets.length > 0 ? (
@@ -187,6 +192,9 @@ export default function OverviewPage() {
               <div className="card-body">
                 <Link href="/dashboard/providers" className="quick-action">Browse Providers</Link>
                 <Link href="/dashboard/register" className="quick-action">+ Register Provider</Link>
+                <Link href="/dashboard/wallets" className="quick-action">View Wallets</Link>
+                <Link href="/dashboard/analytics" className="quick-action">View Analytics</Link>
+                <Link href="/dashboard/api-keys" className="quick-action">API Keys</Link>
                 <Link href="/dashboard/billing" className="quick-action">Manage Billing</Link>
               </div>
             </div>

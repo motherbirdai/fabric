@@ -3,6 +3,7 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { getSubscription, ApiError } from './api';
 import type { Subscription } from './api';
+import { clearCache } from './hooks';
 
 interface AuthState {
   apiKey: string | null;
@@ -86,6 +87,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const logout = () => {
     localStorage.removeItem('fabric_api_key');
+    clearCache();
     setApiKey(null);
     setAuthenticated(false);
     setPlan(null);

@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { Star } from 'lucide-react';
-import { useWallets, useFavorites } from '@/lib/hooks';
+import { useTitle, useWallets, useFavorites } from '@/lib/hooks';
 import { PageSkeleton } from '@/components/ui/loading';
 import { ErrorCard } from '@/components/ui/error';
 import { EmptyState } from '@/components/ui/empty';
@@ -10,6 +10,7 @@ import { deleteFavorite, createFavorite, listProviders, ApiError } from '@/lib/a
 import type { Provider } from '@/lib/api';
 
 export default function FavoritesPage() {
+  useTitle('Favorites');
   const { data: walletsData, loading: walletsLoading } = useWallets();
   const [selectedAgent, setSelectedAgent] = useState<string | null>(null);
 

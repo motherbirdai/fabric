@@ -13,6 +13,14 @@ import type {
   HealthStatus,
 } from './api';
 
+// ─── Page Title ─────────────────────────────────────────────────
+
+export function useTitle(page: string) {
+  useEffect(() => {
+    document.title = page + ' · Fabric';
+  }, [page]);
+}
+
 // ─── In-Memory Cache (stale-while-revalidate) ───────────────────
 
 const apiCache = new Map<string, { data: unknown; ts: number }>();

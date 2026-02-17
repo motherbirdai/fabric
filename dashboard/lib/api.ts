@@ -260,6 +260,19 @@ export function health(): Promise<HealthStatus> {
   return request<HealthStatus>('/health');
 }
 
+export function updateProvider(id: string, data: Partial<Pick<Provider, 'name' | 'endpoint' | 'description' | 'active'> & { price: number }>): Promise<Provider> {
+  return request<Provider>(`/v1/providers/${encodeURIComponent(id)}`, {
+    method: 'PATCH',
+    body: JSON.stringify(data),
+  });
+}
+
+export function deleteProvider(id: string): Promise<void> {
+  return request<void>(`/v1/providers/${encodeURIComponent(id)}`, {
+    method: 'DELETE',
+  });
+}
+
 // ─── Mutation Functions ─────────────────────────────────────────
 
 // Wallets

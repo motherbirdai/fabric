@@ -2,10 +2,10 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import { ArrowLeft } from 'lucide-react';
-import { useProvider, useProviderEvaluation, useWallets } from '@/lib/hooks';
-import { createFavorite, ApiError } from '@/lib/api';
+import { useTitle, useProvider, useProviderEvaluation, useWallets, invalidateCache } from '@/lib/hooks';
+import { createFavorite, updateProvider, deleteProvider, ApiError } from '@/lib/api';
 import { PageSkeleton } from '@/components/ui/loading';
 import { ErrorCard } from '@/components/ui/error';
 
@@ -49,7 +49,9 @@ const BREAKDOWN_COLORS: Record<string, string> = {
 
 export default function ProviderDetailPage() {
   const params = useParams();
+  const router = useRouter();
   const id = params.id as string;
+  useTitle('Provider Detail');
   const { data: provider, loading, error, refetch } = useProvider(id);
   const { data: evaluation, refetch: evaluationRefetch } = useProviderEvaluation(id);
   const { data: walletsData } = useWallets();
@@ -59,6 +61,81 @@ export default function ProviderDetailPage() {
   const [addingFav, setAddingFav] = useState(false);
   const [favError, setFavError] = useState('');
   const [favSuccess, setFavSuccess] = useState(false);
+
+  // Edit state
+  const [editing, setEditing] = useState(false);
+  const [editName, setEditName] = useState('');
+  const [editEndpoint, setEditEndpoint] = useState('');
+  const [editDescription, setEditDescription] = useState('');
+  const [editPrice, setEditPrice] = useState('');
+  const [editActive, setEditActive] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [editError, setEditError] = useState('');
+  const [editSuccess, setEditSuccess] = useState(false);
+
+  // Delete state
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [deleting, setDeleting] = useState(false);
+  const [deleteError, setDeleteError] = useState('');
+
+  function startEditing() {
+    if (!provider) return;
+    setEditName(provider.name);
+    setEditEndpoint(provider.endpoint);
+    setEditDescription(provider.description || '');
+    setEditPrice(provider.basePrice != null ? String(provider.basePrice) : '');
+    setEditActive(provider.active);
+    setEditError('');
+    setEditSuccess(false);
+    setEditing(true);
+  }
+
+  async function handleSave() {
+    setSaving(true);
+    setEditError('');
+    setEditSuccess(false);
+    try {
+      await updateProvider(id, {
+        name: editName.trim(),
+        endpoint: editEndpoint.trim(),
+        description: editDescription.trim() || null,
+        price: editPrice ? parseFloat(editPrice) : undefined,
+        active: editActive,
+      });
+      invalidateCache(`provider:${id}`);
+      invalidateCache('providers');
+      setEditSuccess(true);
+      refetch();
+      setTimeout(() => { setEditing(false); setEditSuccess(false); }, 1500);
+    } catch (err) {
+      if (err instanceof ApiError) {
+        const body = err.body as Record<string, unknown> | undefined;
+        setEditError((body?.error as string) || err.message);
+      } else {
+        setEditError(err instanceof Error ? err.message : 'Update failed');
+      }
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  async function handleDelete() {
+    setDeleting(true);
+    setDeleteError('');
+    try {
+      await deleteProvider(id);
+      invalidateCache('providers');
+      router.push('/dashboard/providers');
+    } catch (err) {
+      if (err instanceof ApiError) {
+        const body = err.body as Record<string, unknown> | undefined;
+        setDeleteError((body?.error as string) || err.message);
+      } else {
+        setDeleteError(err instanceof Error ? err.message : 'Delete failed');
+      }
+      setDeleting(false);
+    }
+  }
 
   const agentIds = (walletsData?.wallets || [])
     .map(w => w.agentId)
@@ -235,6 +312,7 @@ export default function ProviderDetailPage() {
             <div className="card">
               <div className="card-header"><span>Actions</span></div>
               <div className="card-body">
+                <div className="quick-action" onClick={startEditing} style={{ cursor: 'pointer' }}>Edit provider</div>
                 <div className="quick-action">Route to this provider</div>
                 {showFavForm ? (
                   <div style={{ padding: '12px 0', borderBottom: '1px solid var(--bg)' }}>
@@ -292,8 +370,118 @@ export default function ProviderDetailPage() {
                 >
                   Re-evaluate trust
                 </button>
+                <div
+                  className="quick-action"
+                  onClick={() => setShowDeleteConfirm(true)}
+                  style={{ cursor: 'pointer', color: 'var(--red)' }}
+                >
+                  Deactivate provider
+                </div>
               </div>
             </div>
+
+            {/* Edit Provider Form */}
+            {editing && (
+              <div className="card" style={{ marginTop: '20px' }}>
+                <div className="card-header">
+                  <span>Edit Provider</span>
+                  <button
+                    className="btn-sm"
+                    style={{ fontSize: '12px', padding: '5px 12px' }}
+                    onClick={() => setEditing(false)}
+                  >
+                    Cancel
+                  </button>
+                </div>
+                <div className="card-body">
+                  {editError && (
+                    <div style={{ marginBottom: '12px', padding: '10px 14px', background: 'var(--red-subtle)', borderRadius: '8px', fontSize: '12px', color: 'var(--red)' }}>
+                      {editError}
+                    </div>
+                  )}
+                  {editSuccess && (
+                    <div style={{ marginBottom: '12px', padding: '10px 14px', background: 'var(--green-subtle)', borderRadius: '8px', fontSize: '12px', color: 'var(--green)', fontWeight: 500 }}>
+                      Provider updated!
+                    </div>
+                  )}
+                  <div className="form-field">
+                    <label>Name</label>
+                    <input type="text" value={editName} onChange={(e) => setEditName(e.target.value)} />
+                  </div>
+                  <div className="form-field">
+                    <label>Endpoint</label>
+                    <input type="url" value={editEndpoint} onChange={(e) => setEditEndpoint(e.target.value)} />
+                  </div>
+                  <div className="form-field">
+                    <label>Description</label>
+                    <textarea rows={2} value={editDescription} onChange={(e) => setEditDescription(e.target.value)} />
+                  </div>
+                  <div className="form-field">
+                    <label>Price (USD)</label>
+                    <input type="text" value={editPrice} onChange={(e) => setEditPrice(e.target.value)} placeholder="0.00" />
+                  </div>
+                  <div className="form-field" style={{ marginBottom: '16px' }}>
+                    <label>Status</label>
+                    <div style={{ padding: '14px 16px', background: 'var(--bg)', border: '1px solid var(--border)', borderRadius: '10px' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                        <div>
+                          <div style={{ fontSize: '14px', fontWeight: 500 }}>Active</div>
+                          <div style={{ fontSize: '12px', color: 'var(--text-3)', marginTop: '2px' }}>Provider is live and available for routing</div>
+                        </div>
+                        <label className="toggle-switch">
+                          <input type="checkbox" checked={editActive} onChange={(e) => setEditActive(e.target.checked)} />
+                          <span className="toggle-track" />
+                          <span className="toggle-knob" />
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                  <button
+                    className="btn-sm btn-primary-fixed"
+                    style={{ padding: '9px 20px', fontWeight: 600, opacity: saving ? 0.5 : 1 }}
+                    onClick={handleSave}
+                    disabled={saving}
+                  >
+                    {saving ? 'Saving...' : 'Save Changes'}
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {/* Delete Confirmation */}
+            {showDeleteConfirm && (
+              <div className="card" style={{ marginTop: '20px', borderColor: 'var(--red-subtle)' }}>
+                <div className="card-header" style={{ borderColor: 'rgba(239,68,68,.15)' }}>
+                  <span style={{ color: 'var(--red)' }}>Confirm Deactivation</span>
+                </div>
+                <div className="card-body">
+                  <p style={{ fontSize: '13px', color: 'var(--text-2)', marginBottom: '16px' }}>
+                    Are you sure you want to deactivate <strong>{provider.name}</strong>? This will remove the provider from the registry.
+                  </p>
+                  {deleteError && (
+                    <div style={{ marginBottom: '12px', padding: '10px 14px', background: 'var(--red-subtle)', borderRadius: '8px', fontSize: '12px', color: 'var(--red)' }}>
+                      {deleteError}
+                    </div>
+                  )}
+                  <div className="flex items-center gap-2">
+                    <button
+                      style={{ fontSize: '12px', padding: '7px 16px', background: '#dc2626', border: 'none', borderRadius: '8px', color: '#fff', cursor: deleting ? 'not-allowed' : 'pointer', fontWeight: 500, opacity: deleting ? 0.5 : 1 }}
+                      onClick={handleDelete}
+                      disabled={deleting}
+                    >
+                      {deleting ? 'Deactivating...' : 'Yes, Deactivate'}
+                    </button>
+                    <button
+                      className="btn-sm"
+                      style={{ fontSize: '12px', padding: '7px 16px' }}
+                      onClick={() => { setShowDeleteConfirm(false); setDeleteError(''); }}
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>

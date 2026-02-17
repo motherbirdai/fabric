@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { PiggyBank } from 'lucide-react';
-import { useBudgets } from '@/lib/hooks';
+import { useTitle, useBudgets } from '@/lib/hooks';
 import { createBudget, getBudgetStatus, ApiError } from '@/lib/api';
 import type { BudgetStatus } from '@/lib/api';
 import { PageSkeleton } from '@/components/ui/loading';
@@ -10,6 +10,7 @@ import { ErrorCard } from '@/components/ui/error';
 import { EmptyState } from '@/components/ui/empty';
 
 export default function BudgetsPage() {
+  useTitle('Budget Controls');
   const { data: budgets, loading, error, refetch } = useBudgets();
 
   const [showCreateForm, setShowCreateForm] = useState(false);

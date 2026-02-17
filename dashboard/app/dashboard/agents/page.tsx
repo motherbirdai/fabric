@@ -1,12 +1,13 @@
 'use client';
 
 import { Bot } from 'lucide-react';
-import { useWallets } from '@/lib/hooks';
+import { useTitle, useWallets } from '@/lib/hooks';
 import { PageSkeleton } from '@/components/ui/loading';
 import { ErrorCard } from '@/components/ui/error';
 import { EmptyState } from '@/components/ui/empty';
 
 export default function AgentsPage() {
+  useTitle('Agents');
   const { data: walletsData, loading, error, refetch } = useWallets();
 
   const walletList = walletsData?.wallets || [];

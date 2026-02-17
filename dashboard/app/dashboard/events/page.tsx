@@ -2,7 +2,7 @@
 
 import { useState, useMemo } from 'react';
 import { Activity, Pause, Play, Download, Trash2 } from 'lucide-react';
-import { useEventStream } from '@/lib/hooks';
+import { useTitle, useEventStream } from '@/lib/hooks';
 import type { GatewayEvent } from '@/lib/hooks';
 
 const FILTER_TYPES = [
@@ -35,6 +35,7 @@ function formatTime(ts?: string): string {
 }
 
 export default function EventsPage() {
+  useTitle('Events');
   const { events, connected, error, clear, pause, resume, paused } = useEventStream();
   const [filter, setFilter] = useState('');
 
