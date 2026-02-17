@@ -243,8 +243,7 @@ h3 { font-size: 16px; font-weight: 600; letter-spacing: -.3px; }
   overflow: hidden;
 }
 .sidebar-branding {
-  padding: 20px 20px 0;
-  flex-shrink: 0;
+  padding: 0 8px 12px;
 }
 .sidebar-nav {
   flex: 1 1 0;
