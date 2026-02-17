@@ -301,15 +301,6 @@ h3 { font-size: 16px; font-weight: 600; letter-spacing: -.3px; }
 }
 .nav-cta:hover { background: rgba(0,179,104,.06); }
 .nav-cta svg { width: 16px; height: 16px; flex-shrink: 0; }
-.sidebar-branding {
-  padding: 16px 20px;
-}
-.sidebar-branding svg {
-  height: 26px;
-  width: auto;
-  display: block;
-  margin-bottom: 6px;
-}
 .sidebar-footer {
   padding: 16px;
   border-top: 1px solid var(--border);
