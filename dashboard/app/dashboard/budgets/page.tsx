@@ -43,8 +43,8 @@ export default function BudgetsPage() {
                   <div style={{ fontSize: '12px', color: 'var(--text-3)', marginTop: '2px' }}>Hard cap · $5.00/day · Resets at midnight UTC</div>
                 </div>
               </div>
-              <div className="flex items-center gap-3">
-                <div style={{ width: 'min(260px, 100%)' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px', width: '100%' }}>
+                <div style={{ flex: 1, minWidth: 0 }}>
                   <div className="flex justify-between" style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', color: 'var(--text-3)', marginBottom: '3px' }}><span>$0.14</span><span>$5.00</span></div>
                   <div style={{ width: '100%', height: '4px', background: 'var(--bg)', borderRadius: '2px', overflow: 'hidden' }}><div style={{ width: '2.8%', height: '100%', background: 'var(--blue)', borderRadius: '2px' }} /></div>
                 </div>
@@ -61,8 +61,8 @@ export default function BudgetsPage() {
                   <div style={{ fontSize: '12px', color: 'var(--text-3)', marginTop: '2px' }}>Soft cap (alert only) · $45.00/month · Alert at 80%</div>
                 </div>
               </div>
-              <div className="flex items-center gap-3">
-                <div style={{ width: 'min(260px, 100%)' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px', width: '100%' }}>
+                <div style={{ flex: 1, minWidth: 0 }}>
                   <div className="flex justify-between" style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', color: 'var(--text-3)', marginBottom: '3px' }}><span>$3.22</span><span>$45.00</span></div>
                   <div style={{ width: '100%', height: '4px', background: 'var(--bg)', borderRadius: '2px', overflow: 'hidden' }}><div style={{ width: '7.2%', height: '100%', background: 'var(--amber)', borderRadius: '2px' }} /></div>
                 </div>
