@@ -1,6 +1,6 @@
 'use client';
 
-import { Activity, Zap, DollarSign, Shield, Clock, Wifi, WifiOff } from 'lucide-react';
+import { Zap, DollarSign, Shield, Clock, Wifi, WifiOff } from 'lucide-react';
 import { api } from '@/lib/api';
 import { useQuery, usePolling } from '@/lib/hooks';
 
@@ -19,6 +19,11 @@ function MetricCard({ label, value, sub, icon, color }: {
   );
 }
 
+function safe(val: any, decimals: number = 2): string {
+  if (val == null || typeof val !== 'number' || isNaN(val)) return '—';
+  return val.toFixed(decimals);
+}
+
 export default function DashboardPage() {
   const health = usePolling(() => api.health(), 15000);
   const sub = useQuery(() => api.getSubscription());
@@ -27,6 +32,12 @@ export default function DashboardPage() {
   const overage = useQuery(() => api.getOverage());
 
   const isHealthy = health.data?.status === 'ok';
+
+  // Safely extract nested data — API response shapes may vary
+  const subData = sub.data as any;
+  const overageData = (overage.data as any)?.overage ?? overage.data;
+  const budgetList = budgets.data?.budgets ?? [];
+  const walletList = wallets.data?.wallets ?? [];
 
   return (
     <div>
@@ -50,27 +61,27 @@ export default function DashboardPage() {
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 mb-8">
         <MetricCard
           label="Plan"
-          value={sub.data?.plan || '—'}
-          sub={sub.data?.usedToday != null ? `${sub.data.usedToday.toLocaleString()} / ${sub.data.dailyLimit.toLocaleString()} today` : undefined}
+          value={subData?.plan || '—'}
+          sub={subData?.usedToday != null ? `${subData.usedToday.toLocaleString()} / ${(subData.dailyLimit ?? 0).toLocaleString()} today` : undefined}
           icon={<Shield className="w-4 h-4" />}
           color="text-fabric-blue"
         />
         <MetricCard
           label="Wallets"
-          value={wallets.data ? String(wallets.data.wallets.length) : '—'}
-          sub={sub.data ? `${sub.data.maxWallets} max on plan` : undefined}
+          value={String(walletList.length)}
+          sub={subData?.maxWallets != null ? `${subData.maxWallets} max on plan` : undefined}
           icon={<DollarSign className="w-4 h-4" />}
         />
         <MetricCard
           label="Overage Today"
-          value={overage.data ? String(overage.data.todayCount) : '0'}
-          sub={overage.data?.periodCost != null ? `$${overage.data.periodCost.toFixed(3)} this period` : undefined}
+          value={overageData?.todayCount != null ? String(overageData.todayCount) : '0'}
+          sub={overageData?.periodCost != null ? `$${safe(overageData.periodCost, 3)} this period` : undefined}
           icon={<Zap className="w-4 h-4" />}
         />
         <MetricCard
           label="Uptime"
           value={health.data?.uptime != null ? `${Math.floor(health.data.uptime / 3600)}h` : '—'}
-          sub={health.data?.memoryMb != null ? `${health.data.memoryMb.toFixed(0)}MB memory` : undefined}
+          sub={health.data?.memoryMb != null ? `${safe(health.data.memoryMb, 0)}MB memory` : undefined}
           icon={<Clock className="w-4 h-4" />}
         />
       </div>
@@ -81,14 +92,14 @@ export default function DashboardPage() {
           <h2 className="text-sm font-semibold mb-4">System Health</h2>
           {health.data?.checks ? (
             <div className="space-y-3">
-              {Object.entries(health.data.checks).map(([name, check]) => (
+              {Object.entries(health.data.checks).map(([name, check]: [string, any]) => (
                 <div key={name} className="flex items-center justify-between py-2 border-b border-fabric-gray-100 last:border-0">
                   <div className="flex items-center gap-3">
-                    <div className={`w-2 h-2 rounded-full ${check.status === 'ok' || check.status === 'healthy' ? 'bg-green-500' : 'bg-red-500'}`} />
+                    <div className={`w-2 h-2 rounded-full ${check?.status === 'ok' || check?.status === 'healthy' ? 'bg-green-500' : 'bg-red-500'}`} />
                     <span className="text-sm">{name}</span>
                   </div>
                   <span className="text-[12px] text-fabric-gray-500">
-                    {check.latencyMs != null ? `${check.latencyMs}ms` : check.status}
+                    {check?.latencyMs != null ? `${check.latencyMs}ms` : check?.status ?? '—'}
                   </span>
                 </div>
               ))}
@@ -104,15 +115,17 @@ export default function DashboardPage() {
         <div className="space-y-4">
           <div className="metric-card">
             <h2 className="text-sm font-semibold mb-3">Active Budgets</h2>
-            {budgets.data?.budgets.length ? (
+            {budgetList.length ? (
               <div className="space-y-3">
-                {budgets.data.budgets.slice(0, 4).map((b) => {
-                  const pct = b.limitUsd ? Math.min(100, ((b.spentUsd ?? 0) / b.limitUsd) * 100) : 0;
+                {budgetList.slice(0, 4).map((b: any) => {
+                  const spent = b?.spentUsd ?? 0;
+                  const limit = b?.limitUsd ?? 1;
+                  const pct = limit > 0 ? Math.min(100, (spent / limit) * 100) : 0;
                   return (
                     <div key={b.id}>
                       <div className="flex justify-between text-[12px] mb-1">
-                        <span>{b.label || b.periodType}</span>
-                        <span className="text-fabric-gray-500">${(b.spentUsd ?? 0).toFixed(2)} / ${(b.limitUsd ?? 0).toFixed(2)}</span>
+                        <span>{b.label || b.periodType || 'Budget'}</span>
+                        <span className="text-fabric-gray-500">${safe(spent)} / ${safe(limit)}</span>
                       </div>
                       <div className="w-full bg-fabric-gray-100 rounded-full h-2">
                         <div
