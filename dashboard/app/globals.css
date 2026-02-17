@@ -1010,6 +1010,8 @@ h3 { font-size: 16px; font-weight: 600; letter-spacing: -.3px; }
   .page-header-bar { padding: 20px 16px; flex-direction: column; align-items: flex-start; gap: 16px; }
   .page-header-bar .header-actions { width: 100%; }
   .page-header-bar .header-actions .btn-sm.btn-primary-fixed { width: 100%; justify-content: center; }
+  .events-actions { display: flex; gap: 8px; }
+  .events-actions .btn-sm { flex: 1; }
   .page-content { padding: 16px 16px 36px; }
 
   /* Inline grids → stack */
