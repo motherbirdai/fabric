@@ -14,11 +14,11 @@ export default function OverviewPage() {
             Your Fabric gateway at a glance
           </p>
         </div>
-        <div className="header-actions" style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+        <div className="header-actions" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '12px' }}>
+          <span className="status-pill online">Gateway connected</span>
           <span style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--text-3)' }}>
             Updated just now
           </span>
-          <span className="status-pill online">Gateway connected</span>
         </div>
       </div>
 
