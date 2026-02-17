@@ -7,18 +7,15 @@ export default function OverviewPage() {
   return (
     <div>
       {/* Page header */}
-      <div className="page-header-bar" style={{ alignItems: 'flex-start' }}>
-        <div>
-          <h1>Overview</h1>
-          <p style={{ fontSize: '13px', color: 'var(--text-3)', marginTop: '2px' }}>
-            Your Fabric gateway at a glance
-          </p>
-        </div>
-        <div style={{ textAlign: 'right' }}>
-          <span className="status-pill online">Gateway connected</span>
-          <div style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--text-3)', marginTop: '6px' }}>
-            Updated just now
+      <div className="page-header-bar" style={{ alignItems: 'flex-start', flexDirection: 'row', flexWrap: 'nowrap' }}>
+        <div style={{ flex: 1 }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '12px' }}>
+            <h1>Overview</h1>
+            <span className="status-pill online">Gateway connected</span>
           </div>
+          <p style={{ fontSize: '13px', color: 'var(--text-3)', marginTop: '2px' }}>
+            Your Fabric gateway at a glance · <span style={{ fontFamily: 'var(--font-mono)', fontSize: '11px' }}>Updated just now</span>
+          </p>
         </div>
       </div>
 
