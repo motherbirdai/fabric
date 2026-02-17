@@ -33,12 +33,17 @@ async function authPluginFn(app: FastifyInstance) {
     if (PUBLIC_PATHS.has(request.url.split('?')[0])) return;
 
     const authHeader = request.headers.authorization;
-    if (!authHeader?.startsWith('Bearer ')) {
-      reply.status(401).send(toErrorResponse(new AuthError()));
-      return;
-    }
 
-    const apiKey = authHeader.slice(7).trim();
+    // Support query-param auth for SSE (EventSource can't set headers)
+    const queryToken = (request.query as Record<string, string>).token
+      || (request.query as Record<string, string>).key;
+
+    let apiKey: string | undefined;
+    if (authHeader?.startsWith('Bearer ')) {
+      apiKey = authHeader.slice(7).trim();
+    } else if (queryToken) {
+      apiKey = queryToken.trim();
+    }
     if (!apiKey) {
       reply.status(401).send(toErrorResponse(new AuthError()));
       return;
