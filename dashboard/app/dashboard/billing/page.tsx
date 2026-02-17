@@ -1,9 +1,12 @@
 'use client';
 
+import { useState } from 'react';
 import { CreditCard, Check, Download } from 'lucide-react';
+import { useSearchParams } from 'next/navigation';
 import { useSubscription, useInvoices } from '@/lib/hooks';
 import { PageSkeleton } from '@/components/ui/loading';
 import { ErrorCard } from '@/components/ui/error';
+import { createCheckout, createPortalSession, changePlan, ApiError } from '@/lib/api';
 
 const PLANS = [
   {
@@ -33,12 +36,71 @@ const PLANS = [
 ];
 
 export default function BillingPage() {
+  const searchParams = useSearchParams();
   const { data: sub, loading: subLoading, error: subError, refetch: subRefetch } = useSubscription();
   const { data: invoices, loading: invLoading } = useInvoices();
 
   const loading = subLoading || invLoading;
   const currentPlan = (sub?.plan || 'FREE').toUpperCase();
   const currentPlanDef = PLANS.find((p) => p.id === currentPlan) || PLANS[0];
+
+  // Plan change state
+  const [changingPlan, setChangingPlan] = useState<string | null>(null);
+  const [planError, setPlanError] = useState('');
+  const [planSuccess, setPlanSuccess] = useState('');
+
+  // Stripe redirect banners
+  const isSuccess = searchParams.get('success') === '1';
+  const isCanceled = searchParams.get('canceled') === '1';
+
+  const handlePlanChange = async (planId: string) => {
+    setChangingPlan(planId);
+    setPlanError('');
+    setPlanSuccess('');
+    try {
+      if (currentPlan === 'FREE') {
+        // Redirect to Stripe Checkout
+        const successUrl = `${window.location.origin}/dashboard/billing?success=1`;
+        const cancelUrl = `${window.location.origin}/dashboard/billing?canceled=1`;
+        const result = await createCheckout(planId, successUrl, cancelUrl);
+        window.location.href = result.url;
+        return;
+      } else {
+        // Change plan directly
+        const result = await changePlan(planId);
+        setPlanSuccess(result.message || 'Plan changed successfully!');
+        await subRefetch();
+      }
+    } catch (err) {
+      if (err instanceof ApiError) {
+        const msg = typeof err.body === 'object' && err.body && 'error' in (err.body as Record<string, unknown>)
+          ? String((err.body as Record<string, string>).error)
+          : err.message;
+        setPlanError(msg);
+      } else {
+        setPlanError('Failed to change plan. Please try again.');
+      }
+    } finally {
+      setChangingPlan(null);
+    }
+  };
+
+  const handleUpdatePayment = async () => {
+    try {
+      const returnUrl = `${window.location.origin}/dashboard/billing`;
+      const result = await createPortalSession(returnUrl);
+      window.location.href = result.url;
+    } catch (err) {
+      if (err instanceof ApiError) {
+        const msg = typeof err.body === 'object' && err.body && 'error' in (err.body as Record<string, unknown>)
+          ? String((err.body as Record<string, string>).error)
+          : err.message;
+        setPlanError(msg);
+      } else {
+        setPlanError('Failed to open payment portal. Please try again.');
+      }
+    }
+  };
 
   return (
     <div>
@@ -57,6 +119,25 @@ export default function BillingPage() {
         </div>
       ) : (
         <div className="animate-fade-in" style={{ padding: 'clamp(16px, 4vw, 24px) clamp(16px, 4vw, 36px) 48px' }}>
+
+          {/* Stripe redirect banners */}
+          {isSuccess && (
+            <div style={{ marginBottom: '16px', padding: '12px 16px', background: 'var(--green-subtle)', borderRadius: '10px', fontSize: '13px', color: 'var(--green)', fontWeight: 500 }}>
+              Plan upgraded successfully!
+            </div>
+          )}
+          {isCanceled && (
+            <div style={{ marginBottom: '16px', padding: '12px 16px', background: 'var(--blue-subtle)', borderRadius: '10px', fontSize: '13px', color: 'var(--blue)', fontWeight: 500 }}>
+              Checkout was canceled.
+            </div>
+          )}
+
+          {/* Plan success message */}
+          {planSuccess && (
+            <div style={{ marginBottom: '16px', padding: '12px 16px', background: 'var(--green-subtle)', borderRadius: '10px', fontSize: '13px', color: 'var(--green)', fontWeight: 500 }}>
+              {planSuccess}
+            </div>
+          )}
 
           {/* Current Plan Card */}
           <div className="card" style={{ marginBottom: '24px' }}>
@@ -131,13 +212,18 @@ export default function BillingPage() {
                             color: '#fff',
                             border: 'none',
                             borderRadius: '8px',
-                            cursor: 'pointer',
+                            cursor: changingPlan === plan.id ? 'default' : 'pointer',
                             transition: 'opacity .15s',
+                            opacity: changingPlan === plan.id ? 0.5 : 1,
                           }}
-                          onMouseOver={(e) => (e.currentTarget.style.opacity = '0.85')}
-                          onMouseOut={(e) => (e.currentTarget.style.opacity = '1')}
+                          onMouseOver={(e) => { if (changingPlan !== plan.id) e.currentTarget.style.opacity = '0.85'; }}
+                          onMouseOut={(e) => { if (changingPlan !== plan.id) e.currentTarget.style.opacity = '1'; }}
+                          onClick={() => handlePlanChange(plan.id)}
+                          disabled={changingPlan === plan.id}
                         >
-                          {plan.price > currentPlanDef.price ? 'Upgrade' : 'Downgrade'}
+                          {changingPlan === plan.id
+                            ? 'Processing...'
+                            : plan.price > currentPlanDef.price ? 'Upgrade' : 'Downgrade'}
                         </button>
                       )}
                     </div>
@@ -146,6 +232,13 @@ export default function BillingPage() {
               })}
             </div>
           </div>
+
+          {/* Plan error */}
+          {planError && (
+            <div style={{ marginBottom: '24px', padding: '12px 16px', background: 'var(--red-subtle)', borderRadius: '10px', fontSize: '13px', color: 'var(--red)' }}>
+              {planError}
+            </div>
+          )}
 
           {/* Payment Method & Billing History */}
           <div className="grid-2col" style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: '20px' }}>
@@ -164,7 +257,7 @@ export default function BillingPage() {
                     <div style={{ fontFamily: 'var(--font-mono)', fontSize: '12px', color: 'var(--text-3)', marginTop: '1px' }}>Crypto payments</div>
                   </div>
                 </div>
-                <button className="btn-sm" style={{ marginTop: '16px', width: '100%', padding: '10px', fontSize: '13px' }}>Update Payment Method</button>
+                <button className="btn-sm" style={{ marginTop: '16px', width: '100%', padding: '10px', fontSize: '13px' }} onClick={handleUpdatePayment}>Update Payment Method</button>
               </div>
             </div>
 

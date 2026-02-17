@@ -1,9 +1,11 @@
 'use client';
 
+import { useState } from 'react';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { ArrowLeft } from 'lucide-react';
-import { useProvider, useProviderEvaluation } from '@/lib/hooks';
+import { useProvider, useProviderEvaluation, useWallets } from '@/lib/hooks';
+import { createFavorite, ApiError } from '@/lib/api';
 import { PageSkeleton } from '@/components/ui/loading';
 import { ErrorCard } from '@/components/ui/error';
 
@@ -49,7 +51,46 @@ export default function ProviderDetailPage() {
   const params = useParams();
   const id = params.id as string;
   const { data: provider, loading, error, refetch } = useProvider(id);
-  const { data: evaluation } = useProviderEvaluation(id);
+  const { data: evaluation, refetch: evaluationRefetch } = useProviderEvaluation(id);
+  const { data: walletsData } = useWallets();
+
+  const [showFavForm, setShowFavForm] = useState(false);
+  const [favAgentId, setFavAgentId] = useState('');
+  const [addingFav, setAddingFav] = useState(false);
+  const [favError, setFavError] = useState('');
+  const [favSuccess, setFavSuccess] = useState(false);
+
+  const agentIds = (walletsData?.wallets || [])
+    .map(w => w.agentId)
+    .filter(Boolean);
+
+  // Auto-select if only one agent
+  const effectiveAgentId = favAgentId || (agentIds.length === 1 ? agentIds[0] : '');
+
+  async function handleAddFavorite() {
+    if (!effectiveAgentId) return;
+    setAddingFav(true);
+    setFavError('');
+    setFavSuccess(false);
+    try {
+      await createFavorite({ agentId: effectiveAgentId, providerId: id });
+      setFavSuccess(true);
+      setTimeout(() => {
+        setShowFavForm(false);
+        setFavSuccess(false);
+        setFavAgentId('');
+      }, 2000);
+    } catch (err) {
+      if (err instanceof ApiError) {
+        const body = err.body as Record<string, unknown> | undefined;
+        setFavError((body?.error as string) || err.message);
+      } else {
+        setFavError(err instanceof Error ? err.message : 'Unknown error');
+      }
+    } finally {
+      setAddingFav(false);
+    }
+  }
 
   if (loading) {
     return (
@@ -195,8 +236,62 @@ export default function ProviderDetailPage() {
               <div className="card-header"><span>Actions</span></div>
               <div className="card-body">
                 <div className="quick-action">Route to this provider</div>
-                <div className="quick-action">Add to favorites</div>
-                <div className="quick-action">Re-evaluate trust</div>
+                {showFavForm ? (
+                  <div style={{ padding: '12px 0', borderBottom: '1px solid var(--bg)' }}>
+                    {favSuccess ? (
+                      <div style={{ fontSize: '13px', color: 'var(--green)', fontWeight: 500 }}>Added to favorites!</div>
+                    ) : (
+                      <>
+                        {agentIds.length > 1 && (
+                          <div className="form-field" style={{ marginBottom: '8px' }}>
+                            <select
+                              value={favAgentId}
+                              onChange={(e) => setFavAgentId(e.target.value)}
+                              style={{ width: '100%', padding: '6px 10px', fontSize: '13px', borderRadius: '6px', border: '1px solid var(--border)', background: 'var(--bg)', color: 'var(--text)' }}
+                            >
+                              <option value="">Select agent...</option>
+                              {agentIds.map((aid) => (
+                                <option key={aid} value={aid}>{aid}</option>
+                              ))}
+                            </select>
+                          </div>
+                        )}
+                        {agentIds.length === 0 && (
+                          <div style={{ fontSize: '12px', color: 'var(--text-3)', marginBottom: '8px' }}>No agents available. Create a wallet first.</div>
+                        )}
+                        <div className="flex items-center gap-2">
+                          <button
+                            className="btn-sm"
+                            disabled={addingFav || !effectiveAgentId}
+                            onClick={handleAddFavorite}
+                            style={{ fontSize: '12px', padding: '4px 12px', borderRadius: '6px', background: 'var(--blue)', color: '#fff', border: 'none', cursor: addingFav || !effectiveAgentId ? 'not-allowed' : 'pointer', opacity: addingFav || !effectiveAgentId ? 0.5 : 1 }}
+                          >
+                            {addingFav ? 'Adding...' : 'Add'}
+                          </button>
+                          <button
+                            className="btn-sm"
+                            onClick={() => { setShowFavForm(false); setFavError(''); setFavAgentId(''); }}
+                            style={{ fontSize: '12px', padding: '4px 12px', borderRadius: '6px', background: 'var(--bg)', color: 'var(--text-2)', border: '1px solid var(--border)', cursor: 'pointer' }}
+                          >
+                            Cancel
+                          </button>
+                        </div>
+                        {favError && (
+                          <div style={{ fontSize: '12px', color: 'var(--red, #e55)', marginTop: '8px' }}>{favError}</div>
+                        )}
+                      </>
+                    )}
+                  </div>
+                ) : (
+                  <div className="quick-action" onClick={() => setShowFavForm(true)} style={{ cursor: 'pointer' }}>Add to favorites</div>
+                )}
+                <button
+                  className="quick-action"
+                  onClick={() => evaluationRefetch()}
+                  style={{ display: 'block', width: '100%', textAlign: 'left', background: 'none', border: 'none', cursor: 'pointer', color: 'inherit', font: 'inherit', padding: 0 }}
+                >
+                  Re-evaluate trust
+                </button>
               </div>
             </div>
           </div>

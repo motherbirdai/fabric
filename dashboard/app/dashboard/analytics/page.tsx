@@ -1,14 +1,55 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import { useProviders, useSubscription } from '@/lib/hooks';
+import { evaluateProvider } from '@/lib/api';
+import type { ProviderEvaluation } from '@/lib/api';
 import { StatGridSkeleton } from '@/components/ui/loading';
 
 export default function AnalyticsPage() {
   const { data: providers, loading: provLoading } = useProviders();
   const { data: sub, loading: subLoading } = useSubscription();
 
+  const [evaluations, setEvaluations] = useState<ProviderEvaluation[]>([]);
+  const [evalLoading, setEvalLoading] = useState(false);
+
+  useEffect(() => {
+    if (!providers || providers.length === 0) return;
+    setEvalLoading(true);
+    Promise.allSettled(providers.map(p => evaluateProvider(p.id)))
+      .then(results => {
+        const evals = results
+          .filter((r): r is PromiseFulfilledResult<ProviderEvaluation> => r.status === 'fulfilled')
+          .map(r => r.value);
+        setEvaluations(evals);
+        setEvalLoading(false);
+      });
+  }, [providers]);
+
   const loading = provLoading || subLoading;
   const providerCount = providers?.length ?? 0;
+
+  // Aggregated stats from evaluations
+  const totalRequests = evaluations.reduce((sum, e) => sum + e.stats.totalRequests, 0);
+  const last30dRequests = evaluations.reduce((sum, e) => sum + e.stats.last30dRequests, 0);
+  const avgSuccessRate = evaluations.length > 0
+    ? evaluations.reduce((sum, e) => sum + e.stats.successRate, 0) / evaluations.length
+    : 0;
+  const avgLatency = evaluations.length > 0
+    ? evaluations.reduce((sum, e) => sum + e.stats.avgLatencyMs, 0) / evaluations.length
+    : 0;
+
+  // Top 8 providers by last 30d requests
+  const topByRequests = [...evaluations]
+    .sort((a, b) => b.stats.last30dRequests - a.stats.last30dRequests)
+    .slice(0, 8);
+  const maxRequests = topByRequests.length > 0 ? topByRequests[0].stats.last30dRequests : 1;
+
+  // Top 8 providers by success rate
+  const topBySuccess = [...evaluations]
+    .sort((a, b) => b.stats.successRate - a.stats.successRate)
+    .slice(0, 8);
+  const maxSuccessRate = topBySuccess.length > 0 ? topBySuccess[0].stats.successRate : 1;
 
   return (
     <div>
@@ -23,9 +64,9 @@ export default function AnalyticsPage() {
           <div className="stat-grid">
             {[
               { label: 'Plan', value: sub?.plan || '—', color: 'var(--blue)', sub: `$${sub?.priceUsd ?? 0}/mo` },
-              { label: 'Providers', value: String(providerCount), sub: 'in registry' },
-              { label: 'Stripe', value: sub?.stripeConfigured ? 'Connected' : 'No', color: 'var(--green)', sub: 'payment integration' },
-              { label: 'Total Spend (24h)', value: '—', sub: 'no aggregation endpoint' },
+              { label: 'Total Requests', value: totalRequests.toLocaleString(), sub: `${last30dRequests.toLocaleString()} last 30d` },
+              { label: 'Avg Success Rate', value: `${(avgSuccessRate * 100).toFixed(1)}%`, color: 'var(--green)', sub: 'across all providers' },
+              { label: 'Avg Latency', value: `${avgLatency.toFixed(0)}ms`, sub: 'mean response time' },
             ].map((s) => (
               <div key={s.label} className="stat-card">
                 <div style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', textTransform: 'uppercase', letterSpacing: '.8px', color: 'var(--text-3)', marginBottom: '8px' }}>{s.label}</div>
@@ -36,49 +77,62 @@ export default function AnalyticsPage() {
           </div>
         )}
 
-        {/* Charts — partially placeholder (no time-series aggregation endpoint) */}
+        {/* Charts — horizontal bar charts by provider */}
         <div className="grid-2col" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', marginTop: '20px' }}>
           <div className="card">
             <div className="card-header">
-              <h3>Requests (7d)</h3>
-              <span style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--text-3)' }}>Daily volume</span>
+              <h3>Requests by Provider</h3>
+              <span style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--text-3)' }}>Last 30 days</span>
             </div>
-            <div style={{ padding: '20px 20px 12px' }}>
-              <svg viewBox="0 0 420 160" style={{ width: '100%', height: 'auto', display: 'block' }}>
-                <line x1="40" y1="10" x2="410" y2="10" stroke="var(--border)" strokeWidth="0.5" strokeDasharray="3,3"/>
-                <line x1="40" y1="47" x2="410" y2="47" stroke="var(--border)" strokeWidth="0.5" strokeDasharray="3,3"/>
-                <line x1="40" y1="84" x2="410" y2="84" stroke="var(--border)" strokeWidth="0.5" strokeDasharray="3,3"/>
-                <line x1="40" y1="120" x2="410" y2="120" stroke="var(--border)" strokeWidth="0.5" strokeDasharray="3,3"/>
-                <text x="32" y="124" textAnchor="end" fill="var(--text-3)" fontFamily="var(--font-mono)" fontSize="9">0</text>
-                <text x="210" y="80" textAnchor="middle" fill="var(--text-3)" fontFamily="var(--font-mono)" fontSize="11">No time-series data available</text>
-                {['Mon','Tue','Wed','Thu','Fri','Sat','Sun'].map((d,i) => <text key={d} x={40+i*52.86} y="140" textAnchor="middle" fill="var(--text-3)" fontFamily="var(--font-mono)" fontSize="9">{d}</text>)}
-                <text x="410" y="140" textAnchor="middle" fill="var(--blue)" fontFamily="var(--font-mono)" fontSize="9" fontWeight="500">Today</text>
-              </svg>
+            <div className="card-body-flush">
+              {evalLoading ? (
+                <div style={{ padding: '20px', fontSize: '13px', color: 'var(--text-3)' }}>Loading provider stats...</div>
+              ) : topByRequests.length === 0 ? (
+                <div style={{ padding: '20px', fontSize: '13px', color: 'var(--text-3)' }}>No provider data available</div>
+              ) : (
+                topByRequests.map((e) => (
+                  <div key={e.provider.id} className="setting-row">
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px', width: '100%' }}>
+                      <div style={{ fontSize: '13px', minWidth: '120px', flexShrink: 0 }}>{e.provider.name}</div>
+                      <div style={{ flex: 1, height: '6px', borderRadius: '3px', background: 'var(--bg)' }}>
+                        <div style={{ width: `${maxRequests > 0 ? (e.stats.last30dRequests / maxRequests) * 100 : 0}%`, height: '100%', borderRadius: '3px', background: 'var(--blue)', transition: 'width 0.3s ease' }} />
+                      </div>
+                      <div style={{ fontFamily: 'var(--font-mono)', fontSize: '12px', color: 'var(--text-2)', minWidth: '60px', textAlign: 'right' }}>{e.stats.last30dRequests.toLocaleString()}</div>
+                    </div>
+                  </div>
+                ))
+              )}
             </div>
           </div>
 
           <div className="card">
             <div className="card-header">
-              <h3>Success Rate (7d)</h3>
-              <span style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--green)' }}>—</span>
+              <h3>Success Rate by Provider</h3>
+              <span style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--green)' }}>All time</span>
             </div>
-            <div style={{ padding: '20px 20px 12px' }}>
-              <svg viewBox="0 0 420 160" style={{ width: '100%', height: 'auto', display: 'block' }}>
-                <line x1="40" y1="10" x2="410" y2="10" stroke="var(--border)" strokeWidth="0.5" strokeDasharray="3,3"/>
-                <line x1="40" y1="47" x2="410" y2="47" stroke="var(--border)" strokeWidth="0.5" strokeDasharray="3,3"/>
-                <line x1="40" y1="84" x2="410" y2="84" stroke="var(--border)" strokeWidth="0.5" strokeDasharray="3,3"/>
-                <line x1="40" y1="120" x2="410" y2="120" stroke="var(--border)" strokeWidth="0.5" strokeDasharray="3,3"/>
-                <text x="32" y="14" textAnchor="end" fill="var(--text-3)" fontFamily="var(--font-mono)" fontSize="9">100%</text>
-                <text x="32" y="124" textAnchor="end" fill="var(--text-3)" fontFamily="var(--font-mono)" fontSize="9">90%</text>
-                <text x="210" y="80" textAnchor="middle" fill="var(--text-3)" fontFamily="var(--font-mono)" fontSize="11">No time-series data available</text>
-                {['Mon','Tue','Wed','Thu','Fri','Sat','Sun'].map((d,i) => <text key={d} x={40+i*52.86} y="140" textAnchor="middle" fill="var(--text-3)" fontFamily="var(--font-mono)" fontSize="9">{d}</text>)}
-                <text x="410" y="140" textAnchor="middle" fill="var(--green)" fontFamily="var(--font-mono)" fontSize="9" fontWeight="500">Today</text>
-              </svg>
+            <div className="card-body-flush">
+              {evalLoading ? (
+                <div style={{ padding: '20px', fontSize: '13px', color: 'var(--text-3)' }}>Loading provider stats...</div>
+              ) : topBySuccess.length === 0 ? (
+                <div style={{ padding: '20px', fontSize: '13px', color: 'var(--text-3)' }}>No provider data available</div>
+              ) : (
+                topBySuccess.map((e) => (
+                  <div key={e.provider.id} className="setting-row">
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px', width: '100%' }}>
+                      <div style={{ fontSize: '13px', minWidth: '120px', flexShrink: 0 }}>{e.provider.name}</div>
+                      <div style={{ flex: 1, height: '6px', borderRadius: '3px', background: 'var(--bg)' }}>
+                        <div style={{ width: `${maxSuccessRate > 0 ? (e.stats.successRate / maxSuccessRate) * 100 : 0}%`, height: '100%', borderRadius: '3px', background: 'var(--green)', transition: 'width 0.3s ease' }} />
+                      </div>
+                      <div style={{ fontFamily: 'var(--font-mono)', fontSize: '12px', color: 'var(--text-2)', minWidth: '60px', textAlign: 'right' }}>{(e.stats.successRate * 100).toFixed(1)}%</div>
+                    </div>
+                  </div>
+                ))
+              )}
             </div>
           </div>
         </div>
 
-        {/* Provider Breakdown — real data */}
+        {/* Provider Breakdown — real data with stats */}
         {providers && providers.length > 0 && (
           <div className="card" style={{ marginTop: '20px' }}>
             <div className="card-header">
@@ -86,26 +140,42 @@ export default function AnalyticsPage() {
               <span style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--text-3)' }}>{providerCount} total</span>
             </div>
             <div className="card-body-flush">
-              {providers.slice(0, 10).map((p) => (
-                <div key={p.id} className="setting-row">
-                  <div>
-                    <div style={{ fontSize: '14px' }}>{p.name}</div>
-                    <div style={{ fontSize: '12px', color: 'var(--text-3)', marginTop: '2px' }}>{p.category || 'Unknown'}</div>
+              {providers.slice(0, 10).map((p) => {
+                const evalData = evaluations.find(e => e.provider.id === p.id);
+                return (
+                  <div key={p.id} className="setting-row">
+                    <div>
+                      <div style={{ fontSize: '14px' }}>{p.name}</div>
+                      <div style={{ fontSize: '12px', color: 'var(--text-3)', marginTop: '2px' }}>{p.category || 'Unknown'}</div>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      {evalData && (
+                        <>
+                          <span style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--text-3)' }}>
+                            {evalData.stats.totalRequests.toLocaleString()} reqs
+                          </span>
+                          <span style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--green)' }}>
+                            {(evalData.stats.successRate * 100).toFixed(1)}%
+                          </span>
+                          <span style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--text-3)' }}>
+                            {evalData.stats.avgLatencyMs}ms
+                          </span>
+                        </>
+                      )}
+                      {p.trustScore != null && (
+                        <span style={{ fontFamily: 'var(--font-mono)', fontSize: '12px', color: 'var(--green)' }}>
+                          {p.trustScore.toFixed(2)}
+                        </span>
+                      )}
+                      {p.active && (
+                        <span style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', padding: '2px 8px', borderRadius: '4px', background: 'var(--green-subtle)', color: 'var(--green)' }}>
+                          Active
+                        </span>
+                      )}
+                    </div>
                   </div>
-                  <div className="flex items-center gap-3">
-                    {p.trustScore != null && (
-                      <span style={{ fontFamily: 'var(--font-mono)', fontSize: '12px', color: 'var(--green)' }}>
-                        {p.trustScore.toFixed(2)}
-                      </span>
-                    )}
-                    {p.active && (
-                      <span style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', padding: '2px 8px', borderRadius: '4px', background: 'var(--green-subtle)', color: 'var(--green)' }}>
-                        Active
-                      </span>
-                    )}
-                  </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </div>
         )}

@@ -259,3 +259,103 @@ export function discover(params?: { category?: string }): Promise<DiscoverResult
 export function health(): Promise<HealthStatus> {
   return request<HealthStatus>('/health');
 }
+
+// ─── Mutation Functions ─────────────────────────────────────────
+
+// Wallets
+export function createWallet(agentId: string): Promise<{ wallet: WalletItem & { chain: string; note: string } }> {
+  return request('/v1/wallets', {
+    method: 'POST',
+    body: JSON.stringify({ agentId }),
+  });
+}
+
+// Budgets
+export interface CreateBudgetInput {
+  agentId?: string;
+  limitUsd: number;
+  periodType: 'daily' | 'weekly' | 'monthly';
+  hardCap: boolean;
+  alertThreshold: number;
+}
+
+export interface BudgetStatus {
+  id: string;
+  limitUsd: number;
+  spentUsd: number;
+  remaining: number;
+  utilization: number;
+  hardCap: boolean;
+  alertTriggered: boolean;
+  resetAt: string;
+}
+
+export function createBudget(data: CreateBudgetInput): Promise<{ budget: Budget }> {
+  return request('/v1/budget', {
+    method: 'POST',
+    body: JSON.stringify(data),
+  });
+}
+
+export function getBudgetStatus(id: string): Promise<BudgetStatus> {
+  return request(`/v1/budget/${encodeURIComponent(id)}/status`);
+}
+
+// Favorites
+export interface CreateFavoriteInput {
+  agentId: string;
+  providerId: string;
+  priority?: number;
+}
+
+export function createFavorite(data: CreateFavoriteInput): Promise<{ favorite: Favorite }> {
+  return request('/v1/favorites', {
+    method: 'POST',
+    body: JSON.stringify(data),
+  });
+}
+
+export function deleteFavorite(id: string): Promise<{ deleted: boolean; id: string }> {
+  return request(`/v1/favorites/${encodeURIComponent(id)}`, {
+    method: 'DELETE',
+  });
+}
+
+// Billing / Stripe
+export interface CheckoutResponse {
+  url: string;
+  sessionId: string;
+}
+
+export function createCheckout(plan: string, successUrl: string, cancelUrl: string): Promise<CheckoutResponse> {
+  return request('/v1/billing/checkout', {
+    method: 'POST',
+    body: JSON.stringify({ plan, successUrl, cancelUrl }),
+  });
+}
+
+export function createPortalSession(returnUrl?: string): Promise<{ url: string }> {
+  return request('/v1/billing/portal', {
+    method: 'POST',
+    body: JSON.stringify({ returnUrl }),
+  });
+}
+
+export function changePlan(plan: string): Promise<{ plan: string; prorationAmount: number; message: string }> {
+  return request('/v1/billing/plan', {
+    method: 'POST',
+    body: JSON.stringify({ plan }),
+  });
+}
+
+export function cancelSubscription(): Promise<{ message: string; note: string }> {
+  return request('/v1/billing/cancel', { method: 'POST' });
+}
+
+export function reactivateSubscription(): Promise<{ message: string }> {
+  return request('/v1/billing/reactivate', { method: 'POST' });
+}
+
+export function getOverage(): Promise<{ overage: { requestsOverLimit: number; overageCost: number; overage_enabled: boolean } }> {
+  return request('/v1/billing/overage');
+}

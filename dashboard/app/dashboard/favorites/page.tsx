@@ -6,6 +6,8 @@ import { useWallets, useFavorites } from '@/lib/hooks';
 import { PageSkeleton } from '@/components/ui/loading';
 import { ErrorCard } from '@/components/ui/error';
 import { EmptyState } from '@/components/ui/empty';
+import { deleteFavorite, createFavorite, listProviders, ApiError } from '@/lib/api';
+import type { Provider } from '@/lib/api';
 
 export default function FavoritesPage() {
   const { data: walletsData, loading: walletsLoading } = useWallets();
@@ -27,11 +29,93 @@ export default function FavoritesPage() {
 
   const loading = walletsLoading || favsLoading;
 
+  // Remove favorite state
+  const [removingId, setRemovingId] = useState<string | null>(null);
+  const [removeError, setRemoveError] = useState('');
+
+  // Add favorite state
+  const [showAddForm, setShowAddForm] = useState(false);
+  const [availableProviders, setAvailableProviders] = useState<Provider[]>([]);
+  const [loadingProviders, setLoadingProviders] = useState(false);
+  const [selectedProviderId, setSelectedProviderId] = useState('');
+  const [addPriority, setAddPriority] = useState('50');
+  const [adding, setAdding] = useState(false);
+  const [addError, setAddError] = useState('');
+
+  const handleRemove = async (id: string) => {
+    setRemovingId(id);
+    setRemoveError('');
+    try {
+      await deleteFavorite(id);
+      await refetch();
+    } catch (err) {
+      if (err instanceof ApiError) {
+        const msg = typeof err.body === 'object' && err.body && 'error' in (err.body as Record<string, unknown>)
+          ? String((err.body as Record<string, string>).error)
+          : err.message;
+        setRemoveError(msg);
+      } else {
+        setRemoveError('Failed to remove favorite. Please try again.');
+      }
+    } finally {
+      setRemovingId(null);
+    }
+  };
+
+  const handleOpenAddForm = async () => {
+    setShowAddForm(true);
+    setAddError('');
+    setSelectedProviderId('');
+    setAddPriority('50');
+    setLoadingProviders(true);
+    try {
+      const res = await listProviders();
+      setAvailableProviders(res.providers || []);
+    } catch {
+      setAvailableProviders([]);
+    } finally {
+      setLoadingProviders(false);
+    }
+  };
+
+  const handleAddFavorite = async () => {
+    if (!selectedAgent || !selectedProviderId) return;
+    setAdding(true);
+    setAddError('');
+    try {
+      await createFavorite({
+        agentId: selectedAgent,
+        providerId: selectedProviderId,
+        priority: parseInt(addPriority, 10) || 50,
+      });
+      setShowAddForm(false);
+      setSelectedProviderId('');
+      setAddPriority('50');
+      await refetch();
+    } catch (err) {
+      if (err instanceof ApiError) {
+        const msg = typeof err.body === 'object' && err.body && 'error' in (err.body as Record<string, unknown>)
+          ? String((err.body as Record<string, string>).error)
+          : err.message;
+        setAddError(msg);
+      } else {
+        setAddError('Failed to add favorite. Please try again.');
+      }
+    } finally {
+      setAdding(false);
+    }
+  };
+
   return (
     <div>
-      <div style={{ padding: 'clamp(20px, 5vw, 28px) clamp(16px, 4vw, 36px)', borderBottom: '1px solid var(--border)', background: 'var(--card)' }}>
-        <h1 style={{ fontSize: '22px', fontWeight: 700, letterSpacing: '-.8px' }}>Favorites</h1>
-        <p style={{ fontSize: '13px', color: 'var(--text-3)', marginTop: '2px' }}>Preferred providers get priority in routing decisions</p>
+      <div className="page-header-bar">
+        <div>
+          <h1 style={{ fontSize: '22px', fontWeight: 700, letterSpacing: '-.8px' }}>Favorites</h1>
+          <p style={{ fontSize: '13px', color: 'var(--text-3)', marginTop: '2px' }}>Preferred providers get priority in routing decisions</p>
+        </div>
+        <div className="header-actions">
+          <button className="btn-sm btn-primary-fixed" style={{ padding: '9px 20px', fontWeight: 600 }} onClick={handleOpenAddForm}>+ Add Favorite</button>
+        </div>
       </div>
 
       {loading ? (
@@ -54,6 +138,71 @@ export default function FavoritesPage() {
                   {id}
                 </button>
               ))}
+            </div>
+          )}
+
+          {removeError && (
+            <div style={{ marginBottom: '16px', padding: '12px 16px', background: 'var(--red-subtle)', borderRadius: '10px', fontSize: '13px', color: 'var(--red)' }}>
+              {removeError}
+            </div>
+          )}
+
+          {/* Add Favorite Form */}
+          {showAddForm && (
+            <div className="card" style={{ marginBottom: '20px' }}>
+              <div className="card-header"><h3>Add Favorite</h3></div>
+              <div className="card-body">
+                {addError && (
+                  <div style={{ marginBottom: '16px', padding: '12px 16px', background: 'var(--red-subtle)', borderRadius: '10px', fontSize: '13px', color: 'var(--red)' }}>
+                    {addError}
+                  </div>
+                )}
+                <div className="form-field">
+                  <label>Provider</label>
+                  {loadingProviders ? (
+                    <div style={{ fontSize: '13px', color: 'var(--text-3)', padding: '10px 0' }}>Loading providers...</div>
+                  ) : (
+                    <select value={selectedProviderId} onChange={(e) => setSelectedProviderId(e.target.value)}>
+                      <option value="">Select a provider...</option>
+                      {availableProviders.map((p) => (
+                        <option key={p.id} value={p.id}>{p.name} ({p.category})</option>
+                      ))}
+                    </select>
+                  )}
+                </div>
+                <div className="form-field">
+                  <label>Priority (0-100)</label>
+                  <input
+                    type="number"
+                    min="0"
+                    max="100"
+                    value={addPriority}
+                    onChange={(e) => setAddPriority(e.target.value)}
+                    placeholder="50"
+                  />
+                  <div style={{ fontSize: '12px', color: 'var(--text-3)', marginTop: '6px' }}>
+                    Higher priority means stronger preference during routing.
+                  </div>
+                </div>
+                <div style={{ display: 'flex', gap: '10px', marginTop: '8px' }}>
+                  <button
+                    className="btn-sm btn-primary-fixed"
+                    style={{ padding: '9px 20px', fontWeight: 600, opacity: adding || !selectedProviderId ? 0.5 : 1 }}
+                    onClick={handleAddFavorite}
+                    disabled={adding || !selectedProviderId}
+                  >
+                    {adding ? 'Adding...' : 'Add Favorite'}
+                  </button>
+                  <button
+                    className="btn-sm"
+                    style={{ padding: '9px 20px' }}
+                    onClick={() => { setShowAddForm(false); setAddError(''); }}
+                    disabled={adding}
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </div>
             </div>
           )}
 
@@ -80,7 +229,14 @@ export default function FavoritesPage() {
                     </div>
                     <div className="fav-actions">
                       <span style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', padding: '3px 8px', borderRadius: '6px', background: 'var(--green-subtle)', color: 'var(--green)', textAlign: 'center' }}>+15% boost</span>
-                      <button className="btn-sm" style={{ fontSize: '12px', padding: '5px 12px' }}>Remove</button>
+                      <button
+                        className="btn-sm"
+                        style={{ fontSize: '12px', padding: '5px 12px', opacity: removingId === f.id ? 0.5 : 1 }}
+                        onClick={() => handleRemove(f.id)}
+                        disabled={removingId === f.id}
+                      >
+                        {removingId === f.id ? 'Removing...' : 'Remove'}
+                      </button>
                     </div>
                   </div>
                 ))}
