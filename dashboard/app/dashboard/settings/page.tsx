@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useAuth } from '@/lib/auth';
 
 const TRUST_WEIGHTS = [
   { key: 'successRate', label: 'Success Rate', desc: 'Weight for provider success rate (last 30d)', default: 30 },
@@ -14,9 +15,12 @@ const TRUST_WEIGHTS = [
 const WEBHOOK_EVENTS = ['route.completed', 'route.failed', 'budget.exceeded', 'trust.updated'];
 
 export default function SettingsPage() {
+  const { plan } = useAuth();
   const [weights, setWeights] = useState<Record<string, number>>(
     Object.fromEntries(TRUST_WEIGHTS.map((w) => [w.key, w.default]))
   );
+
+  const planLabel = plan ? plan.toUpperCase() : 'FREE';
 
   const btnDangerStyle: React.CSSProperties = {
     fontSize: '12px',
@@ -33,7 +37,6 @@ export default function SettingsPage() {
 
   return (
     <div>
-      {/* Page header */}
       <div style={{ padding: 'clamp(20px, 5vw, 28px) clamp(16px, 4vw, 36px)', borderBottom: '1px solid var(--border)', background: 'var(--card)' }}>
         <h1 style={{ fontSize: '22px', fontWeight: 700, letterSpacing: '-.8px' }}>Settings</h1>
         <p style={{ fontSize: '13px', color: 'var(--text-3)', marginTop: '2px' }}>Account configuration</p>
@@ -41,35 +44,28 @@ export default function SettingsPage() {
 
       <div className="animate-fade-in" style={{ padding: 'clamp(16px, 4vw, 24px) clamp(16px, 4vw, 36px) 48px', display: 'flex', flexDirection: 'column', gap: '20px' }}>
 
-        {/* ── Account ── */}
+        {/* Account */}
         <div className="card">
           <div className="card-header"><h3>Account</h3></div>
           <div className="card-body-flush">
             <div className="setting-row">
               <div>
-                <div className="setting-label">Email</div>
-                <div className="setting-desc">Account email for notifications</div>
-              </div>
-              <span className="setting-value">kenny@motherbird.com.au</span>
-            </div>
-            <div className="setting-row">
-              <div>
                 <div className="setting-label">Plan</div>
                 <div className="setting-desc">Current subscription tier</div>
               </div>
-              <span className="setting-value" style={{ color: 'var(--green)' }}>FREE</span>
+              <span className="setting-value" style={{ color: 'var(--green)' }}>{planLabel}</span>
             </div>
             <div className="setting-row">
               <div>
                 <div className="setting-label">Gateway URL</div>
                 <div className="setting-desc">Your gateway endpoint</div>
               </div>
-              <span className="setting-value">api.fabriclayer.dev</span>
+              <span className="setting-value">Configured via FABRIC_API_URL</span>
             </div>
           </div>
         </div>
 
-        {/* ── Webhooks ── */}
+        {/* Webhooks */}
         <div className="card">
           <div className="card-header"><h3>Webhooks</h3></div>
           <div className="card-body-flush">
@@ -127,7 +123,7 @@ export default function SettingsPage() {
           </div>
         </div>
 
-        {/* ── Trust Weight Overrides ── */}
+        {/* Trust Weight Overrides */}
         <div className="card">
           <div className="card-header">
             <h3>
@@ -178,7 +174,7 @@ export default function SettingsPage() {
           </div>
         </div>
 
-        {/* ── Danger Zone ── */}
+        {/* Danger Zone */}
         <div className="card" style={{ borderColor: 'var(--red-subtle)' }}>
           <div className="card-header" style={{ borderColor: 'rgba(239,68,68,.15)' }}>
             <h3 style={{ color: 'var(--red)' }}>Danger Zone</h3>

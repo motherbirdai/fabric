@@ -1,8 +1,9 @@
 'use client';
 
 import { useState } from 'react';
-import { Check, Globe, Shield, DollarSign, FileCheck } from 'lucide-react';
+import { Check, Shield, DollarSign, FileCheck } from 'lucide-react';
 import Link from 'next/link';
+import { registerProvider, ApiError } from '@/lib/api';
 
 const STEPS = [
   { num: 1, label: 'Identity' },
@@ -30,6 +31,8 @@ const PRICING_MODELS = [
 
 export default function RegisterPage() {
   const [step, setStep] = useState(1);
+  const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState('');
 
   const [providerName, setProviderName] = useState('');
   const [category, setCategory] = useState('');
@@ -54,8 +57,33 @@ export default function RegisterPage() {
     }
   };
 
-  const handleRegister = () => {
-    setRegistered(true);
+  const handleRegister = async () => {
+    setSubmitting(true);
+    setSubmitError('');
+    try {
+      await registerProvider({
+        name: providerName.trim(),
+        category,
+        description: description.trim() || undefined,
+        endpoint: endpointUrl.trim(),
+        health_check_path: healthCheckPath.trim() || undefined,
+        requires_auth: requiresAuth,
+        pricing_model: pricingModel,
+        price: parseFloat(price),
+      });
+      setRegistered(true);
+    } catch (err) {
+      if (err instanceof ApiError) {
+        const msg = typeof err.body === 'object' && err.body && 'error' in (err.body as Record<string, unknown>)
+          ? String((err.body as Record<string, string>).error)
+          : err.message;
+        setSubmitError(msg);
+      } else {
+        setSubmitError('Registration failed. Please try again.');
+      }
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   const resetForm = () => {
@@ -69,6 +97,7 @@ export default function RegisterPage() {
     setRequiresAuth(false);
     setPricingModel('per_request');
     setPrice('');
+    setSubmitError('');
   };
 
   if (registered) {
@@ -130,13 +159,17 @@ export default function RegisterPage() {
         </div>
 
         <div className="page-content">
+          {submitError && (
+            <div style={{ marginBottom: '16px', padding: '12px 16px', background: 'var(--red-subtle)', borderRadius: '10px', fontSize: '13px', color: 'var(--red)' }}>
+              {submitError}
+            </div>
+          )}
+
           {/* Step 1: Identity */}
           {step === 1 && (
             <div className="card">
               <div className="card-header">
-                <span className="card-title">
-                  Provider Identity
-                </span>
+                <span className="card-title">Provider Identity</span>
               </div>
               <div className="card-body">
                 <div className="form-field">
@@ -414,8 +447,24 @@ export default function RegisterPage() {
 
                 <div className="wizard-footer" style={{ margin: '0 24px', padding: '20px 0' }}>
                   <button className="wizard-back" onClick={() => setStep(3)}>← Back</button>
-                  <button className="wizard-next" style={{ color: 'var(--green)', fontWeight: 600 }} onClick={handleRegister}>
-                    <Check size={14} /> Register on Fabric
+                  <button
+                    className="wizard-next"
+                    style={{ color: 'var(--green)', fontWeight: 600, opacity: submitting ? 0.5 : 1 }}
+                    onClick={handleRegister}
+                    disabled={submitting}
+                  >
+                    {submitting ? (
+                      <div style={{
+                        width: '14px',
+                        height: '14px',
+                        border: '2px solid var(--border)',
+                        borderTopColor: 'var(--green)',
+                        borderRadius: '50%',
+                        animation: 'spin .6s linear infinite',
+                      }} />
+                    ) : (
+                      <><Check size={14} /> Register on Fabric</>
+                    )}
                   </button>
                 </div>
               </div>

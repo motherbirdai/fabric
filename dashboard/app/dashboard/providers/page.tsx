@@ -2,21 +2,48 @@
 
 import Link from 'next/link';
 import { useState } from 'react';
+import { useProviders } from '@/lib/hooks';
+import { PageSkeleton } from '@/components/ui/loading';
+import { ErrorCard } from '@/components/ui/error';
+import { EmptyState } from '@/components/ui/empty';
+import { Search } from 'lucide-react';
 
-const PROVIDERS = [
-  { id: 'deepl', name: 'DeepL Agent', score: '4.17', cat: 'Translation', catClass: 'cat-translation', desc: 'Neural machine translation with context awareness. 30+ languages.', price: '$0.001/token', latency: '400ms avg', uptime: '99.9% uptime', gradient: 'linear-gradient(135deg,#068cff,#0066cc)', letter: 'D' },
-  { id: 'flux', name: 'Flux Pro', score: '4.06', cat: 'Image Generation', catClass: 'cat-image', desc: 'State-of-the-art image generation from text prompts.', price: '$0.02/request', latency: '1200ms avg', uptime: '99.8% uptime', gradient: 'linear-gradient(135deg,#fe83e0,#cc66b3)', letter: 'F' },
-  { id: 'sentiment', name: 'Sentiment AI', score: '3.87', cat: 'Data Analysis', catClass: 'cat-data', desc: 'Real-time sentiment analysis across text, social, and news.', price: '$0.005/request', latency: '800ms avg', uptime: '97.8% uptime', gradient: 'linear-gradient(135deg,#ffab00,#cc8800)', letter: 'S' },
-  { id: 'dalle', name: 'DALL·E 3', score: '3.79', cat: 'Image Generation', catClass: 'cat-image', desc: "OpenAI's latest image generation model with high fidelity.", price: '$0.04/request', latency: '2800ms avg', uptime: '99.5% uptime', gradient: 'linear-gradient(135deg,#fe83e0,#cc66b3)', letter: 'D' },
-  { id: 'codex', name: 'Codex Review', score: '3.70', cat: 'Code Review', catClass: 'cat-code', desc: 'Automated code review with security analysis and suggestions.', price: '$0.003/token', latency: '3200ms avg', uptime: '99.2% uptime', gradient: 'linear-gradient(135deg,#00e5ff,#00b3cc)', letter: 'C' },
-];
+function nameToGradient(name: string): string {
+  let hash = 0;
+  for (let i = 0; i < name.length; i++) {
+    hash = name.charCodeAt(i) + ((hash << 5) - hash);
+  }
+  const h1 = Math.abs(hash) % 360;
+  const h2 = (h1 + 40) % 360;
+  return `linear-gradient(135deg, hsl(${h1},70%,55%), hsl(${h2},70%,45%))`;
+}
+
+const CAT_CLASS_MAP: Record<string, string> = {
+  'search': 'cat-search',
+  'image generation': 'cat-image',
+  'image': 'cat-image',
+  'data analysis': 'cat-data',
+  'data': 'cat-data',
+  'code review': 'cat-code',
+  'code': 'cat-code',
+  'translation': 'cat-translation',
+  'transcription': 'cat-transcription',
+  'text generation': 'cat-text',
+  'text': 'cat-text',
+  'embedding': 'cat-embedding',
+};
+
+function catClass(category: string): string {
+  return CAT_CLASS_MAP[category.toLowerCase()] || 'cat-search';
+}
 
 export default function ProvidersPage() {
   const [search, setSearch] = useState('');
+  const { data: providers, loading, error, refetch } = useProviders();
 
-  const filtered = PROVIDERS.filter(p =>
+  const filtered = (providers || []).filter(p =>
     p.name.toLowerCase().includes(search.toLowerCase()) ||
-    p.cat.toLowerCase().includes(search.toLowerCase())
+    (p.category || '').toLowerCase().includes(search.toLowerCase())
   );
 
   return (
@@ -30,48 +57,76 @@ export default function ProvidersPage() {
           <Link href="/dashboard/register" className="btn-sm btn-primary-fixed" style={{ padding: '9px 20px', fontWeight: 600, display: 'flex', textAlign: 'center' }}>+ Register Provider</Link>
         </div>
       </div>
-      <div className="animate-fade-in" style={{ padding: 'clamp(16px, 4vw, 24px) clamp(16px, 4vw, 36px) 48px' }}>
-        <div className="provider-search-bar">
-          <input
-            style={{ flex: '1 1 200px', minWidth: 0, padding: '10px 16px', borderRadius: '10px', fontSize: '16px', outline: 'none', background: 'var(--card)', border: '1px solid var(--border)', fontFamily: 'var(--font-sans)', color: 'var(--text)' }}
-            placeholder="Search providers..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-          />
-          <button className="btn-sm provider-filter-btn" style={{ fontFamily: 'var(--font-mono)', fontSize: '12px', padding: '10px 18px', whiteSpace: 'nowrap' }}>Category ↓</button>
-          <button className="btn-sm provider-filter-btn" style={{ fontFamily: 'var(--font-mono)', fontSize: '12px', padding: '10px 18px', whiteSpace: 'nowrap' }}>Min Trust ↓</button>
-        </div>
 
-        <div className="provider-grid">
-          {filtered.map((p) => (
-            <Link
-              key={p.id}
-              href={`/dashboard/providers/${p.id}`}
-              className="block transition-colors cursor-pointer"
-              style={{ background: 'var(--card)', padding: '24px' }}
-            >
-              <div className="flex items-center justify-between" style={{ marginBottom: '10px' }}>
-                <div className="flex items-center gap-3">
-                  <div className="flex items-center justify-center rounded-[10px] text-[16px] font-bold text-white" style={{ width: '36px', height: '36px', background: p.gradient }}>{p.letter}</div>
-                  <div style={{ fontSize: '16px', fontWeight: 600, letterSpacing: '-.3px' }}>{p.name}</div>
-                </div>
-                <div style={{ fontFamily: 'var(--font-mono)', fontSize: '14px', color: 'var(--green)', fontWeight: 500 }}>{p.score}</div>
-              </div>
-              <span className={`inline-block ${p.catClass} rounded-[5px]`} style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', letterSpacing: '.5px', padding: '3px 10px', textTransform: 'uppercase', marginBottom: '10px' }}>{p.cat}</span>
-              <div style={{ fontSize: '13px', color: 'var(--text-2)', lineHeight: 1.5, marginBottom: '14px' }}>{p.desc}</div>
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px 16px', fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--text-3)' }}>
-                <span>{p.price}</span>
-                <span>{p.latency}</span>
-                <span>{p.uptime}</span>
-                <span className="inline-flex items-center gap-[5px]" style={{ color: 'var(--green)', letterSpacing: '.5px' }}>
-                  <span className="inline-block w-[5px] h-[5px] rounded-full animate-live-pulse" style={{ background: 'var(--green)' }} />
-                  LIVE
-                </span>
-              </div>
-            </Link>
-          ))}
+      {loading ? (
+        <PageSkeleton />
+      ) : error ? (
+        <div style={{ padding: 'clamp(16px, 4vw, 24px) clamp(16px, 4vw, 36px) 48px' }}>
+          <ErrorCard message={error.message} onRetry={refetch} />
         </div>
-      </div>
+      ) : filtered.length === 0 && !search ? (
+        <div style={{ padding: 'clamp(16px, 4vw, 24px) clamp(16px, 4vw, 36px) 48px' }}>
+          <EmptyState icon={Search} title="No providers registered" description="Register your first provider to get started." />
+        </div>
+      ) : (
+        <div className="animate-fade-in" style={{ padding: 'clamp(16px, 4vw, 24px) clamp(16px, 4vw, 36px) 48px' }}>
+          <div className="provider-search-bar">
+            <input
+              style={{ flex: '1 1 200px', minWidth: 0, padding: '10px 16px', borderRadius: '10px', fontSize: '16px', outline: 'none', background: 'var(--card)', border: '1px solid var(--border)', fontFamily: 'var(--font-sans)', color: 'var(--text)' }}
+              placeholder="Search providers..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
+            <button className="btn-sm provider-filter-btn" style={{ fontFamily: 'var(--font-mono)', fontSize: '12px', padding: '10px 18px', whiteSpace: 'nowrap' }}>Category ↓</button>
+            <button className="btn-sm provider-filter-btn" style={{ fontFamily: 'var(--font-mono)', fontSize: '12px', padding: '10px 18px', whiteSpace: 'nowrap' }}>Min Trust ↓</button>
+          </div>
+
+          {filtered.length === 0 ? (
+            <EmptyState icon={Search} title="No matching providers" description="Try a different search term." />
+          ) : (
+            <div className="provider-grid">
+              {filtered.map((p) => {
+                const score = p.trust_score != null ? p.trust_score.toFixed(2) : '—';
+                const letter = p.name.charAt(0).toUpperCase();
+                const gradient = nameToGradient(p.name);
+                const cat = p.category || 'Unknown';
+                const cc = catClass(cat);
+
+                return (
+                  <Link
+                    key={p.id}
+                    href={`/dashboard/providers/${p.id}`}
+                    className="block transition-colors cursor-pointer"
+                    style={{ background: 'var(--card)', padding: '24px' }}
+                  >
+                    <div className="flex items-center justify-between" style={{ marginBottom: '10px' }}>
+                      <div className="flex items-center gap-3">
+                        <div className="flex items-center justify-center rounded-[10px] text-[16px] font-bold text-white" style={{ width: '36px', height: '36px', background: gradient }}>{letter}</div>
+                        <div style={{ fontSize: '16px', fontWeight: 600, letterSpacing: '-.3px' }}>{p.name}</div>
+                      </div>
+                      <div style={{ fontFamily: 'var(--font-mono)', fontSize: '14px', color: 'var(--green)', fontWeight: 500 }}>{score}</div>
+                    </div>
+                    <span className={`inline-block ${cc} rounded-[5px]`} style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', letterSpacing: '.5px', padding: '3px 10px', textTransform: 'uppercase', marginBottom: '10px' }}>{cat}</span>
+                    {p.description && (
+                      <div style={{ fontSize: '13px', color: 'var(--text-2)', lineHeight: 1.5, marginBottom: '14px' }}>{p.description}</div>
+                    )}
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px 16px', fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--text-3)' }}>
+                      {p.price_per_request != null && <span>${p.price_per_request}/req</span>}
+                      {p.price_per_token != null && <span>${p.price_per_token}/token</span>}
+                      {p.status === 'active' && (
+                        <span className="inline-flex items-center gap-[5px]" style={{ color: 'var(--green)', letterSpacing: '.5px' }}>
+                          <span className="inline-block w-[5px] h-[5px] rounded-full animate-live-pulse" style={{ background: 'var(--green)' }} />
+                          LIVE
+                        </span>
+                      )}
+                    </div>
+                  </Link>
+                );
+              })}
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 }

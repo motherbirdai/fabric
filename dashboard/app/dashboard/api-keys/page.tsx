@@ -1,48 +1,31 @@
 'use client';
 
 import { useState } from 'react';
-import { Key, Copy, Check, RefreshCw, Eye, EyeOff } from 'lucide-react';
-
-const KEYS = [
-  {
-    id: '1',
-    key: 'fab_sk_live_7f3a...c9d2',
-    type: 'Live' as const,
-    created: 'Mar 15',
-    lastUsed: '2 min ago',
-  },
-  {
-    id: '2',
-    key: 'fab_sk_test_4b2e...8f1a',
-    type: 'Test' as const,
-    created: 'Mar 10',
-    lastUsed: '1 day ago',
-  },
-];
+import { Key, Copy, Check, Eye, EyeOff } from 'lucide-react';
+import { useAuth } from '@/lib/auth';
 
 export default function ApiKeysPage() {
-  const [copied, setCopied] = useState<string | null>(null);
+  const { apiKey } = useAuth();
+  const [copied, setCopied] = useState(false);
   const [revealed, setRevealed] = useState(false);
 
-  const SESSION_KEY_MASKED = 'fab_n5nL7gE2••••••••••••••••••yhVS';
-  const SESSION_KEY_FULL = 'fab_n5nL7gE2xKm9RtWpQ4vBhJsYcN3dFa8eU6iOlZyhVS';
+  const maskedKey = apiKey
+    ? `${apiKey.slice(0, 10)}${'•'.repeat(Math.max(0, apiKey.length - 14))}${apiKey.slice(-4)}`
+    : '—';
 
-  const handleCopy = (text: string, id: string) => {
-    navigator.clipboard.writeText(text);
-    setCopied(id);
-    setTimeout(() => setCopied(null), 2000);
+  const handleCopy = () => {
+    if (!apiKey) return;
+    navigator.clipboard.writeText(apiKey);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
   };
 
   return (
     <div>
-      {/* Page header */}
       <div className="page-header-bar">
         <div>
           <h1>API Keys</h1>
           <p style={{ fontSize: '13px', color: 'var(--text-3)', marginTop: '2px' }}>Manage authentication keys for the Fabric gateway</p>
-        </div>
-        <div className="header-actions">
-          <button className="btn-sm btn-primary-fixed" style={{ padding: '9px 20px', fontWeight: 600 }}>+ Generate Key</button>
         </div>
       </div>
 
@@ -71,7 +54,7 @@ export default function ApiKeysPage() {
                 textOverflow: 'ellipsis',
                 whiteSpace: 'nowrap',
               }}>
-                {revealed ? SESSION_KEY_FULL : SESSION_KEY_MASKED}
+                {revealed ? (apiKey || '—') : maskedKey}
               </code>
               <div className="apikey-actions">
                 <button
@@ -103,80 +86,20 @@ export default function ApiKeysPage() {
                     cursor: 'pointer',
                     transition: 'all .15s',
                   }}
-                  onClick={() => handleCopy(SESSION_KEY_FULL, 'session')}
+                  onClick={handleCopy}
                   title="Copy key"
                 >
-                  {copied === 'session' ? (
+                  {copied ? (
                     <Check size={15} style={{ color: 'var(--green)' }} />
                   ) : (
                     <Copy size={15} style={{ color: 'var(--text-3)' }} />
                   )}
                 </button>
-                <button className="apikey-regen-btn btn-sm flex items-center justify-center gap-2" style={{ fontSize: '12px', padding: '7px 16px' }}>
-                  <RefreshCw size={13} />
-                  Regenerate
-                </button>
               </div>
             </div>
-          </div>
-        </div>
-
-        {/* All Keys */}
-        <div className="card" style={{ marginBottom: '20px' }}>
-          <div className="card-header">
-            <h3>All Keys</h3>
-          </div>
-          <div className="card-body-flush">
-            {KEYS.map((k) => (
-              <div key={k.id} className="setting-row">
-                <div style={{ display: 'flex', alignItems: 'center', gap: '12px', minWidth: 0 }}>
-                  <div
-                    className="flex items-center justify-center rounded-lg"
-                    style={{
-                      width: '36px',
-                      height: '36px',
-                      background: k.type === 'Live' ? 'var(--green-subtle)' : 'var(--amber-subtle)',
-                      flexShrink: 0,
-                    }}
-                  >
-                    <Key size={16} style={{ color: k.type === 'Live' ? 'var(--green)' : 'var(--amber)' }} />
-                  </div>
-                  <div style={{ minWidth: 0 }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
-                      <span style={{ fontFamily: 'var(--font-mono)', fontSize: '13px', letterSpacing: '.3px' }}>{k.key}</span>
-                      <span
-                        style={{
-                          fontFamily: 'var(--font-mono)',
-                          fontSize: '10px',
-                          padding: '2px 8px',
-                          borderRadius: '4px',
-                          letterSpacing: '.3px',
-                          color: k.type === 'Live' ? 'var(--green)' : 'var(--amber)',
-                          background: k.type === 'Live' ? 'var(--green-subtle)' : 'var(--amber-subtle)',
-                        }}
-                      >
-                        {k.type}
-                      </span>
-                    </div>
-                    <div style={{ fontSize: '12px', color: 'var(--text-3)', marginTop: '2px' }}>
-                      Created {k.created} &middot; Last used {k.lastUsed}
-                    </div>
-                  </div>
-                </div>
-                <button className="btn-sm btn-sm-danger apikey-revoke-btn" style={{
-                  fontSize: '12px',
-                  padding: '5px 14px',
-                  background: 'var(--card)',
-                  border: '1px solid rgba(239,68,68,.2)',
-                  borderRadius: '8px',
-                  color: 'var(--red)',
-                  cursor: 'pointer',
-                  fontFamily: 'var(--font-sans)',
-                }}>
-                  Revoke
-                </button>
-              </div>
-            ))}
+            <p style={{ fontSize: '12px', color: 'var(--text-3)', marginTop: '12px' }}>
+              This is the API key you used to log in. Key management (list, generate, revoke) is not yet available from the dashboard.
+            </p>
           </div>
         </div>
 
@@ -186,14 +109,13 @@ export default function ApiKeysPage() {
             <h3>Usage</h3>
           </div>
           <div style={{ padding: '4px 0' }}>
-            {/* cURL example */}
             <div className="code-block">
               <div className="code-comment"># cURL</div>
               <div>
-                curl <span className="code-string">https://gateway.fabric.dev/v1/route</span> \
+                curl <span className="code-string">https://your-gateway/v1/route</span> \
               </div>
               <div>
-                {'  '}-H <span className="code-string">&quot;x-api-key: fab_sk_live_7f3a...c9d2&quot;</span> \
+                {'  '}-H <span className="code-string">&quot;Authorization: Bearer {apiKey ? `${apiKey.slice(0, 10)}...` : 'fab_...'}&quot;</span> \
               </div>
               <div>
                 {'  '}-H <span className="code-string">&quot;Content-Type: application/json&quot;</span> \
@@ -203,7 +125,6 @@ export default function ApiKeysPage() {
               </div>
             </div>
 
-            {/* Node.js / TypeScript example */}
             <div className="code-block">
               <div className="code-comment">// Node.js / TypeScript</div>
               <div>
@@ -213,7 +134,7 @@ export default function ApiKeysPage() {
                 <span style={{ color: 'var(--text-3)' }}>const</span> fabric = <span style={{ color: 'var(--text-3)' }}>new</span> FabricClient({'{'}&nbsp;
               </div>
               <div>
-                {'  '}apiKey: <span className="code-string">&apos;fab_sk_live_7f3a...c9d2&apos;</span>
+                {'  '}apiKey: <span className="code-string">&apos;{apiKey ? `${apiKey.slice(0, 10)}...` : 'fab_...'}&apos;</span>
               </div>
               <div>{'}'});</div>
               <div style={{ marginTop: '6px' }}>
