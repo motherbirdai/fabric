@@ -104,7 +104,7 @@ export const TRUST_SCORE_PREFIX = 'trust:score:';
 
 // ─── Rate Limit ───
 export const RATE_LIMIT_WINDOW = 60_000; // 1 minute
-export const RATE_LIMIT_MAX = 100; // max requests per window (burst protection)
+export const RATE_LIMIT_MAX = 500; // max requests per window (burst protection)
 
 // ─── Brave Search ───
 export const BRAVE_API_KEY = process.env.BRAVE_API_KEY || '';

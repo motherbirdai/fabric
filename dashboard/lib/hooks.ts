@@ -5,7 +5,6 @@ import * as api from './api';
 import type {
   Provider,
   ProviderEvaluation,
-  WalletItem,
   WalletsResponse,
   Budget,
   Favorite,
@@ -13,6 +12,21 @@ import type {
   Invoice,
   HealthStatus,
 } from './api';
+
+// ─── In-Memory Cache (stale-while-revalidate) ───────────────────
+
+const apiCache = new Map<string, { data: unknown; ts: number }>();
+const CACHE_TTL = 30_000; // 30 seconds
+
+/** Clear a specific cache entry (call after mutations) */
+export function invalidateCache(key: string) {
+  apiCache.delete(key);
+}
+
+/** Clear all cached data */
+export function clearCache() {
+  apiCache.clear();
+}
 
 // ─── Generic Hook ────────────────────────────────────────────────
 
@@ -26,13 +40,30 @@ interface UseApiResult<T> {
 export function useApi<T>(
   fetcher: () => Promise<T>,
   deps: unknown[] = [],
+  cacheKey?: string,
 ): UseApiResult<T> {
-  const [data, setData] = useState<T | null>(null);
-  const [loading, setLoading] = useState(true);
+  // Check cache for initial state
+  const cached = cacheKey ? apiCache.get(cacheKey) : undefined;
+  const isFresh = cached != null && Date.now() - cached.ts < CACHE_TTL;
+
+  const [data, setData] = useState<T | null>(isFresh ? (cached!.data as T) : null);
+  const [loading, setLoading] = useState(!isFresh);
   const [error, setError] = useState<api.ApiError | Error | null>(null);
   const mountedRef = useRef(true);
+  const skipCacheRef = useRef(false);
 
   const fetchData = useCallback(() => {
+    // Serve from cache if fresh (unless refetch bypassing)
+    if (!skipCacheRef.current && cacheKey) {
+      const entry = apiCache.get(cacheKey);
+      if (entry && Date.now() - entry.ts < CACHE_TTL) {
+        setData(entry.data as T);
+        setLoading(false);
+        return;
+      }
+    }
+    skipCacheRef.current = false;
+
     setLoading(true);
     setError(null);
     fetcher()
@@ -40,6 +71,9 @@ export function useApi<T>(
         if (mountedRef.current) {
           setData(result);
           setLoading(false);
+          if (cacheKey) {
+            apiCache.set(cacheKey, { data: result, ts: Date.now() });
+          }
         }
       })
       .catch((err) => {
@@ -59,48 +93,54 @@ export function useApi<T>(
     };
   }, [fetchData]);
 
-  return { data, loading, error, refetch: fetchData };
+  const refetch = useCallback(() => {
+    skipCacheRef.current = true;
+    fetchData();
+  }, [fetchData]);
+
+  return { data, loading, error, refetch };
 }
 
 // ─── Data Hooks ──────────────────────────────────────────────────
 
 export function useProviders(): UseApiResult<Provider[]> {
-  return useApi(() => api.listProviders().then((r) => r.providers), []);
+  return useApi(() => api.listProviders().then((r) => r.providers), [], 'providers');
 }
 
 export function useProvider(id: string): UseApiResult<Provider> {
-  return useApi(() => api.getProvider(id), [id]);
+  return useApi(() => api.getProvider(id), [id], `provider:${id}`);
 }
 
 export function useProviderEvaluation(id: string): UseApiResult<ProviderEvaluation> {
-  return useApi(() => api.evaluateProvider(id), [id]);
+  return useApi(() => api.evaluateProvider(id), [id], `evaluation:${id}`);
 }
 
 export function useWallets(): UseApiResult<WalletsResponse> {
-  return useApi(() => api.listWallets(), []);
+  return useApi(() => api.listWallets(), [], 'wallets');
 }
 
 export function useBudgets(): UseApiResult<Budget[]> {
-  return useApi(() => api.listBudgets().then((r) => r.budgets), []);
+  return useApi(() => api.listBudgets().then((r) => r.budgets), [], 'budgets');
 }
 
 export function useFavorites(agentId: string | null): UseApiResult<Favorite[]> {
   return useApi(
     () => (agentId ? api.listFavorites(agentId).then((r) => r.favorites) : Promise.resolve([])),
     [agentId],
+    agentId ? `favorites:${agentId}` : undefined,
   );
 }
 
 export function useSubscription(): UseApiResult<Subscription> {
-  return useApi(() => api.getSubscription(), []);
+  return useApi(() => api.getSubscription(), [], 'subscription');
 }
 
 export function useInvoices(): UseApiResult<Invoice[]> {
-  return useApi(() => api.listInvoices().then((r) => r.invoices), []);
+  return useApi(() => api.listInvoices().then((r) => r.invoices), [], 'invoices');
 }
 
 export function useHealth(): UseApiResult<HealthStatus> {
-  return useApi(() => api.health(), []);
+  return useApi(() => api.health(), [], 'health');
 }
 
 // ─── SSE Event Stream ────────────────────────────────────────────
