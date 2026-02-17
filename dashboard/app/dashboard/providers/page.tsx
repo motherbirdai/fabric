@@ -38,10 +38,8 @@ export default function ProvidersPage() {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
-          <div style={{ display: 'flex', gap: '10px' }}>
-            <button className="btn-sm" style={{ fontFamily: 'var(--font-mono)', fontSize: '12px', padding: '10px 18px', whiteSpace: 'nowrap' }}>Category ↓</button>
-            <button className="btn-sm" style={{ fontFamily: 'var(--font-mono)', fontSize: '12px', padding: '10px 18px', whiteSpace: 'nowrap' }}>Min Trust ↓</button>
-          </div>
+          <button className="btn-sm provider-filter-btn" style={{ fontFamily: 'var(--font-mono)', fontSize: '12px', padding: '10px 18px', whiteSpace: 'nowrap' }}>Category ↓</button>
+          <button className="btn-sm provider-filter-btn" style={{ fontFamily: 'var(--font-mono)', fontSize: '12px', padding: '10px 18px', whiteSpace: 'nowrap' }}>Min Trust ↓</button>
         </div>
 
         <div className="provider-grid">

@@ -588,8 +588,9 @@ h3 { font-size: 16px; font-weight: 600; letter-spacing: -.3px; }
   .wallet-row { padding: 12px 16px; flex-direction: column; align-items: flex-start; }
   .wallet-actions { width: 100%; }
   .wallet-actions .btn-sm { flex: 1; justify-content: center; }
-  .provider-search-bar { flex-direction: column; }
-  .provider-search-bar .btn-sm { flex: 1; }
+  .provider-search-bar { flex-wrap: wrap; }
+  .provider-search-bar input { flex: 1 1 100% !important; }
+  .provider-filter-btn { flex: 1; }
 }
 
 /* Settings sections */
