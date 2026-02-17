@@ -16,9 +16,9 @@ export default function EventsPage() {
           <p style={{ fontSize: '13px', color: 'var(--text-3)', marginTop: '2px' }}>Real-time gateway events via WebSocket · 0 events buffered</p>
         </div>
         <div className="header-actions events-actions">
-          <button className="btn-sm flex items-center justify-center" style={{ padding: '7px 12px', height: '42px' }} title="Pause stream"><Pause size={21} /></button>
-          <button className="btn-sm flex items-center justify-center" style={{ padding: '7px 12px', height: '42px' }} title="Export events"><Download size={21} /></button>
-          <button className="btn-sm flex items-center justify-center" style={{ padding: '7px 12px', height: '42px' }} title="Clear events"><Trash2 size={21} /></button>
+          <button className="btn-sm flex items-center justify-center" style={{ padding: '7px 12px', height: '36px' }} title="Pause stream"><Pause size={16} strokeWidth={1.5} /></button>
+          <button className="btn-sm flex items-center justify-center" style={{ padding: '7px 12px', height: '36px' }} title="Export events"><Download size={16} strokeWidth={1.5} /></button>
+          <button className="btn-sm flex items-center justify-center" style={{ padding: '7px 12px', height: '36px' }} title="Clear events"><Trash2 size={16} strokeWidth={1.5} /></button>
         </div>
       </div>
       <div className="animate-fade-in" style={{ padding: 'clamp(16px, 4vw, 24px) clamp(16px, 4vw, 36px) 48px' }}>
