@@ -113,7 +113,7 @@ h3 { font-size: 16px; font-weight: 600; letter-spacing: -.3px; }
   margin-bottom: clamp(24px, 5vh, 48px);
 }
 .login-logo svg {
-  height: 96px;
+  height: 144px;
   width: auto;
   display: inline-block;
   margin-bottom: 4px;
@@ -238,12 +238,12 @@ h3 { font-size: 16px; font-weight: 600; letter-spacing: -.3px; }
   bottom: 0;
   z-index: 200;
   transition: left .25s ease-in-out;
-  overflow: hidden;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 .sidebar-nav {
-  flex: 1;
+  flex: 1 0 auto;
   padding: 20px 12px 16px;
-  overflow-y: auto;
 }
 .nav-section-label {
   font-family: var(--font-mono);
@@ -305,6 +305,10 @@ h3 { font-size: 16px; font-weight: 600; letter-spacing: -.3px; }
 .sidebar-footer {
   padding: 16px;
   border-top: 1px solid var(--border);
+  flex-shrink: 0;
+  position: sticky;
+  bottom: 0;
+  background: var(--card);
 }
 .sidebar-footer-row {
   display: flex;
