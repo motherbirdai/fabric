@@ -52,7 +52,7 @@ export default function WalletsPage() {
                 </div>
               </div>
               <div className="wallet-actions">
-                <span style={{ fontFamily: 'var(--font-mono)', fontSize: '13px', fontWeight: 600, color: 'var(--green)', whiteSpace: 'nowrap' }}>$12.50 USDC</span>
+                <span className="wallet-balance" style={{ fontFamily: 'var(--font-mono)', fontSize: '13px', fontWeight: 600, color: 'var(--green)', whiteSpace: 'nowrap' }}>$12.50 USDC</span>
                 <button className="btn-sm" style={{ fontSize: '12px', padding: '5px 12px' }}>Fund</button>
                 <button className="btn-sm" style={{ fontSize: '12px', padding: '5px 12px' }}>Withdraw</button>
               </div>
