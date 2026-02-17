@@ -31,15 +31,17 @@ export default function ProvidersPage() {
         </div>
       </div>
       <div className="animate-fade-in" style={{ padding: 'clamp(16px, 4vw, 24px) clamp(16px, 4vw, 36px) 48px' }}>
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', marginBottom: '20px' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginBottom: '20px' }}>
           <input
-            style={{ flex: '1 1 200px', minWidth: 0, padding: '10px 16px', borderRadius: '10px', fontSize: '16px', outline: 'none', background: 'var(--card)', border: '1px solid var(--border)', fontFamily: 'var(--font-sans)', color: 'var(--text)' }}
+            style={{ width: '100%', padding: '10px 16px', borderRadius: '10px', fontSize: '16px', outline: 'none', background: 'var(--card)', border: '1px solid var(--border)', fontFamily: 'var(--font-sans)', color: 'var(--text)' }}
             placeholder="Search providers..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
-          <button className="btn-sm" style={{ fontFamily: 'var(--font-mono)', fontSize: '12px', padding: '10px 18px', whiteSpace: 'nowrap' }}>Category ↓</button>
-          <button className="btn-sm" style={{ fontFamily: 'var(--font-mono)', fontSize: '12px', padding: '10px 18px', whiteSpace: 'nowrap' }}>Min Trust ↓</button>
+          <div style={{ display: 'flex', gap: '10px' }}>
+            <button className="btn-sm" style={{ flex: 1, fontFamily: 'var(--font-mono)', fontSize: '12px', padding: '10px 18px', whiteSpace: 'nowrap' }}>Category ↓</button>
+            <button className="btn-sm" style={{ flex: 1, fontFamily: 'var(--font-mono)', fontSize: '12px', padding: '10px 18px', whiteSpace: 'nowrap' }}>Min Trust ↓</button>
+          </div>
         </div>
 
         <div className="provider-grid">
