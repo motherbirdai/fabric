@@ -279,4 +279,4 @@ fabric-gateway/
 
 ## License
 
-BSL 1.1 — Motherbird AI Studio
+MIT — Fabric Technology Ltd.
