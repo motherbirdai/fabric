@@ -136,9 +136,9 @@ export function Sidebar({
           ))}
         </nav>
 
-        <div className="sidebar-branding">
+        <Link href="/dashboard" className="sidebar-branding">
           <FabricLogo style={{ height: '25px', width: 'auto' }} />
-        </div>
+        </Link>
         <div className="sidebar-footer">
           <div className="sidebar-footer-row">
             <button className="sidebar-signout" onClick={handleLogout}>

@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { AuthProvider, useAuth } from '@/lib/auth';
+import Link from 'next/link';
 import { Sidebar } from '@/components/layout/sidebar';
 import { FabricLogo } from '@/components/layout/FabricLogo';
 import { Menu } from 'lucide-react';
@@ -47,9 +48,9 @@ function DashboardShell({ children }: { children: React.ReactNode }) {
 
       <div className="main">
         <div className="mobile-header">
-          <div className="mobile-header-logo">
+          <Link href="/dashboard" className="mobile-header-logo">
             <FabricLogo style={{ height: '30px', width: 'auto' }} />
-          </div>
+          </Link>
           <button className="mobile-hamburger" onClick={() => setMobileOpen(!mobileOpen)}>
             <Menu size={20} />
           </button>
