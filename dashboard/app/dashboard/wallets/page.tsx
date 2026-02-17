@@ -42,19 +42,17 @@ export default function WalletsPage() {
           <div className="card-header"><h3>Managed Wallets</h3></div>
           <div className="card-body-flush">
             <div className="wallet-row">
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '8px' }}>
-                <div className="flex items-center gap-3">
-                  <div className="flex items-center justify-center rounded-lg" style={{ width: '36px', height: '36px', background: 'var(--green-subtle)' }}>
-                    <Wallet size={18} style={{ color: 'var(--green)' }} />
-                  </div>
-                  <div>
-                    <div style={{ fontSize: '14px' }}>Primary Wallet</div>
-                    <div style={{ fontFamily: 'var(--font-mono)', fontSize: '12px', color: 'var(--text-3)', marginTop: '2px' }}>0x8f3a...c7d2 · Linked to research-agent</div>
-                  </div>
+              <div className="flex items-center gap-3">
+                <div className="flex items-center justify-center rounded-lg" style={{ width: '36px', height: '36px', background: 'var(--green-subtle)' }}>
+                  <Wallet size={18} style={{ color: 'var(--green)' }} />
                 </div>
-                <span style={{ fontFamily: 'var(--font-mono)', fontSize: '13px', fontWeight: 600, color: 'var(--green)' }}>$12.50 USDC</span>
+                <div>
+                  <div style={{ fontSize: '14px' }}>Primary Wallet</div>
+                  <div style={{ fontFamily: 'var(--font-mono)', fontSize: '12px', color: 'var(--text-3)', marginTop: '2px' }}>0x8f3a...c7d2 · Linked to research-agent</div>
+                </div>
               </div>
               <div className="wallet-actions">
+                <span style={{ fontFamily: 'var(--font-mono)', fontSize: '13px', fontWeight: 600, color: 'var(--green)', whiteSpace: 'nowrap' }}>$12.50 USDC</span>
                 <button className="btn-sm" style={{ fontSize: '12px', padding: '5px 12px' }}>Fund</button>
                 <button className="btn-sm" style={{ fontSize: '12px', padding: '5px 12px' }}>Withdraw</button>
               </div>

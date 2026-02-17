@@ -582,6 +582,7 @@ h3 { font-size: 16px; font-weight: 600; letter-spacing: -.3px; }
 .fav-actions { display: flex; align-items: center; gap: 8px; }
 .events-actions { display: flex; gap: 8px; }
 .apikey-actions { display: flex; gap: 8px; }
+.apikey-icon-btn { min-width: 36px; padding: 0 10px; }
 .settings-webhook-actions { display: flex; align-items: center; gap: 8px; }
 .budget-controls { display: flex; align-items: center; gap: 12px; max-width: 320px; }
 @media (max-width: 768px) {
