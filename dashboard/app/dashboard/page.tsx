@@ -7,12 +7,9 @@ export default function OverviewPage() {
   return (
     <div>
       {/* Page header */}
-      <div className="page-header-bar" style={{ alignItems: 'flex-start', flexDirection: 'row', flexWrap: 'nowrap' }}>
-        <div style={{ flex: 1 }}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '12px' }}>
-            <h1>Overview</h1>
-            <span className="status-pill online">Gateway connected</span>
-          </div>
+      <div className="page-header-bar">
+        <div>
+          <h1>Overview</h1>
           <p style={{ fontSize: '13px', color: 'var(--text-3)', marginTop: '2px' }}>
             Your Fabric gateway at a glance
           </p>
