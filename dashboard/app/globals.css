@@ -569,6 +569,7 @@ h3 { font-size: 16px; font-weight: 600; letter-spacing: -.3px; }
 .wallet-row:last-child { border-bottom: none; }
 .wallet-actions {
   display: flex;
+  align-items: center;
   gap: 8px;
 }
 /* Provider search bar */
