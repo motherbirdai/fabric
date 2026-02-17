@@ -7,21 +7,14 @@ export default function OverviewPage() {
   return (
     <div>
       {/* Page header */}
-      <div
-        className="flex items-center justify-between"
-        style={{
-          padding: 'clamp(20px, 5vw, 28px) clamp(16px, 4vw, 36px)',
-          borderBottom: '1px solid var(--border)',
-          background: 'var(--card)',
-        }}
-      >
+      <div className="page-header-bar">
         <div>
-          <h1 style={{ fontSize: '22px', fontWeight: 700, letterSpacing: '-.8px' }}>Overview</h1>
+          <h1>Overview</h1>
           <p style={{ fontSize: '13px', color: 'var(--text-3)', marginTop: '2px' }}>
             Your Fabric gateway at a glance
           </p>
         </div>
-        <div className="flex items-center gap-3">
+        <div className="header-actions" style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
           <span style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--text-3)' }}>
             Updated just now
           </span>
