@@ -1,7 +1,6 @@
 'use client';
 
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { getStoredApiKey, setStoredApiKey, clearStoredApiKey, api } from './api';
 
 interface AuthState {
   apiKey: string | null;
@@ -24,38 +23,25 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [authenticated, setAuthenticated] = useState(false);
   const [loading, setLoading] = useState(true);
 
-  // Check for stored key on mount
   useEffect(() => {
-    const stored = getStoredApiKey();
+    const stored = typeof window !== 'undefined' ? localStorage.getItem('fabric_api_key') : null;
     if (stored) {
-      api.validateKey(stored)
-        .then(() => {
-          setApiKey(stored);
-          setAuthenticated(true);
-        })
-        .catch(() => {
-          clearStoredApiKey();
-        })
-        .finally(() => setLoading(false));
-    } else {
-      setLoading(false);
+      setApiKey(stored);
+      setAuthenticated(true);
     }
+    setLoading(false);
   }, []);
 
   const login = async (key: string): Promise<boolean> => {
-    try {
-      await api.validateKey(key);
-      setStoredApiKey(key);
-      setApiKey(key);
-      setAuthenticated(true);
-      return true;
-    } catch {
-      return false;
-    }
+    if (!key.startsWith('fab_')) return false;
+    localStorage.setItem('fabric_api_key', key);
+    setApiKey(key);
+    setAuthenticated(true);
+    return true;
   };
 
   const logout = () => {
-    clearStoredApiKey();
+    localStorage.removeItem('fabric_api_key');
     setApiKey(null);
     setAuthenticated(false);
   };

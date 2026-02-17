@@ -1,116 +1,149 @@
 'use client';
 
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { useAuth } from '@/lib/auth';
+import { FabricLogo } from './FabricLogo';
 import {
-  LayoutDashboard,
+  LayoutGrid,
+  Globe,
   Bot,
   BarChart3,
-  Wallet,
-  Key,
-  CreditCard,
-  Globe,
-  Plus,
-  LogOut,
+  PiggyBank,
   Activity,
+  Plus,
+  Wallet,
+  Star,
+  CreditCard,
+  Key,
   Settings,
+  LogOut,
+  Sun,
+  Moon,
 } from 'lucide-react';
+import { useEffect, useState } from 'react';
 
-const NAV_MAIN = [
-  { label: 'Overview', href: '/dashboard', icon: LayoutDashboard },
+const NAV_DASHBOARD = [
+  { label: 'Overview', href: '/dashboard', icon: LayoutGrid },
   { label: 'Providers', href: '/dashboard/providers', icon: Globe },
   { label: 'Agents', href: '/dashboard/agents', icon: Bot },
   { label: 'Analytics', href: '/dashboard/analytics', icon: BarChart3 },
-  { label: 'Budgets', href: '/dashboard/budgets', icon: Wallet },
+  { label: 'Budgets', href: '/dashboard/budgets', icon: PiggyBank },
   { label: 'Events', href: '/dashboard/events', icon: Activity },
 ] as const;
 
 const NAV_ACCOUNT = [
+  { label: 'Wallets', href: '/dashboard/wallets', icon: Wallet },
+  { label: 'Favorites', href: '/dashboard/favorites', icon: Star },
   { label: 'Billing', href: '/dashboard/billing', icon: CreditCard },
-  { label: 'API Keys', href: '/dashboard/keys', icon: Key },
+  { label: 'API Keys', href: '/dashboard/api-keys', icon: Key },
   { label: 'Settings', href: '/dashboard/settings', icon: Settings },
 ] as const;
 
-function NavItem({ href, icon: Icon, label, active }: {
-  href: string; icon: any; label: string; active: boolean;
+export function Sidebar({
+  mobileOpen,
+  onClose,
+}: {
+  mobileOpen: boolean;
+  onClose: () => void;
 }) {
-  return (
-    <Link
-      href={href}
-      className={`flex items-center gap-3 px-3 py-2 rounded-lg text-[13px] transition-colors ${
-        active
-          ? 'bg-fabric-green/10 text-fabric-green'
-          : 'text-fabric-gray-500 hover:bg-fabric-gray-300/50 hover:text-fabric-white'
-      }`}
-    >
-      <Icon className="w-4 h-4" />
-      {label}
-    </Link>
-  );
-}
-
-export function Sidebar() {
   const pathname = usePathname();
+  const router = useRouter();
   const { logout } = useAuth();
+  const [isDark, setIsDark] = useState(false);
 
-  const isActive = (href: string) =>
-    pathname === href || (href !== '/dashboard' && pathname?.startsWith(href));
+  useEffect(() => {
+    setIsDark(document.documentElement.classList.contains('dark'));
+  }, []);
+
+  const isActive = (href: string) => {
+    if (href === '/dashboard') return pathname === '/dashboard';
+    return pathname?.startsWith(href) ?? false;
+  };
+
+  const toggleTheme = () => {
+    const html = document.documentElement;
+    const newDark = !html.classList.contains('dark');
+    if (newDark) {
+      html.classList.add('dark');
+      localStorage.setItem('fabric-theme', 'dark');
+    } else {
+      html.classList.remove('dark');
+      localStorage.setItem('fabric-theme', 'light');
+    }
+    setIsDark(newDark);
+  };
+
+  const handleLogout = () => {
+    logout();
+    router.push('/');
+  };
 
   return (
-    <aside className="w-56 min-h-screen bg-fabric-gray-900 border-r border-fabric-gray-300 flex flex-col">
-      {/* Logo */}
-      <div className="px-5 py-6 border-b border-fabric-gray-300">
-        <Link href="/dashboard" className="flex items-center gap-2">
-          <span className="text-fabric-green font-bold text-sm tracking-wider">fabric</span>
-          <span className="text-[10px] text-fabric-gray-500 font-normal">dashboard</span>
-        </Link>
-      </div>
+    <>
+      {/* Mobile overlay */}
+      <div
+        className={`sidebar-overlay${mobileOpen ? ' open' : ''}`}
+        onClick={onClose}
+      />
 
-      {/* Main nav */}
-      <nav className="flex-1 px-3 py-4">
-        <div className="space-y-1">
-          {NAV_MAIN.map(({ label, href, icon }) => (
-            <NavItem key={href} href={href} icon={icon} label={label} active={!!isActive(href)} />
+      <aside className={`sidebar${mobileOpen ? ' open' : ''}`}>
+        <nav className="sidebar-nav">
+          <div className="nav-section-label" style={{ marginTop: 0, marginBottom: '4px' }}>
+            Dashboard
+          </div>
+
+          {NAV_DASHBOARD.map(({ label, href, icon: Icon }) => (
+            <Link
+              key={href}
+              href={href}
+              onClick={onClose}
+              className={`nav-item${isActive(href) ? ' active' : ''}`}
+            >
+              <Icon size={16} />
+              {label}
+            </Link>
           ))}
-        </div>
 
-        <div className="my-4 mx-3 border-t border-fabric-gray-300" />
+          <div className="nav-divider" />
 
-        {/* Provider onboarding */}
-        <Link
-          href="/dashboard/providers/register"
-          className="flex items-center gap-3 px-3 py-2 rounded-lg text-[13px] text-fabric-green hover:bg-fabric-green/10 transition-colors mb-4"
-        >
-          <Plus className="w-4 h-4" />
-          Register Provider
-        </Link>
+          <Link href="/dashboard/register" onClick={onClose} className="nav-cta">
+            <Plus size={16} />
+            Register Provider
+          </Link>
 
-        {/* Account nav */}
-        <div className="text-[10px] uppercase tracking-widest text-fabric-gray-600 px-3 mb-2">
-          Account
-        </div>
-        <div className="space-y-1">
-          {NAV_ACCOUNT.map(({ label, href, icon }) => (
-            <NavItem key={href} href={href} icon={icon} label={label} active={!!isActive(href)} />
+          <div className="nav-section-label">Account</div>
+
+          {NAV_ACCOUNT.map(({ label, href, icon: Icon }) => (
+            <Link
+              key={href}
+              href={href}
+              onClick={onClose}
+              className={`nav-item${isActive(href) ? ' active' : ''}`}
+            >
+              <Icon size={16} />
+              {label}
+            </Link>
           ))}
+        </nav>
+
+        <div className="sidebar-branding">
+          <FabricLogo />
         </div>
-      </nav>
 
-      {/* Logout */}
-      <div className="px-3 pb-4">
-        <button
-          onClick={logout}
-          className="flex items-center gap-3 px-3 py-2 rounded-lg text-[13px] w-full text-fabric-gray-500 hover:bg-fabric-gray-300/50 hover:text-fabric-white transition-colors"
-        >
-          <LogOut className="w-4 h-4" />
-          Sign out
-        </button>
-      </div>
-
-      <div className="px-5 py-3 border-t border-fabric-gray-300 text-[10px] text-fabric-gray-600">
-        v1.0 &middot; Base L2
-      </div>
-    </aside>
+        <div className="sidebar-footer">
+          <div className="sidebar-footer-row">
+            <button className="sidebar-signout" onClick={handleLogout}>
+              <LogOut size={16} />
+              Sign out
+            </button>
+            <button className="theme-toggle" onClick={toggleTheme} title="Toggle dark mode">
+              {isDark ? <Sun size={16} /> : <Moon size={16} />}
+            </button>
+          </div>
+          <div className="sidebar-version">v1.0 &middot; Base L2</div>
+        </div>
+      </aside>
+    </>
   );
 }

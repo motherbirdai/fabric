@@ -1,224 +1,76 @@
 'use client';
 
+import Link from 'next/link';
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { Star, StarOff, Shield, Globe, ExternalLink, ChevronDown } from 'lucide-react';
-import { api, Provider } from '@/lib/api';
-import { useQuery, useMutation } from '@/lib/hooks';
 
-const CATEGORIES = [
-  'all',
-  'image-generation',
-  'translation',
-  'transcription',
-  'code-review',
-  'data-analysis',
-  'text-generation',
-  'embedding',
-  'search',
+const PROVIDERS = [
+  { id: 'deepl', name: 'DeepL Agent', score: '4.17', cat: 'Translation', catClass: 'cat-translation', desc: 'Neural machine translation with context awareness. 30+ languages.', price: '$0.001/token', latency: '400ms avg', uptime: '99.9% uptime', gradient: 'linear-gradient(135deg,#068cff,#0066cc)', letter: 'D' },
+  { id: 'flux', name: 'Flux Pro', score: '4.06', cat: 'Image Generation', catClass: 'cat-image', desc: 'State-of-the-art image generation from text prompts.', price: '$0.02/request', latency: '1200ms avg', uptime: '99.8% uptime', gradient: 'linear-gradient(135deg,#fe83e0,#cc66b3)', letter: 'F' },
+  { id: 'sentiment', name: 'Sentiment AI', score: '3.87', cat: 'Data Analysis', catClass: 'cat-data', desc: 'Real-time sentiment analysis across text, social, and news.', price: '$0.005/request', latency: '800ms avg', uptime: '97.8% uptime', gradient: 'linear-gradient(135deg,#ffab00,#cc8800)', letter: 'S' },
+  { id: 'dalle', name: 'DALL·E 3', score: '3.79', cat: 'Image Generation', catClass: 'cat-image', desc: "OpenAI's latest image generation model with high fidelity.", price: '$0.04/request', latency: '2800ms avg', uptime: '99.5% uptime', gradient: 'linear-gradient(135deg,#fe83e0,#cc66b3)', letter: 'D' },
+  { id: 'codex', name: 'Codex Review', score: '3.70', cat: 'Code Review', catClass: 'cat-code', desc: 'Automated code review with security analysis and suggestions.', price: '$0.003/token', latency: '3200ms avg', uptime: '99.2% uptime', gradient: 'linear-gradient(135deg,#00e5ff,#00b3cc)', letter: 'C' },
 ];
 
-function TrustBadge({ score }: { score: number }) {
-  const level = score >= 4.0 ? 'high' : score >= 3.0 ? 'mid' : 'low';
-  return (
-    <span className={`trust-badge ${level}`}>
-      <Shield className="w-3 h-3" />
-      {score.toFixed(1)}
-    </span>
-  );
-}
-
-function ProviderCard({ provider, isFav, onToggleFav }: {
-  provider: Provider; isFav: boolean; onToggleFav: () => void;
-}) {
-  const router = useRouter();
-  const [evaluating, setEvaluating] = useState(false);
-  const [breakdown, setBreakdown] = useState<Record<string, number> | null>(null);
-
-  const handleEvaluate = async () => {
-    setEvaluating(true);
-    try {
-      const result = await api.evaluate({ providerId: provider.id });
-      setBreakdown(result.breakdown);
-    } catch {}
-    setEvaluating(false);
-  };
-
-  return (
-    <div className="metric-card">
-      <div className="flex items-start justify-between mb-3">
-        <div>
-          <div className="flex items-center gap-2">
-            <h3 className="text-sm font-semibold cursor-pointer hover:text-fabric-blue transition-colors" onClick={() => router.push(`/dashboard/providers/${provider.id}`)}>{provider.name}</h3>
-            <TrustBadge score={provider.trustScore} />
-          </div>
-          <div className="text-[11px] text-fabric-gray-500 mt-0.5">{provider.category}</div>
-        </div>
-        <button
-          onClick={onToggleFav}
-          className="text-fabric-gray-400 hover:text-fabric-pink transition-colors"
-          title={isFav ? 'Remove favorite' : 'Add favorite'}
-        >
-          {isFav ? <Star className="w-4 h-4 fill-current text-fabric-pink" /> : <StarOff className="w-4 h-4" />}
-        </button>
-      </div>
-
-      <div className="grid grid-cols-3 gap-3 text-center text-[11px] mb-3">
-        <div>
-          <div className="text-fabric-gray-900 font-medium">{provider.totalInteractions.toLocaleString()}</div>
-          <div className="text-fabric-gray-500">interactions</div>
-        </div>
-        <div>
-          <div className="text-fabric-gray-900 font-medium">${provider.priceUsd.toFixed(3)}</div>
-          <div className="text-fabric-gray-500">per request</div>
-        </div>
-        <div>
-          <div className={`font-medium ${provider.active ? 'text-green-600' : 'text-red-500'}`}>
-            {provider.active ? 'Active' : 'Inactive'}
-          </div>
-          <div className="text-fabric-gray-500">status</div>
-        </div>
-      </div>
-
-      <div className="flex items-center gap-2 text-[11px] text-fabric-gray-500 mb-3 overflow-hidden">
-        <Globe className="w-3 h-3 flex-shrink-0" />
-        <span className="truncate">{provider.endpoint}</span>
-      </div>
-
-      {breakdown && (
-        <div className="border-t border-fabric-gray-100 pt-3 mb-3 space-y-1">
-          {Object.entries(breakdown).map(([key, val]) => (
-            <div key={key} className="flex justify-between text-[11px]">
-              <span className="text-fabric-gray-500">{key}</span>
-              <span className="font-medium">{(val * 100).toFixed(0)}%</span>
-            </div>
-          ))}
-        </div>
-      )}
-
-      <div className="flex gap-2">
-        <button
-          onClick={handleEvaluate}
-          disabled={evaluating}
-          className="flex-1 py-1.5 text-[11px] rounded-lg border border-fabric-gray-200 hover:bg-fabric-gray-50 transition-colors disabled:opacity-40"
-        >
-          {evaluating ? 'Evaluating...' : breakdown ? 'Re-evaluate' : 'Evaluate trust'}
-        </button>
-        {provider.endpoint && (
-          <a
-            href={provider.endpoint}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="px-3 py-1.5 text-[11px] rounded-lg border border-fabric-gray-200 hover:bg-fabric-gray-50 transition-colors flex items-center gap-1"
-          >
-            <ExternalLink className="w-3 h-3" />
-          </a>
-        )}
-      </div>
-    </div>
-  );
-}
-
 export default function ProvidersPage() {
-  const [category, setCategory] = useState('all');
-  const [minTrust, setMinTrust] = useState(0);
+  const [search, setSearch] = useState('');
 
-  const providers = useQuery(
-    () => api.discover({ category: category === 'all' ? undefined : category, minTrust: minTrust || undefined, limit: 50 }),
-    [category, minTrust]
+  const filtered = PROVIDERS.filter(p =>
+    p.name.toLowerCase().includes(search.toLowerCase()) ||
+    p.cat.toLowerCase().includes(search.toLowerCase())
   );
-
-  const favorites = useQuery(() => api.getFavorites());
-  const favIds = new Set(favorites.data?.favorites.map(f => f.providerId) || []);
-
-  const toggleFav = useMutation(async (providerId: string) => {
-    if (favIds.has(providerId)) {
-      await api.removeFavorite(providerId);
-    } else {
-      await api.addFavorite(providerId);
-    }
-    favorites.refetch();
-  });
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex items-center justify-between" style={{ padding: '28px 36px', borderBottom: '1px solid var(--border)', background: 'var(--card)' }}>
         <div>
-          <h1 className="text-xl font-semibold">Providers</h1>
-          <p className="text-[13px] text-fabric-gray-500 mt-1">
-            Browse and evaluate {providers.data?.total || 0} registered providers
-          </p>
+          <h1 style={{ fontSize: '22px', fontWeight: 700, letterSpacing: '-.8px' }}>Providers</h1>
+          <p style={{ fontSize: '13px', color: 'var(--text-3)', marginTop: '2px' }}>AI services in the Fabric registry</p>
         </div>
-        <a
-          href="/dashboard/providers/register"
-          className="px-4 py-2 bg-fabric-gray-900 text-white text-[12px] font-medium rounded-lg hover:bg-fabric-gray-800 transition-colors"
-        >
-          + Register Provider
-        </a>
+        <Link href="/dashboard/register" className="btn-sm btn-primary-fixed" style={{ padding: '9px 20px', fontWeight: 600 }}>+ Register Provider</Link>
       </div>
-
-      {/* Filters */}
-      <div className="flex flex-wrap gap-3 mb-6">
-        <div className="relative">
-          <select
-            value={category}
-            onChange={(e) => setCategory(e.target.value)}
-            className="appearance-none pl-3 pr-8 py-2 bg-white border border-fabric-gray-200 rounded-lg text-[12px] focus:outline-none focus:ring-2 focus:ring-fabric-blue cursor-pointer"
-          >
-            {CATEGORIES.map(c => (
-              <option key={c} value={c}>{c === 'all' ? 'All categories' : c}</option>
-            ))}
-          </select>
-          <ChevronDown className="w-3 h-3 absolute right-3 top-1/2 -translate-y-1/2 text-fabric-gray-400 pointer-events-none" />
+      <div className="animate-fade-in" style={{ padding: '24px 36px 48px' }}>
+        <div className="flex gap-[10px]" style={{ marginBottom: '20px' }}>
+          <input
+            className="flex-1"
+            style={{ padding: '10px 16px', borderRadius: '10px', fontSize: '14px', outline: 'none', background: 'var(--card)', border: '1px solid var(--border)', fontFamily: 'var(--font-sans)', color: 'var(--text)' }}
+            placeholder="Search providers..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
+          <button className="btn-sm" style={{ fontFamily: 'var(--font-mono)', fontSize: '12px', padding: '10px 18px' }}>Category ↓</button>
+          <button className="btn-sm" style={{ fontFamily: 'var(--font-mono)', fontSize: '12px', padding: '10px 18px' }}>Min Trust ↓</button>
         </div>
 
-        <div className="relative">
-          <select
-            value={minTrust}
-            onChange={(e) => setMinTrust(Number(e.target.value))}
-            className="appearance-none pl-3 pr-8 py-2 bg-white border border-fabric-gray-200 rounded-lg text-[12px] focus:outline-none focus:ring-2 focus:ring-fabric-blue cursor-pointer"
-          >
-            <option value={0}>Any trust score</option>
-            <option value={3}>3.0+ trust</option>
-            <option value={3.5}>3.5+ trust</option>
-            <option value={4}>4.0+ trust</option>
-            <option value={4.5}>4.5+ trust</option>
-          </select>
-          <ChevronDown className="w-3 h-3 absolute right-3 top-1/2 -translate-y-1/2 text-fabric-gray-400 pointer-events-none" />
-        </div>
-
-        {favorites.data?.favorites.length ? (
-          <div className="flex items-center gap-1 text-[11px] text-fabric-pink ml-auto">
-            <Star className="w-3 h-3 fill-current" />
-            {favorites.data.favorites.length} favorites
-          </div>
-        ) : null}
-      </div>
-
-      {/* Provider grid */}
-      {providers.loading ? (
-        <div className="text-center py-12 text-[13px] text-fabric-gray-400">Loading providers...</div>
-      ) : providers.error ? (
-        <div className="text-center py-12 text-[13px] text-red-500">{providers.error}</div>
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
-          {providers.data?.providers.map((p) => (
-            <ProviderCard
+        <div className="provider-grid">
+          {filtered.map((p) => (
+            <Link
               key={p.id}
-              provider={p}
-              isFav={favIds.has(p.id)}
-              onToggleFav={() => toggleFav.execute(p.id)}
-            />
+              href={`/dashboard/providers/${p.id}`}
+              className="block transition-colors cursor-pointer"
+              style={{ background: 'var(--card)', padding: '24px' }}
+            >
+              <div className="flex items-center justify-between" style={{ marginBottom: '10px' }}>
+                <div className="flex items-center gap-3">
+                  <div className="flex items-center justify-center rounded-[10px] text-[16px] font-bold text-white" style={{ width: '36px', height: '36px', background: p.gradient }}>{p.letter}</div>
+                  <div style={{ fontSize: '16px', fontWeight: 600, letterSpacing: '-.3px' }}>{p.name}</div>
+                </div>
+                <div style={{ fontFamily: 'var(--font-mono)', fontSize: '14px', color: 'var(--green)', fontWeight: 500 }}>{p.score}</div>
+              </div>
+              <span className={`inline-block ${p.catClass} rounded-[5px]`} style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', letterSpacing: '.5px', padding: '3px 10px', textTransform: 'uppercase', marginBottom: '10px' }}>{p.cat}</span>
+              <div style={{ fontSize: '13px', color: 'var(--text-2)', lineHeight: 1.5, marginBottom: '14px' }}>{p.desc}</div>
+              <div className="flex gap-4" style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--text-3)' }}>
+                <span>{p.price}</span>
+                <span>{p.latency}</span>
+                <span>{p.uptime}</span>
+                <span className="inline-flex items-center gap-[5px]" style={{ color: 'var(--green)', letterSpacing: '.5px' }}>
+                  <span className="inline-block w-[5px] h-[5px] rounded-full animate-live-pulse" style={{ background: 'var(--green)' }} />
+                  LIVE
+                </span>
+              </div>
+            </Link>
           ))}
         </div>
-      )}
-
-      {providers.data?.providers.length === 0 && !providers.loading && (
-        <div className="text-center py-12">
-          <Globe className="w-8 h-8 text-fabric-gray-300 mx-auto mb-3" />
-          <div className="text-[13px] text-fabric-gray-500">No providers found for this category</div>
-        </div>
-      )}
+      </div>
     </div>
   );
 }

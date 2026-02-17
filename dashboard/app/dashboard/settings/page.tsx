@@ -1,146 +1,215 @@
 'use client';
 
 import { useState } from 'react';
-import { Key, Eye, EyeOff, Copy, RefreshCw, Shield, Zap, ExternalLink } from 'lucide-react';
-import { useAuth } from '@/lib/auth';
-import { api } from '@/lib/api';
-import { useQuery } from '@/lib/hooks';
+
+const TRUST_WEIGHTS = [
+  { key: 'successRate', label: 'Success Rate', desc: 'Weight for provider success rate (last 30d)', default: 30 },
+  { key: 'feedbackScore', label: 'Feedback Score', desc: 'Weight for agent feedback ratings', default: 20 },
+  { key: 'latency', label: 'Latency', desc: 'Weight for response time percentile', default: 15 },
+  { key: 'uptime', label: 'Uptime', desc: 'Weight for 7-day rolling uptime', default: 15 },
+  { key: 'onChain', label: 'On-Chain Reputation', desc: 'Weight for ERC-8004 registry data', default: 10 },
+  { key: 'longevity', label: 'Longevity + Volume', desc: 'Weight for account age and transaction consistency', default: 10 },
+];
+
+const WEBHOOK_EVENTS = ['route.completed', 'route.failed', 'budget.exceeded', 'trust.updated'];
 
 export default function SettingsPage() {
-  const { apiKey } = useAuth();
-  const [showKey, setShowKey] = useState(false);
-  const [copied, setCopied] = useState(false);
-  const chain = useQuery(() => api.getChainStatus());
-  const sub = useQuery(() => api.getSubscription());
+  const [weights, setWeights] = useState<Record<string, number>>(
+    Object.fromEntries(TRUST_WEIGHTS.map((w) => [w.key, w.default]))
+  );
 
-  const copyKey = () => {
-    if (apiKey) {
-      navigator.clipboard.writeText(apiKey);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    }
+  const btnDangerStyle: React.CSSProperties = {
+    fontSize: '12px',
+    padding: '7px 16px',
+    background: '#dc2626',
+    border: '1px solid #dc2626',
+    borderRadius: '8px',
+    color: '#fff',
+    cursor: 'pointer',
+    fontFamily: 'var(--font-sans)',
+    fontWeight: 500,
+    whiteSpace: 'nowrap',
   };
-
-  const maskedKey = apiKey
-    ? `${apiKey.slice(0, 10)}${'•'.repeat(24)}${apiKey.slice(-4)}`
-    : '—';
 
   return (
     <div>
-      <div className="mb-8">
-        <h1 className="text-xl font-semibold">Settings</h1>
-        <p className="text-[13px] text-fabric-gray-500 mt-1">API keys and account configuration</p>
+      {/* Page header */}
+      <div style={{ padding: '28px 36px', borderBottom: '1px solid var(--border)', background: 'var(--card)' }}>
+        <h1 style={{ fontSize: '22px', fontWeight: 700, letterSpacing: '-.8px' }}>Settings</h1>
+        <p style={{ fontSize: '13px', color: 'var(--text-3)', marginTop: '2px' }}>Account configuration</p>
       </div>
 
-      {/* API Key */}
-      <div className="metric-card mb-6">
-        <h2 className="text-sm font-semibold mb-4 flex items-center gap-2">
-          <Key className="w-4 h-4" /> API Key
-        </h2>
-        <div className="flex items-center gap-2 p-3 bg-fabric-gray-50 rounded-lg">
-          <code className="flex-1 text-[12px] font-mono truncate">
-            {showKey ? apiKey : maskedKey}
-          </code>
-          <button
-            onClick={() => setShowKey(!showKey)}
-            className="p-1.5 hover:bg-fabric-gray-200 rounded transition-colors"
-            title={showKey ? 'Hide' : 'Reveal'}
-          >
-            {showKey ? <EyeOff className="w-4 h-4 text-fabric-gray-500" /> : <Eye className="w-4 h-4 text-fabric-gray-500" />}
-          </button>
-          <button
-            onClick={copyKey}
-            className="p-1.5 hover:bg-fabric-gray-200 rounded transition-colors"
-            title="Copy"
-          >
-            <Copy className="w-4 h-4 text-fabric-gray-500" />
-          </button>
-        </div>
-        {copied && <p className="text-[11px] text-green-600 mt-1">Copied to clipboard</p>}
-        <p className="text-[11px] text-fabric-gray-500 mt-2">
-          Use this key in the <code className="bg-fabric-gray-100 px-1 rounded">x-api-key</code> header for all API requests.
-        </p>
-      </div>
+      <div className="animate-fade-in" style={{ padding: '24px 36px 48px', display: 'flex', flexDirection: 'column', gap: '20px' }}>
 
-      {/* Account info */}
-      {sub.data && (
-        <div className="metric-card mb-6">
-          <h2 className="text-sm font-semibold mb-4 flex items-center gap-2">
-            <Shield className="w-4 h-4" /> Account
-          </h2>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-[12px]">
-            <div>
-              <div className="text-[10px] text-fabric-gray-500 uppercase tracking-wider mb-1">Plan</div>
-              <div className="font-semibold text-fabric-blue">{sub.data.plan}</div>
+        {/* ── Account ── */}
+        <div className="card">
+          <div className="card-header"><h3>Account</h3></div>
+          <div className="card-body-flush">
+            <div className="setting-row">
+              <div>
+                <div className="setting-label">Email</div>
+                <div className="setting-desc">Account email for notifications</div>
+              </div>
+              <span className="setting-value">kenny@motherbird.com.au</span>
             </div>
-            <div>
-              <div className="text-[10px] text-fabric-gray-500 uppercase tracking-wider mb-1">Status</div>
-              <div className="font-medium text-green-600">{sub.data.status}</div>
+            <div className="setting-row">
+              <div>
+                <div className="setting-label">Plan</div>
+                <div className="setting-desc">Current subscription tier</div>
+              </div>
+              <span className="setting-value" style={{ color: 'var(--green)' }}>FREE</span>
             </div>
-            <div>
-              <div className="text-[10px] text-fabric-gray-500 uppercase tracking-wider mb-1">Daily Limit</div>
-              <div className="font-medium">{sub.data.dailyLimit.toLocaleString()} req</div>
-            </div>
-            <div>
-              <div className="text-[10px] text-fabric-gray-500 uppercase tracking-wider mb-1">Routing Fee</div>
-              <div className="font-medium">{sub.data.routingFeePct}%</div>
+            <div className="setting-row">
+              <div>
+                <div className="setting-label">Gateway URL</div>
+                <div className="setting-desc">Your gateway endpoint</div>
+              </div>
+              <span className="setting-value">api.fabriclayer.dev</span>
             </div>
           </div>
-          <div className="mt-4 pt-4 border-t border-fabric-gray-100 text-[11px] text-fabric-gray-500">
-            Current period: {new Date(sub.data.currentPeriodStart).toLocaleDateString()} — {new Date(sub.data.currentPeriodEnd).toLocaleDateString()}
+        </div>
+
+        {/* ── Webhooks ── */}
+        <div className="card">
+          <div className="card-header"><h3>Webhooks</h3></div>
+          <div className="card-body-flush">
+            <div className="setting-row">
+              <div>
+                <div className="setting-label">Webhook URL</div>
+                <div className="setting-desc">Receive POST notifications for gateway events</div>
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <span style={{ fontFamily: 'var(--font-mono)', fontSize: '12px', color: 'var(--text-3)' }}>Not configured</span>
+                <button className="btn-sm" style={{
+                  fontSize: '12px',
+                  padding: '5px 12px',
+                  background: 'var(--card)',
+                  border: '1px solid var(--border)',
+                  borderRadius: '8px',
+                  color: 'var(--text)',
+                  cursor: 'pointer',
+                  fontFamily: 'var(--font-sans)',
+                }}>
+                  Configure
+                </button>
+              </div>
+            </div>
+            <div className="setting-row">
+              <div>
+                <div className="setting-label">Events</div>
+                <div className="setting-desc">Choose which events trigger webhook calls</div>
+              </div>
+              <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
+                {WEBHOOK_EVENTS.map((evt) => (
+                  <span
+                    key={evt}
+                    style={{
+                      fontFamily: 'var(--font-mono)',
+                      fontSize: '10px',
+                      padding: '3px 8px',
+                      borderRadius: '6px',
+                      background: 'var(--bg)',
+                      color: 'var(--text-3)',
+                    }}
+                  >
+                    {evt}
+                  </span>
+                ))}
+              </div>
+            </div>
+            <div className="setting-row">
+              <div>
+                <div className="setting-label">Webhook Secret</div>
+                <div className="setting-desc">Used to verify webhook signatures</div>
+              </div>
+              <span style={{ fontFamily: 'var(--font-mono)', fontSize: '12px', color: 'var(--text-3)' }}>whsec_••••••••</span>
+            </div>
           </div>
         </div>
-      )}
 
-      {/* Chain status */}
-      <div className="metric-card mb-6">
-        <h2 className="text-sm font-semibold mb-4 flex items-center gap-2">
-          <Zap className="w-4 h-4" /> Base L2
-        </h2>
-        {chain.data ? (
-          <div className="grid grid-cols-3 gap-4 text-[12px]">
-            <div>
-              <div className="text-[10px] text-fabric-gray-500 uppercase tracking-wider mb-1">Chain ID</div>
-              <div className="font-medium">{chain.data.chainId}</div>
+        {/* ── Trust Weight Overrides ── */}
+        <div className="card">
+          <div className="card-header">
+            <h3>
+              Trust Weight Overrides{' '}
+              <span style={{
+                fontFamily: 'var(--font-mono)',
+                fontSize: '10px',
+                padding: '3px 8px',
+                borderRadius: '6px',
+                background: 'var(--blue-subtle)',
+                color: 'var(--blue)',
+                marginLeft: '8px',
+                verticalAlign: 'middle',
+              }}>
+                PRO+
+              </span>
+            </h3>
+          </div>
+          <div className="card-body-flush">
+            {TRUST_WEIGHTS.map((w) => (
+              <div key={w.key} className="setting-row">
+                <div className="tooltip-wrap">
+                  <div className="setting-label">{w.label}</div>
+                  <div className="tooltip-text">{w.desc}</div>
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <input
+                    type="range"
+                    min={0}
+                    max={100}
+                    value={weights[w.key]}
+                    onChange={(e) =>
+                      setWeights((prev) => ({ ...prev, [w.key]: Number(e.target.value) }))
+                    }
+                    style={{ width: '300px', accentColor: 'var(--blue)' }}
+                  />
+                  <span style={{
+                    fontFamily: 'var(--font-mono)',
+                    fontSize: '13px',
+                    minWidth: '36px',
+                    textAlign: 'right',
+                  }}>
+                    {(weights[w.key] / 100).toFixed(2)}
+                  </span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* ── Danger Zone ── */}
+        <div className="card" style={{ borderColor: 'var(--red-subtle)' }}>
+          <div className="card-header" style={{ borderColor: 'rgba(239,68,68,.15)' }}>
+            <h3 style={{ color: 'var(--red)' }}>Danger Zone</h3>
+          </div>
+          <div className="card-body-flush">
+            <div className="setting-row">
+              <div>
+                <div className="setting-label">Revoke All Keys</div>
+                <div className="setting-desc">Invalidate all existing API keys immediately</div>
+              </div>
+              <button style={btnDangerStyle}>
+                Revoke Keys
+              </button>
             </div>
-            <div>
-              <div className="text-[10px] text-fabric-gray-500 uppercase tracking-wider mb-1">Block</div>
-              <div className="font-medium">{chain.data.blockNumber.toLocaleString()}</div>
-            </div>
-            <div>
-              <div className="text-[10px] text-fabric-gray-500 uppercase tracking-wider mb-1">Gas Price</div>
-              <div className="font-medium">{chain.data.gasPrice}</div>
+            <div className="setting-row">
+              <div>
+                <div className="setting-label">Delete Account</div>
+                <div className="setting-desc">Permanently delete your account and all data</div>
+              </div>
+              <button style={btnDangerStyle}>
+                Delete Account
+              </button>
             </div>
           </div>
-        ) : chain.loading ? (
-          <div className="text-[13px] text-fabric-gray-400">Connecting to Base...</div>
-        ) : (
-          <div className="text-[13px] text-red-500">Unable to connect to Base L2</div>
-        )}
-      </div>
-
-      {/* Quick links */}
-      <div className="metric-card">
-        <h2 className="text-sm font-semibold mb-4">Resources</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-          {[
-            { label: 'API Documentation', href: '/docs' },
-            { label: 'TypeScript SDK', href: 'https://www.npmjs.com/package/@fabric-gateway/sdk' },
-            { label: 'Python SDK', href: 'https://pypi.org/project/fabric-gateway-sdk/' },
-            { label: 'FabricRegistry Contract', href: 'https://sepolia.basescan.org' },
-          ].map((link) => (
-            <a
-              key={link.label}
-              href={link.href}
-              target={link.href.startsWith('http') ? '_blank' : undefined}
-              rel="noopener noreferrer"
-              className="flex items-center justify-between px-3 py-2.5 rounded-lg bg-fabric-gray-50 hover:bg-fabric-gray-100 transition-colors text-[12px]"
-            >
-              {link.label}
-              <ExternalLink className="w-3 h-3 text-fabric-gray-400" />
-            </a>
-          ))}
+          <div style={{
+            height: '48px',
+            background: 'linear-gradient(to bottom, rgba(239,68,68,.06), rgba(239,68,68,.12))',
+            borderTop: '1px solid rgba(239,68,68,.1)',
+          }} />
         </div>
+
       </div>
     </div>
   );

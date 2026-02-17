@@ -1,0 +1,6 @@
+.vercel
+.next/
+node_modules/
+.env*
+out/
+next-env.d.ts

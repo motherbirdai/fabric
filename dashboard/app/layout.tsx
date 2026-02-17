@@ -1,18 +1,31 @@
 import type { Metadata } from 'next';
+import { Inter, JetBrains_Mono } from 'next/font/google';
 import './globals.css';
-import { AuthProvider } from '@/lib/auth';
+
+const inter = Inter({
+  subsets: ['latin'],
+  variable: '--font-inter',
+});
+
+const jetbrains = JetBrains_Mono({
+  subsets: ['latin'],
+  variable: '--font-jetbrains',
+});
 
 export const metadata: Metadata = {
   title: 'Fabric Dashboard',
-  description: 'Trust layer for the agent economy',
+  description: 'The trust layer for the agent economy',
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className="dark">
-      <body className="antialiased">
-        <AuthProvider>{children}</AuthProvider>
-      </body>
+    <html lang="en" className={`${inter.variable} ${jetbrains.variable}`} suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{
+          __html: `try{const t=localStorage.getItem('fabric-theme');if(t==='dark')document.documentElement.classList.add('dark')}catch(e){}`
+        }} />
+      </head>
+      <body className="antialiased">{children}</body>
     </html>
   );
 }

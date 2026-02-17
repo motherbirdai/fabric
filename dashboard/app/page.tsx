@@ -1,5 +1,115 @@
-import { redirect } from 'next/navigation';
+'use client';
+
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { AuthProvider, useAuth } from '@/lib/auth';
+import { FabricLogo } from '@/components/layout/FabricLogo';
+import { Key, Building, ArrowRight } from 'lucide-react';
+
+function LoginForm() {
+  const [mode, setMode] = useState<'apikey' | 'wallet'>('apikey');
+  const [value, setValue] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const { login, authenticated, loading: authLoading } = useAuth();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!authLoading && authenticated) {
+      router.replace('/dashboard');
+    }
+  }, [authLoading, authenticated, router]);
+
+  if (authLoading) return null;
+  if (authenticated) return null;
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!value.trim()) return;
+    setLoading(true);
+    setError('');
+    const ok = await login(value.trim());
+    if (ok) {
+      router.push('/dashboard');
+    } else {
+      setError('Invalid API key. Keys start with fab_');
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="login-page">
+      <div className="login-card">
+        <div className="login-logo">
+          <FabricLogo />
+          <p>The trust layer for the agent economy</p>
+        </div>
+
+        <div className="login-tabs">
+          <button
+            className={`login-tab${mode === 'apikey' ? ' active' : ''}`}
+            onClick={() => { setMode('apikey'); setValue(''); setError(''); }}
+          >
+            <Key size={14} />
+            API Key
+          </button>
+          <button
+            className={`login-tab${mode === 'wallet' ? ' active' : ''}`}
+            onClick={() => { setMode('wallet'); setValue(''); setError(''); }}
+          >
+            <Building size={14} />
+            Wallet
+          </button>
+        </div>
+
+        <form onSubmit={handleSubmit}>
+          <div className="login-field">
+            <label>{mode === 'apikey' ? 'API Key' : 'Wallet Address'}</label>
+            <input
+              type={mode === 'apikey' ? 'password' : 'text'}
+              value={value}
+              onChange={(e) => setValue(e.target.value)}
+              placeholder={mode === 'apikey' ? 'fab_...' : '0x...'}
+              autoFocus
+            />
+          </div>
+
+          {error && (
+            <p style={{ fontSize: '12px', color: '#ef4444', marginTop: '8px' }}>{error}</p>
+          )}
+
+          <button type="submit" className="login-btn" disabled={loading || !value.trim()}>
+            {loading ? (
+              <div style={{
+                width: '16px',
+                height: '16px',
+                border: '2px solid rgba(255,255,255,.3)',
+                borderTopColor: '#fff',
+                borderRadius: '50%',
+                animation: 'spin .6s linear infinite',
+              }} />
+            ) : (
+              <>
+                Continue
+                <ArrowRight size={16} />
+              </>
+            )}
+          </button>
+        </form>
+
+        <div className="login-footer">
+          Don&apos;t have a key?{' '}
+          <a href="https://fabriclayer.dev" target="_blank">Get started</a>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 export default function Home() {
-  redirect('/dashboard');
+  return (
+    <AuthProvider>
+      <LoginForm />
+    </AuthProvider>
+  );
 }

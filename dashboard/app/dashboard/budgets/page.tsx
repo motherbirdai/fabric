@@ -1,190 +1,75 @@
 'use client';
 
-import { useState } from 'react';
-import { Wallet, Plus, AlertTriangle, CheckCircle, Shield } from 'lucide-react';
-import { api, Budget } from '@/lib/api';
-import { useQuery, useMutation } from '@/lib/hooks';
-
-function UtilBar({ spent, limit }: { spent: number; limit: number }) {
-  const pct = Math.min(100, (spent / limit) * 100);
-  const color = pct > 80 ? '#ef4444' : pct > 60 ? '#eab308' : '#068cff';
-  return (
-    <div className="w-full bg-fabric-gray-100 rounded-full h-3">
-      <div className="h-3 rounded-full transition-all" style={{ width: `${pct}%`, backgroundColor: color }} />
-    </div>
-  );
-}
-
-function BudgetCard({ budget }: { budget: Budget }) {
-  const pct = budget.limitUsd > 0 ? (budget.spentUsd / budget.limitUsd) * 100 : 0;
-  const isNearLimit = pct > 80;
-
-  return (
-    <div className="metric-card">
-      <div className="flex items-center justify-between mb-3">
-        <div className="flex items-center gap-2">
-          {isNearLimit ? (
-            <AlertTriangle className="w-4 h-4 text-red-500" />
-          ) : (
-            <CheckCircle className="w-4 h-4 text-green-500" />
-          )}
-          <h3 className="text-sm font-semibold">{budget.label || budget.periodType}</h3>
-        </div>
-        <span className={`text-[10px] uppercase tracking-wider px-2 py-0.5 rounded ${
-          budget.hardCap ? 'bg-red-50 text-red-600' : 'bg-fabric-gray-100 text-fabric-gray-500'
-        }`}>
-          {budget.hardCap ? 'Hard cap' : 'Soft limit'}
-        </span>
-      </div>
-
-      <div className="mb-2">
-        <div className="flex justify-between text-[12px] mb-1">
-          <span className="text-fabric-gray-500">${budget.spentUsd.toFixed(2)} spent</span>
-          <span className="font-medium">${budget.limitUsd.toFixed(2)} limit</span>
-        </div>
-        <UtilBar spent={budget.spentUsd} limit={budget.limitUsd} />
-      </div>
-
-      <div className="grid grid-cols-2 gap-3 text-[11px] mt-3">
-        <div>
-          <span className="text-fabric-gray-500">Period: </span>
-          <span className="font-medium">{budget.periodType}</span>
-        </div>
-        <div>
-          <span className="text-fabric-gray-500">Resets: </span>
-          <span className="font-medium">{budget.resetAt}</span>
-        </div>
-        {budget.agentId && (
-          <div className="col-span-2">
-            <span className="text-fabric-gray-500">Agent: </span>
-            <code className="text-[10px] font-mono bg-fabric-gray-100 px-1 rounded">{budget.agentId}</code>
-          </div>
-        )}
-      </div>
-    </div>
-  );
-}
+import { PiggyBank } from 'lucide-react';
 
 export default function BudgetsPage() {
-  const budgets = useQuery(() => api.getBudgets());
-  const sub = useQuery(() => api.getSubscription());
-  const [showCreate, setShowCreate] = useState(false);
-  const [newBudget, setNewBudget] = useState({ limitUsd: '', periodType: 'daily', hardCap: true });
-
-  const createBudget = useMutation(async (input: typeof newBudget) => {
-    await api.setBudget({
-      limitUsd: parseFloat(input.limitUsd),
-      periodType: input.periodType,
-      hardCap: input.hardCap,
-    });
-    budgets.refetch();
-    setShowCreate(false);
-    setNewBudget({ limitUsd: '', periodType: 'daily', hardCap: true });
-  });
-
   return (
     <div>
-      <div className="flex items-center justify-between mb-8">
+      <div className="flex items-center justify-between" style={{ padding: '28px 36px', borderBottom: '1px solid var(--border)', background: 'var(--card)' }}>
         <div>
-          <h1 className="text-xl font-semibold">Budget Controls</h1>
-          <p className="text-[13px] text-fabric-gray-500 mt-1">Set spending limits to control agent costs</p>
+          <h1 style={{ fontSize: '22px', fontWeight: 700, letterSpacing: '-.8px' }}>Budget Controls</h1>
+          <p style={{ fontSize: '13px', color: 'var(--text-3)', marginTop: '2px' }}>Set spending limits to control agent costs</p>
         </div>
-        <button
-          onClick={() => setShowCreate(true)}
-          className="flex items-center gap-2 px-4 py-2 bg-fabric-gray-900 text-white text-[12px] font-medium rounded-lg hover:bg-fabric-gray-800 transition-colors"
-        >
-          <Plus className="w-3.5 h-3.5" /> New Budget
-        </button>
+        <button className="btn-sm btn-primary-fixed" style={{ padding: '9px 20px', fontWeight: 600 }}>+ New Budget</button>
       </div>
-
-      {/* Daily usage summary */}
-      {sub.data && (
-        <div className="metric-card mb-6">
-          <div className="flex items-center gap-2 mb-3">
-            <Shield className="w-4 h-4 text-fabric-blue" />
-            <h2 className="text-sm font-semibold">Daily Request Usage</h2>
-          </div>
-          <div className="flex justify-between text-[12px] mb-1">
-            <span className="text-fabric-gray-500">{sub.data.usedToday.toLocaleString()} requests used</span>
-            <span className="font-medium">{sub.data.dailyLimit.toLocaleString()} daily limit ({sub.data.plan})</span>
-          </div>
-          <UtilBar spent={sub.data.usedToday} limit={sub.data.dailyLimit} />
-        </div>
-      )}
-
-      {/* Create form */}
-      {showCreate && (
-        <div className="metric-card mb-6 max-w-lg">
-          <h2 className="text-sm font-semibold mb-4">New Budget</h2>
-          <div className="space-y-3">
-            <div>
-              <label className="block text-[11px] text-fabric-gray-500 mb-1">Limit (USD)</label>
-              <input
-                type="number"
-                step="0.01"
-                value={newBudget.limitUsd}
-                onChange={(e) => setNewBudget({ ...newBudget, limitUsd: e.target.value })}
-                placeholder="5.00"
-                className="w-full px-3 py-2 bg-fabric-gray-50 border border-fabric-gray-200 rounded-lg text-[13px] focus:outline-none focus:ring-2 focus:ring-fabric-blue"
-                autoFocus
-              />
+      <div className="animate-fade-in" style={{ padding: '24px 36px 48px' }}>
+        <div className="stat-grid">
+          {[
+            { label: 'Active Budgets', value: '2', color: 'var(--blue)', sub: 'of 5 max on plan' },
+            { label: 'Total Budget', value: '$50.00', sub: 'combined limit' },
+            { label: 'Spent (30d)', value: '$3.22', sub: '6.4% of total' },
+            { label: 'Alerts Triggered', value: '0', color: 'var(--green)', sub: 'no warnings' },
+          ].map((s) => (
+            <div key={s.label} className="stat-card">
+              <div style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', textTransform: 'uppercase', letterSpacing: '.8px', color: 'var(--text-3)', marginBottom: '8px' }}>{s.label}</div>
+              <div style={{ fontSize: '22px', fontWeight: 700, letterSpacing: '-.5px', color: s.color }}>{s.value}</div>
+              <div style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--text-3)', marginTop: '4px' }}>{s.sub}</div>
             </div>
-            <div>
-              <label className="block text-[11px] text-fabric-gray-500 mb-1">Period</label>
-              <select
-                value={newBudget.periodType}
-                onChange={(e) => setNewBudget({ ...newBudget, periodType: e.target.value })}
-                className="w-full px-3 py-2 bg-fabric-gray-50 border border-fabric-gray-200 rounded-lg text-[13px] focus:outline-none focus:ring-2 focus:ring-fabric-blue"
-              >
-                <option value="daily">Daily</option>
-                <option value="weekly">Weekly</option>
-                <option value="monthly">Monthly</option>
-              </select>
-            </div>
-            <label className="flex items-center gap-2 cursor-pointer">
-              <input
-                type="checkbox"
-                checked={newBudget.hardCap}
-                onChange={(e) => setNewBudget({ ...newBudget, hardCap: e.target.checked })}
-                className="w-4 h-4 accent-fabric-blue"
-              />
-              <span className="text-[12px]">Hard cap (block requests when exceeded)</span>
-            </label>
-            <div className="flex gap-2">
-              <button
-                onClick={() => createBudget.execute(newBudget)}
-                disabled={!newBudget.limitUsd || createBudget.loading}
-                className="px-4 py-2 bg-fabric-blue text-white text-[12px] font-medium rounded-lg hover:bg-blue-600 disabled:opacity-40 transition-colors"
-              >
-                {createBudget.loading ? 'Creating...' : 'Create Budget'}
-              </button>
-              <button
-                onClick={() => setShowCreate(false)}
-                className="px-3 py-2 border border-fabric-gray-200 rounded-lg text-[12px] hover:bg-fabric-gray-50 transition-colors"
-              >
-                Cancel
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Budget cards */}
-      {budgets.loading ? (
-        <div className="text-center py-12 text-[13px] text-fabric-gray-400">Loading budgets...</div>
-      ) : budgets.data?.budgets.length ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
-          {budgets.data.budgets.map((b) => (
-            <BudgetCard key={b.id} budget={b} />
           ))}
         </div>
-      ) : (
-        <div className="text-center py-12">
-          <Wallet className="w-8 h-8 text-fabric-gray-300 mx-auto mb-3" />
-          <div className="text-[13px] text-fabric-gray-500">No budgets configured yet</div>
-          <p className="text-[11px] text-fabric-gray-400 mt-1">Create a budget to control agent spending</p>
+
+        <div className="card" style={{ marginTop: '20px' }}>
+          <div className="card-header"><h3>Active Budgets</h3></div>
+          <div className="card-body-flush">
+            <div className="setting-row">
+              <div className="flex items-center gap-3">
+                <div className="flex items-center justify-center rounded-lg" style={{ width: '36px', height: '36px', background: 'var(--blue-subtle)' }}>
+                  <PiggyBank size={18} style={{ color: 'var(--blue)' }} />
+                </div>
+                <div>
+                  <div style={{ fontSize: '14px' }}>research-agent — Daily</div>
+                  <div style={{ fontSize: '12px', color: 'var(--text-3)', marginTop: '2px' }}>Hard cap · $5.00/day · Resets at midnight UTC</div>
+                </div>
+              </div>
+              <div className="flex items-center gap-3">
+                <div style={{ width: '260px' }}>
+                  <div className="flex justify-between" style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', color: 'var(--text-3)', marginBottom: '3px' }}><span>$0.14</span><span>$5.00</span></div>
+                  <div style={{ width: '100%', height: '4px', background: 'var(--bg)', borderRadius: '2px', overflow: 'hidden' }}><div style={{ width: '2.8%', height: '100%', background: 'var(--blue)', borderRadius: '2px' }} /></div>
+                </div>
+                <button className="btn-sm" style={{ fontSize: '12px', padding: '5px 12px' }}>Edit</button>
+              </div>
+            </div>
+            <div className="setting-row">
+              <div className="flex items-center gap-3">
+                <div className="flex items-center justify-center rounded-lg" style={{ width: '36px', height: '36px', background: 'var(--amber-subtle)' }}>
+                  <PiggyBank size={18} style={{ color: 'var(--amber)' }} />
+                </div>
+                <div>
+                  <div style={{ fontSize: '14px' }}>All Agents — Monthly</div>
+                  <div style={{ fontSize: '12px', color: 'var(--text-3)', marginTop: '2px' }}>Soft cap (alert only) · $45.00/month · Alert at 80%</div>
+                </div>
+              </div>
+              <div className="flex items-center gap-3">
+                <div style={{ width: '260px' }}>
+                  <div className="flex justify-between" style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', color: 'var(--text-3)', marginBottom: '3px' }}><span>$3.22</span><span>$45.00</span></div>
+                  <div style={{ width: '100%', height: '4px', background: 'var(--bg)', borderRadius: '2px', overflow: 'hidden' }}><div style={{ width: '7.2%', height: '100%', background: 'var(--amber)', borderRadius: '2px' }} /></div>
+                </div>
+                <button className="btn-sm" style={{ fontSize: '12px', padding: '5px 12px' }}>Edit</button>
+              </div>
+            </div>
+          </div>
         </div>
-      )}
+      </div>
     </div>
   );
 }

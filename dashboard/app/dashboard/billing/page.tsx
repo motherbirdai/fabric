@@ -1,250 +1,213 @@
 'use client';
 
-import { useState } from 'react';
-import { CreditCard, ArrowUpRight, FileText, AlertTriangle, Check, Zap } from 'lucide-react';
-import { api } from '@/lib/api';
-import { useQuery, useMutation } from '@/lib/hooks';
+import { CreditCard, Check, Download } from 'lucide-react';
 
 const PLANS = [
-  { id: 'FREE', name: 'Free', price: 0, daily: 50, fee: 0, wallets: 0 },
-  { id: 'BUILDER', name: 'Builder', price: 9, daily: 5000, fee: 0.5, wallets: 3 },
-  { id: 'PRO', name: 'Pro', price: 39, daily: 15000, fee: 0.4, wallets: 10 },
-  { id: 'TEAM', name: 'Team', price: 149, daily: 50000, fee: 0.3, wallets: 50 },
-] as const;
+  {
+    id: 'FREE',
+    name: 'Free',
+    price: 0,
+    features: ['1,000 requests/day', '1 wallet', '1 agent', 'Community support'],
+  },
+  {
+    id: 'BUILDER',
+    name: 'Builder',
+    price: 9,
+    features: ['5,000 requests/day', '3 wallets', '5 agents', 'Email support'],
+  },
+  {
+    id: 'PRO',
+    name: 'Pro',
+    price: 39,
+    features: ['15,000 requests/day', '10 wallets', '25 agents', 'Priority support'],
+  },
+  {
+    id: 'TEAM',
+    name: 'Team',
+    price: 149,
+    features: ['100,000 requests/day', '50 wallets', 'Unlimited agents', 'Dedicated support'],
+  },
+];
+
+const CURRENT_PLAN = 'PRO';
+
+const INVOICES = [
+  { id: 'inv_001', date: 'Feb 1, 2026', amount: 39.00, status: 'Paid' },
+  { id: 'inv_002', date: 'Jan 1, 2026', amount: 39.00, status: 'Paid' },
+  { id: 'inv_003', date: 'Dec 1, 2025', amount: 39.00, status: 'Paid' },
+  { id: 'inv_004', date: 'Nov 1, 2025', amount: 9.00, status: 'Paid' },
+];
 
 export default function BillingPage() {
-  const sub = useQuery(() => api.getSubscription());
-  const invoices = useQuery(() => api.getInvoices());
-  const upcoming = useQuery(() => api.getUpcomingInvoice());
-  const overage = useQuery(() => api.getOverage());
-  const [upgrading, setUpgrading] = useState<string | null>(null);
-
-  const checkout = useMutation(async (plan: string) => {
-    const { url } = await api.createCheckout({
-      plan,
-      successUrl: `${window.location.origin}/dashboard/billing?success=1`,
-      cancelUrl: `${window.location.origin}/dashboard/billing`,
-    });
-    window.location.href = url;
-  });
-
-  const portal = useMutation(async () => {
-    const { url } = await api.createPortal({
-      returnUrl: `${window.location.origin}/dashboard/billing`,
-    });
-    window.location.href = url;
-  });
-
-  const cancel = useMutation(async () => {
-    await api.cancelSubscription();
-    sub.refetch();
-  });
-
-  const reactivate = useMutation(async () => {
-    await api.reactivateSubscription();
-    sub.refetch();
-  });
-
-  const currentPlan = sub.data?.plan || 'FREE';
-
   return (
     <div>
-      <div className="mb-8">
-        <h1 className="text-xl font-semibold">Billing</h1>
-        <p className="text-[13px] text-fabric-gray-500 mt-1">Manage your subscription and view usage</p>
+      {/* Page header */}
+      <div className="flex items-center justify-between" style={{ padding: '28px 36px', borderBottom: '1px solid var(--border)', background: 'var(--card)' }}>
+        <div>
+          <h1 style={{ fontSize: '22px', fontWeight: 700, letterSpacing: '-.8px' }}>Billing</h1>
+          <p style={{ fontSize: '13px', color: 'var(--text-3)', marginTop: '2px' }}>Manage your plan and payment methods</p>
+        </div>
       </div>
 
-      {/* Current plan */}
-      <div className="metric-card mb-6">
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-sm font-semibold flex items-center gap-2">
-            <CreditCard className="w-4 h-4" /> Current Plan
-          </h2>
-          {sub.data?.status === 'ACTIVE' && (
-            <button
-              onClick={() => portal.execute(undefined as any)}
-              className="text-[12px] text-fabric-blue hover:underline flex items-center gap-1"
-            >
-              Manage in Stripe <ArrowUpRight className="w-3 h-3" />
-            </button>
-          )}
-        </div>
+      <div className="animate-fade-in" style={{ padding: '24px 36px 48px' }}>
 
-        {sub.data ? (
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div>
-              <div className="text-[11px] text-fabric-gray-500 uppercase tracking-wider mb-1">Plan</div>
-              <div className="text-lg font-semibold text-fabric-blue">{sub.data.plan}</div>
-            </div>
-            <div>
-              <div className="text-[11px] text-fabric-gray-500 uppercase tracking-wider mb-1">Status</div>
-              <div className="text-sm font-medium">
-                {sub.data.cancelAtPeriodEnd ? (
-                  <span className="text-orange-600">Cancelling</span>
-                ) : (
-                  <span className="text-green-600">{sub.data.status}</span>
-                )}
+        {/* Current Plan Card */}
+        <div className="card" style={{ marginBottom: '24px' }}>
+          <div className="card-header">
+            <h3>Current Plan</h3>
+            <span style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', padding: '3px 10px', borderRadius: '6px', background: 'var(--blue-subtle)', color: 'var(--blue)', fontWeight: 500 }}>Pro</span>
+          </div>
+          <div className="card-body">
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '24px' }}>
+              <div>
+                <div style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', textTransform: 'uppercase', letterSpacing: '.8px', color: 'var(--text-3)', marginBottom: '6px' }}>Monthly Price</div>
+                <div style={{ fontSize: '20px', fontWeight: 700, letterSpacing: '-.5px' }}>$39<span style={{ fontSize: '13px', fontWeight: 400, color: 'var(--text-3)' }}>/mo</span></div>
+              </div>
+              <div>
+                <div style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', textTransform: 'uppercase', letterSpacing: '.8px', color: 'var(--text-3)', marginBottom: '6px' }}>Requests Today</div>
+                <div style={{ fontSize: '20px', fontWeight: 700, letterSpacing: '-.5px' }}>2,847<span style={{ fontSize: '13px', fontWeight: 400, color: 'var(--text-3)' }}> / 15,000</span></div>
+              </div>
+              <div>
+                <div style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', textTransform: 'uppercase', letterSpacing: '.8px', color: 'var(--text-3)', marginBottom: '6px' }}>Wallets Used</div>
+                <div style={{ fontSize: '20px', fontWeight: 700, letterSpacing: '-.5px' }}>3<span style={{ fontSize: '13px', fontWeight: 400, color: 'var(--text-3)' }}> / 10</span></div>
+              </div>
+              <div>
+                <div style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', textTransform: 'uppercase', letterSpacing: '.8px', color: 'var(--text-3)', marginBottom: '6px' }}>Agents Active</div>
+                <div style={{ fontSize: '20px', fontWeight: 700, letterSpacing: '-.5px' }}>7<span style={{ fontSize: '13px', fontWeight: 400, color: 'var(--text-3)' }}> / 25</span></div>
               </div>
             </div>
-            <div>
-              <div className="text-[11px] text-fabric-gray-500 uppercase tracking-wider mb-1">Daily Usage</div>
-              <div className="text-sm">{sub.data.usedToday.toLocaleString()} / {sub.data.dailyLimit.toLocaleString()}</div>
-            </div>
-            <div>
-              <div className="text-[11px] text-fabric-gray-500 uppercase tracking-wider mb-1">Routing Fee</div>
-              <div className="text-sm">{sub.data.routingFeePct}%</div>
+            <div style={{ marginTop: '16px' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '6px' }}>
+                <span style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--text-3)' }}>Daily usage</span>
+                <span style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--text-3)' }}>19%</span>
+              </div>
+              <div className="trust-bar-bg">
+                <div className="trust-bar" style={{ width: '19%', background: 'var(--blue)' }} />
+              </div>
             </div>
           </div>
-        ) : (
-          <div className="text-[13px] text-fabric-gray-400">Loading...</div>
-        )}
+        </div>
 
-        {sub.data?.cancelAtPeriodEnd && (
-          <div className="mt-4 flex items-center gap-3 p-3 bg-orange-50 border border-orange-200 rounded-lg text-[12px] text-orange-700">
-            <AlertTriangle className="w-4 h-4 flex-shrink-0" />
-            Your plan will be downgraded at the end of this billing period.
-            <button
-              onClick={() => reactivate.execute(undefined as any)}
-              className="ml-auto text-fabric-blue hover:underline"
-            >
-              Reactivate
-            </button>
+        {/* Plan Grid */}
+        <div style={{ marginBottom: '24px' }}>
+          <h3 style={{ marginBottom: '16px', paddingLeft: '24px' }}>Available Plans</h3>
+          <div className="plan-grid">
+            {PLANS.map((plan) => {
+              const isCurrent = plan.id === CURRENT_PLAN;
+              return (
+                <div key={plan.id} className={`plan-card${isCurrent ? ' current' : ''}`}>
+                  {isCurrent && (
+                    <div style={{ position: 'absolute', top: '12px', right: '12px' }}>
+                      <span style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', padding: '2px 8px', borderRadius: '4px', background: 'var(--blue-subtle)', color: 'var(--blue)', fontWeight: 500 }}>Current</span>
+                    </div>
+                  )}
+                  <div style={{ fontFamily: 'var(--font-mono)', fontSize: '12px', textTransform: 'uppercase', letterSpacing: '.8px', color: 'var(--text-3)', marginBottom: '8px' }}>{plan.name}</div>
+                  <div style={{ fontSize: '28px', fontWeight: 700, letterSpacing: '-1px', marginBottom: '20px' }}>
+                    ${plan.price}<span style={{ fontSize: '14px', fontWeight: 400, color: 'var(--text-3)' }}>/mo</span>
+                  </div>
+                  <div style={{ flex: 1 }}>
+                    {plan.features.map((feature) => (
+                      <div key={feature} className="flex items-center gap-2" style={{ fontSize: '13px', color: 'var(--text-2)', marginBottom: '10px' }}>
+                        <Check size={14} style={{ color: isCurrent ? 'var(--blue)' : 'var(--text-3)', flexShrink: 0 }} />
+                        {feature}
+                      </div>
+                    ))}
+                  </div>
+                  <div style={{ marginTop: '20px' }}>
+                    {isCurrent ? (
+                      <button
+                        className="btn-sm"
+                        style={{ width: '100%', padding: '10px', fontSize: '13px', fontWeight: 600, background: 'var(--blue-subtle)', color: 'var(--blue)', border: '1px solid var(--blue)', cursor: 'default' }}
+                      >
+                        Current Plan
+                      </button>
+                    ) : (
+                      <button
+                        className="plan-btn-fill"
+                        style={{
+                          width: '100%',
+                          padding: '10px',
+                          fontSize: '13px',
+                          fontWeight: 600,
+                          background: '#0a0a0a',
+                          color: '#fff',
+                          border: 'none',
+                          borderRadius: '8px',
+                          cursor: 'pointer',
+                          transition: 'opacity .15s',
+                        }}
+                        onMouseOver={(e) => (e.currentTarget.style.opacity = '0.85')}
+                        onMouseOut={(e) => (e.currentTarget.style.opacity = '1')}
+                      >
+                        {plan.price > 39 ? 'Upgrade' : plan.price < 39 ? 'Downgrade' : 'Upgrade'}
+                      </button>
+                    )}
+                  </div>
+                </div>
+              );
+            })}
           </div>
-        )}
-      </div>
-
-      {/* Plan cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 mb-6">
-        {PLANS.map((plan) => {
-          const isCurrent = currentPlan === plan.id;
-          return (
-            <div key={plan.id} className={`metric-card ${isCurrent ? 'ring-2 ring-fabric-blue' : ''}`}>
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-sm font-semibold">{plan.name}</span>
-                {isCurrent && <Check className="w-4 h-4 text-fabric-blue" />}
-              </div>
-              <div className="text-2xl font-semibold mb-1">
-                ${plan.price}<span className="text-[13px] font-normal text-fabric-gray-500">/mo</span>
-              </div>
-              <div className="text-[11px] text-fabric-gray-500 mb-3 space-y-1">
-                <div>{plan.daily.toLocaleString()} requests/day</div>
-                <div>{plan.fee}% routing fee</div>
-                <div>{plan.wallets} wallets</div>
-              </div>
-              {!isCurrent && (
-                <button
-                  onClick={() => {
-                    setUpgrading(plan.id);
-                    checkout.execute(plan.id);
-                  }}
-                  disabled={checkout.loading}
-                  className="w-full py-2 text-[12px] font-medium rounded-lg bg-fabric-gray-900 text-white hover:bg-fabric-gray-800 disabled:opacity-40 transition-colors"
-                >
-                  {upgrading === plan.id && checkout.loading ? 'Redirecting...' : plan.price > (PLANS.find(p => p.id === currentPlan)?.price || 0) ? 'Upgrade' : 'Switch'}
-                </button>
-              )}
-            </div>
-          );
-        })}
-      </div>
-
-      <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
-        {/* Upcoming estimate */}
-        <div className="metric-card">
-          <h2 className="text-sm font-semibold mb-4 flex items-center gap-2">
-            <Zap className="w-4 h-4" /> Upcoming Invoice
-          </h2>
-          {upcoming.data ? (
-            <div className="space-y-2 text-[13px]">
-              <div className="flex justify-between"><span className="text-fabric-gray-500">Subscription</span><span>${upcoming.data.subscriptionCost.toFixed(2)}</span></div>
-              <div className="flex justify-between"><span className="text-fabric-gray-500">Est. overage</span><span>${upcoming.data.estimatedOverage.toFixed(3)}</span></div>
-              <div className="flex justify-between"><span className="text-fabric-gray-500">Routing fees</span><span>${upcoming.data.routingFees.toFixed(3)}</span></div>
-              <div className="border-t border-fabric-gray-200 pt-2 flex justify-between font-semibold">
-                <span>Estimated total</span>
-                <span>${upcoming.data.estimatedTotal.toFixed(2)}</span>
-              </div>
-              <div className="text-[11px] text-fabric-gray-400">{upcoming.data.daysRemaining} days remaining</div>
-            </div>
-          ) : (
-            <div className="text-[13px] text-fabric-gray-400">No upcoming invoice</div>
-          )}
         </div>
 
-        {/* Overage */}
-        <div className="metric-card">
-          <h2 className="text-sm font-semibold mb-4">Overage This Period</h2>
-          {overage.data ? (
-            <div className="space-y-3">
-              <div className="grid grid-cols-2 gap-4 text-center">
-                <div>
-                  <div className="text-2xl font-semibold">{overage.data.periodCount.toLocaleString()}</div>
-                  <div className="text-[11px] text-fabric-gray-500">overage requests</div>
-                </div>
-                <div>
-                  <div className="text-2xl font-semibold">${overage.data.periodCost.toFixed(3)}</div>
-                  <div className="text-[11px] text-fabric-gray-500">overage cost</div>
-                </div>
-              </div>
-              <div className="text-[11px] text-fabric-gray-500 text-center">
-                {overage.data.dailyRate.toFixed(0)} avg/day · projected ${overage.data.projectedPeriodCost.toFixed(2)} this period
-              </div>
-            </div>
-          ) : (
-            <div className="text-[13px] text-fabric-gray-400">No overage data</div>
-          )}
-        </div>
-      </div>
+        {/* Payment Method & Billing History side by side */}
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: '20px' }}>
 
-      {/* Invoice history */}
-      <div className="metric-card mt-6">
-        <h2 className="text-sm font-semibold mb-4 flex items-center gap-2">
-          <FileText className="w-4 h-4" /> Invoice History
-        </h2>
-        {invoices.data?.invoices.length ? (
-          <div className="overflow-x-auto">
-            <table className="w-full text-[12px]">
-              <thead>
-                <tr className="text-left text-fabric-gray-500 uppercase tracking-wider text-[10px]">
-                  <th className="pb-3">Period</th>
-                  <th className="pb-3">Amount</th>
-                  <th className="pb-3">Overage</th>
-                  <th className="pb-3">Status</th>
-                  <th className="pb-3">Paid</th>
-                </tr>
-              </thead>
-              <tbody>
-                {invoices.data.invoices.map((inv) => (
-                  <tr key={inv.id} className="border-t border-fabric-gray-100">
-                    <td className="py-3">{new Date(inv.periodStart).toLocaleDateString()} – {new Date(inv.periodEnd).toLocaleDateString()}</td>
-                    <td className="py-3">${inv.amount.toFixed(2)}</td>
-                    <td className="py-3">{inv.overageCount.toLocaleString()} req</td>
-                    <td className="py-3">
-                      <span className={`inline-flex px-2 py-0.5 rounded text-[10px] font-medium ${inv.status === 'PAID' ? 'bg-green-50 text-green-700' : 'bg-fabric-gray-100 text-fabric-gray-600'}`}>
-                        {inv.status}
-                      </span>
-                    </td>
-                    <td className="py-3 text-fabric-gray-500">{inv.paidAt ? new Date(inv.paidAt).toLocaleDateString() : '—'}</td>
+          {/* Payment Method */}
+          <div className="card">
+            <div className="card-header">
+              <h3>Payment Method</h3>
+            </div>
+            <div className="card-body">
+              <div className="flex items-center gap-3" style={{ padding: '14px 16px', background: 'var(--bg)', borderRadius: '10px' }}>
+                <div className="flex items-center justify-center" style={{ width: '40px', height: '28px', background: 'var(--card)', borderRadius: '6px', border: '1px solid var(--border)' }}>
+                  <CreditCard size={18} style={{ color: 'var(--text-2)' }} />
+                </div>
+                <div>
+                  <div style={{ fontSize: '14px', fontWeight: 500 }}>Visa ending in 4242</div>
+                  <div style={{ fontFamily: 'var(--font-mono)', fontSize: '12px', color: 'var(--text-3)', marginTop: '1px' }}>Expires 12/2027</div>
+                </div>
+              </div>
+              <button className="btn-sm" style={{ marginTop: '16px', width: '100%', padding: '10px', fontSize: '13px' }}>Update Payment Method</button>
+            </div>
+          </div>
+
+          {/* Billing History */}
+          <div className="card">
+            <div className="card-header">
+              <h3>Billing History</h3>
+            </div>
+            <div className="card-body-flush">
+              <table style={{ width: '100%', fontSize: '13px', borderCollapse: 'collapse' }}>
+                <thead>
+                  <tr style={{ borderBottom: '1px solid var(--border)' }}>
+                    <th style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', textTransform: 'uppercase', letterSpacing: '.8px', color: 'var(--text-3)', fontWeight: 500, textAlign: 'left', padding: '12px 24px' }}>Date</th>
+                    <th style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', textTransform: 'uppercase', letterSpacing: '.8px', color: 'var(--text-3)', fontWeight: 500, textAlign: 'left', padding: '12px 24px' }}>Amount</th>
+                    <th style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', textTransform: 'uppercase', letterSpacing: '.8px', color: 'var(--text-3)', fontWeight: 500, textAlign: 'left', padding: '12px 24px' }}>Status</th>
+                    <th style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', textTransform: 'uppercase', letterSpacing: '.8px', color: 'var(--text-3)', fontWeight: 500, textAlign: 'right', padding: '12px 24px' }}>Invoice</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {INVOICES.map((inv) => (
+                    <tr key={inv.id} style={{ borderBottom: '1px solid var(--bg)' }}>
+                      <td style={{ padding: '14px 24px', fontSize: '13px' }}>{inv.date}</td>
+                      <td style={{ padding: '14px 24px', fontFamily: 'var(--font-mono)', fontSize: '13px' }}>${inv.amount.toFixed(2)}</td>
+                      <td style={{ padding: '14px 24px' }}>
+                        <span className="status-badge status-paid">{inv.status}</span>
+                      </td>
+                      <td style={{ padding: '14px 24px', textAlign: 'right' }}>
+                        <button className="flex items-center gap-1" style={{ marginLeft: 'auto', fontSize: '12px', color: 'var(--blue)', background: 'none', border: 'none', cursor: 'pointer' }}>
+                          <Download size={12} /> PDF
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
-        ) : (
-          <div className="text-[13px] text-fabric-gray-400">No invoices yet</div>
-        )}
-      </div>
 
-      {/* Cancel */}
-      {sub.data?.status === 'ACTIVE' && currentPlan !== 'FREE' && !sub.data.cancelAtPeriodEnd && (
-        <div className="mt-6 text-center">
-          <button
-            onClick={() => { if (confirm('Cancel your subscription? You\'ll keep access until the end of the billing period.')) cancel.execute(undefined as any); }}
-            className="text-[12px] text-fabric-gray-400 hover:text-red-500 transition-colors"
-          >
-            Cancel subscription
-          </button>
         </div>
-      )}
+      </div>
     </div>
   );
 }
