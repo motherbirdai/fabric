@@ -153,7 +153,7 @@ export default function SettingsPage() {
                   <div className="setting-label">{w.label}</div>
                   <div className="tooltip-text">{w.desc}</div>
                 </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', width: '100%' }}>
                   <input
                     type="range"
                     min={0}
@@ -162,7 +162,7 @@ export default function SettingsPage() {
                     onChange={(e) =>
                       setWeights((prev) => ({ ...prev, [w.key]: Number(e.target.value) }))
                     }
-                    style={{ width: 'min(300px, 50vw)', accentColor: 'var(--blue)' }}
+                    style={{ flex: 1, minWidth: 0, accentColor: 'var(--blue)' }}
                   />
                   <span style={{
                     fontFamily: 'var(--font-mono)',
