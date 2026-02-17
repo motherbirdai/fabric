@@ -21,24 +21,23 @@ export default function ProvidersPage() {
 
   return (
     <div>
-      <div className="flex items-center justify-between" style={{ padding: 'clamp(20px, 5vw, 28px) clamp(16px, 4vw, 36px)', borderBottom: '1px solid var(--border)', background: 'var(--card)' }}>
+      <div className="page-header-bar" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '12px' }}>
         <div>
           <h1 style={{ fontSize: '22px', fontWeight: 700, letterSpacing: '-.8px' }}>Providers</h1>
           <p style={{ fontSize: '13px', color: 'var(--text-3)', marginTop: '2px' }}>AI services in the Fabric registry</p>
         </div>
-        <Link href="/dashboard/register" className="btn-sm btn-primary-fixed" style={{ padding: '9px 20px', fontWeight: 600 }}>+ Register Provider</Link>
+        <Link href="/dashboard/register" className="btn-sm btn-primary-fixed" style={{ padding: '9px 20px', fontWeight: 600, whiteSpace: 'nowrap' }}>+ Register Provider</Link>
       </div>
       <div className="animate-fade-in" style={{ padding: 'clamp(16px, 4vw, 24px) clamp(16px, 4vw, 36px) 48px' }}>
-        <div className="flex gap-[10px]" style={{ marginBottom: '20px' }}>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', marginBottom: '20px' }}>
           <input
-            className="flex-1"
-            style={{ padding: '10px 16px', borderRadius: '10px', fontSize: '14px', outline: 'none', background: 'var(--card)', border: '1px solid var(--border)', fontFamily: 'var(--font-sans)', color: 'var(--text)' }}
+            style={{ flex: '1 1 200px', minWidth: 0, padding: '10px 16px', borderRadius: '10px', fontSize: '16px', outline: 'none', background: 'var(--card)', border: '1px solid var(--border)', fontFamily: 'var(--font-sans)', color: 'var(--text)' }}
             placeholder="Search providers..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
-          <button className="btn-sm" style={{ fontFamily: 'var(--font-mono)', fontSize: '12px', padding: '10px 18px' }}>Category ↓</button>
-          <button className="btn-sm" style={{ fontFamily: 'var(--font-mono)', fontSize: '12px', padding: '10px 18px' }}>Min Trust ↓</button>
+          <button className="btn-sm" style={{ fontFamily: 'var(--font-mono)', fontSize: '12px', padding: '10px 18px', whiteSpace: 'nowrap' }}>Category ↓</button>
+          <button className="btn-sm" style={{ fontFamily: 'var(--font-mono)', fontSize: '12px', padding: '10px 18px', whiteSpace: 'nowrap' }}>Min Trust ↓</button>
         </div>
 
         <div className="provider-grid">
@@ -58,7 +57,7 @@ export default function ProvidersPage() {
               </div>
               <span className={`inline-block ${p.catClass} rounded-[5px]`} style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', letterSpacing: '.5px', padding: '3px 10px', textTransform: 'uppercase', marginBottom: '10px' }}>{p.cat}</span>
               <div style={{ fontSize: '13px', color: 'var(--text-2)', lineHeight: 1.5, marginBottom: '14px' }}>{p.desc}</div>
-              <div className="flex gap-4" style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--text-3)' }}>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px 16px', fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--text-3)' }}>
                 <span>{p.price}</span>
                 <span>{p.latency}</span>
                 <span>{p.uptime}</span>
