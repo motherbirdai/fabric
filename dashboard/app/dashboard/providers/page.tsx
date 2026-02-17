@@ -27,7 +27,7 @@ export default function ProvidersPage() {
           <p style={{ fontSize: '13px', color: 'var(--text-3)', marginTop: '2px' }}>AI services in the Fabric registry</p>
         </div>
         <div className="header-actions">
-          <Link href="/dashboard/register" className="btn-sm btn-primary-fixed" style={{ padding: '9px 20px', fontWeight: 600 }}>+ Register Provider</Link>
+          <Link href="/dashboard/register" className="btn-sm btn-primary-fixed" style={{ padding: '9px 20px', fontWeight: 600, display: 'flex', textAlign: 'center' }}>+ Register Provider</Link>
         </div>
       </div>
       <div className="animate-fade-in" style={{ padding: 'clamp(16px, 4vw, 24px) clamp(16px, 4vw, 36px) 48px' }}>
