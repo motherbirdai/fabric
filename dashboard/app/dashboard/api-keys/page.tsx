@@ -36,7 +36,7 @@ export default function ApiKeysPage() {
   return (
     <div>
       {/* Page header */}
-      <div className="flex items-center justify-between" style={{ padding: '28px 36px', borderBottom: '1px solid var(--border)', background: 'var(--card)' }}>
+      <div className="flex items-center justify-between" style={{ padding: 'clamp(20px, 5vw, 28px) clamp(16px, 4vw, 36px)', borderBottom: '1px solid var(--border)', background: 'var(--card)' }}>
         <div>
           <h1 style={{ fontSize: '22px', fontWeight: 700, letterSpacing: '-.8px' }}>API Keys</h1>
           <p style={{ fontSize: '13px', color: 'var(--text-3)', marginTop: '2px' }}>Manage authentication keys for the Fabric gateway</p>
@@ -44,7 +44,7 @@ export default function ApiKeysPage() {
         <button className="btn-sm btn-primary-fixed" style={{ padding: '9px 20px', fontWeight: 600 }}>+ Generate Key</button>
       </div>
 
-      <div className="animate-fade-in" style={{ padding: '24px 36px 48px' }}>
+      <div className="animate-fade-in" style={{ padding: 'clamp(16px, 4vw, 24px) clamp(16px, 4vw, 36px) 48px' }}>
         {/* Current Session Key */}
         <div className="card" style={{ marginBottom: '20px' }}>
           <div className="card-header">

@@ -10,7 +10,7 @@ export default function OverviewPage() {
       <div
         className="flex items-center justify-between"
         style={{
-          padding: '28px 36px',
+          padding: 'clamp(20px, 5vw, 28px) clamp(16px, 4vw, 36px)',
           borderBottom: '1px solid var(--border)',
           background: 'var(--card)',
         }}
@@ -30,7 +30,7 @@ export default function OverviewPage() {
       </div>
 
       {/* Page content */}
-      <div className="animate-fade-in" style={{ padding: '24px 36px 48px' }}>
+      <div className="animate-fade-in" style={{ padding: 'clamp(16px, 4vw, 24px) clamp(16px, 4vw, 36px) 48px' }}>
         {/* Metric grid */}
         <div className="metric-grid" style={{ marginBottom: '28px' }}>
           <div className="metric-card">

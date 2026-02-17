@@ -5,14 +5,14 @@ import { PiggyBank } from 'lucide-react';
 export default function BudgetsPage() {
   return (
     <div>
-      <div className="flex items-center justify-between" style={{ padding: '28px 36px', borderBottom: '1px solid var(--border)', background: 'var(--card)' }}>
+      <div className="flex items-center justify-between" style={{ padding: 'clamp(20px, 5vw, 28px) clamp(16px, 4vw, 36px)', borderBottom: '1px solid var(--border)', background: 'var(--card)' }}>
         <div>
           <h1 style={{ fontSize: '22px', fontWeight: 700, letterSpacing: '-.8px' }}>Budget Controls</h1>
           <p style={{ fontSize: '13px', color: 'var(--text-3)', marginTop: '2px' }}>Set spending limits to control agent costs</p>
         </div>
         <button className="btn-sm btn-primary-fixed" style={{ padding: '9px 20px', fontWeight: 600 }}>+ New Budget</button>
       </div>
-      <div className="animate-fade-in" style={{ padding: '24px 36px 48px' }}>
+      <div className="animate-fade-in" style={{ padding: 'clamp(16px, 4vw, 24px) clamp(16px, 4vw, 36px) 48px' }}>
         <div className="stat-grid">
           {[
             { label: 'Active Budgets', value: '2', color: 'var(--blue)', sub: 'of 5 max on plan' },
@@ -42,7 +42,7 @@ export default function BudgetsPage() {
                 </div>
               </div>
               <div className="flex items-center gap-3">
-                <div style={{ width: '260px' }}>
+                <div style={{ width: 'min(260px, 100%)' }}>
                   <div className="flex justify-between" style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', color: 'var(--text-3)', marginBottom: '3px' }}><span>$0.14</span><span>$5.00</span></div>
                   <div style={{ width: '100%', height: '4px', background: 'var(--bg)', borderRadius: '2px', overflow: 'hidden' }}><div style={{ width: '2.8%', height: '100%', background: 'var(--blue)', borderRadius: '2px' }} /></div>
                 </div>
@@ -60,7 +60,7 @@ export default function BudgetsPage() {
                 </div>
               </div>
               <div className="flex items-center gap-3">
-                <div style={{ width: '260px' }}>
+                <div style={{ width: 'min(260px, 100%)' }}>
                   <div className="flex justify-between" style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', color: 'var(--text-3)', marginBottom: '3px' }}><span>$3.22</span><span>$45.00</span></div>
                   <div style={{ width: '100%', height: '4px', background: 'var(--bg)', borderRadius: '2px', overflow: 'hidden' }}><div style={{ width: '7.2%', height: '100%', background: 'var(--amber)', borderRadius: '2px' }} /></div>
                 </div>

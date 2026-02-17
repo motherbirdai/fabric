@@ -3,11 +3,11 @@
 export default function AnalyticsPage() {
   return (
     <div>
-      <div style={{ padding: '28px 36px', borderBottom: '1px solid var(--border)', background: 'var(--card)' }}>
+      <div style={{ padding: 'clamp(20px, 5vw, 28px) clamp(16px, 4vw, 36px)', borderBottom: '1px solid var(--border)', background: 'var(--card)' }}>
         <h1 style={{ fontSize: '22px', fontWeight: 700, letterSpacing: '-.8px' }}>Analytics</h1>
         <p style={{ fontSize: '13px', color: 'var(--text-3)', marginTop: '2px' }}>Usage metrics and performance data</p>
       </div>
-      <div className="animate-fade-in" style={{ padding: '24px 36px 48px' }}>
+      <div className="animate-fade-in" style={{ padding: 'clamp(16px, 4vw, 24px) clamp(16px, 4vw, 36px) 48px' }}>
         <div className="stat-grid">
           {[
             { label: 'Requests (24h)', value: '47', color: 'var(--blue)', sub: '↑ 12% vs yesterday' },
@@ -80,7 +80,7 @@ export default function AnalyticsPage() {
         </div>
 
         {/* Charts row 2 */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', marginTop: '20px' }}>
+        <div className="grid-2col" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', marginTop: '20px' }}>
           {/* Latency Distribution */}
           <div className="card">
             <div className="card-header">
@@ -164,7 +164,7 @@ export default function AnalyticsPage() {
                   <div style={{ fontSize: '12px', color: 'var(--text-3)', marginTop: '2px' }}>{r.desc}</div>
                 </div>
                 <div className="flex items-center gap-3">
-                  <div style={{ width: '360px', height: '6px', background: 'var(--bg)', borderRadius: '3px', overflow: 'hidden' }}>
+                  <div style={{ width: 'min(360px, 100%)', height: '6px', background: 'var(--bg)', borderRadius: '3px', overflow: 'hidden' }}>
                     <div style={{ width: `${r.pct}%`, height: '100%', background: 'var(--blue)', borderRadius: '3px' }} />
                   </div>
                   <span style={{ fontFamily: 'var(--font-mono)', fontSize: '12px', color: 'var(--text-2)', minWidth: '30px', textAlign: 'right' }}>{r.count}</span>

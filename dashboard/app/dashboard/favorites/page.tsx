@@ -5,11 +5,11 @@ import { Star } from 'lucide-react';
 export default function FavoritesPage() {
   return (
     <div>
-      <div style={{ padding: '28px 36px', borderBottom: '1px solid var(--border)', background: 'var(--card)' }}>
+      <div style={{ padding: 'clamp(20px, 5vw, 28px) clamp(16px, 4vw, 36px)', borderBottom: '1px solid var(--border)', background: 'var(--card)' }}>
         <h1 style={{ fontSize: '22px', fontWeight: 700, letterSpacing: '-.8px' }}>Favorites</h1>
         <p style={{ fontSize: '13px', color: 'var(--text-3)', marginTop: '2px' }}>Preferred providers get priority in routing decisions</p>
       </div>
-      <div className="animate-fade-in" style={{ padding: '24px 36px 48px' }}>
+      <div className="animate-fade-in" style={{ padding: 'clamp(16px, 4vw, 24px) clamp(16px, 4vw, 36px) 48px' }}>
         <div className="card">
           <div className="card-header"><h3>Preferred Providers</h3></div>
           <div className="card-body-flush">

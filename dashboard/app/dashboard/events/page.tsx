@@ -7,7 +7,7 @@ const FILTERS = ['All events', 'Routes 0', 'Failures 0', 'Trust updates 0', 'Bud
 export default function EventsPage() {
   return (
     <div>
-      <div className="flex items-center justify-between" style={{ padding: '28px 36px', borderBottom: '1px solid var(--border)', background: 'var(--card)' }}>
+      <div className="flex items-center justify-between" style={{ padding: 'clamp(20px, 5vw, 28px) clamp(16px, 4vw, 36px)', borderBottom: '1px solid var(--border)', background: 'var(--card)' }}>
         <div>
           <h1 className="flex items-center gap-2" style={{ fontSize: '22px', fontWeight: 700, letterSpacing: '-.8px' }}>
             Events
@@ -21,7 +21,7 @@ export default function EventsPage() {
           <button className="btn-sm flex items-center justify-center" style={{ padding: '7px 12px', width: '42px', height: '42px' }} title="Clear events"><Trash2 size={21} /></button>
         </div>
       </div>
-      <div className="animate-fade-in" style={{ padding: '24px 36px 48px' }}>
+      <div className="animate-fade-in" style={{ padding: 'clamp(16px, 4vw, 24px) clamp(16px, 4vw, 36px) 48px' }}>
         <div className="flex gap-2 flex-wrap" style={{ marginBottom: '20px' }}>
           {FILTERS.map((f, i) => (
             <button key={f} className={`event-filter ${i === 0 ? 'active' : ''}`}>{f}</button>

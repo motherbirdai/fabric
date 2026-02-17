@@ -34,12 +34,12 @@ export default function SettingsPage() {
   return (
     <div>
       {/* Page header */}
-      <div style={{ padding: '28px 36px', borderBottom: '1px solid var(--border)', background: 'var(--card)' }}>
+      <div style={{ padding: 'clamp(20px, 5vw, 28px) clamp(16px, 4vw, 36px)', borderBottom: '1px solid var(--border)', background: 'var(--card)' }}>
         <h1 style={{ fontSize: '22px', fontWeight: 700, letterSpacing: '-.8px' }}>Settings</h1>
         <p style={{ fontSize: '13px', color: 'var(--text-3)', marginTop: '2px' }}>Account configuration</p>
       </div>
 
-      <div className="animate-fade-in" style={{ padding: '24px 36px 48px', display: 'flex', flexDirection: 'column', gap: '20px' }}>
+      <div className="animate-fade-in" style={{ padding: 'clamp(16px, 4vw, 24px) clamp(16px, 4vw, 36px) 48px', display: 'flex', flexDirection: 'column', gap: '20px' }}>
 
         {/* ── Account ── */}
         <div className="card">
@@ -162,7 +162,7 @@ export default function SettingsPage() {
                     onChange={(e) =>
                       setWeights((prev) => ({ ...prev, [w.key]: Number(e.target.value) }))
                     }
-                    style={{ width: '300px', accentColor: 'var(--blue)' }}
+                    style={{ width: 'min(300px, 50vw)', accentColor: 'var(--blue)' }}
                   />
                   <span style={{
                     fontFamily: 'var(--font-mono)',

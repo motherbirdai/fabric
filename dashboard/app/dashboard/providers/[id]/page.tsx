@@ -14,7 +14,7 @@ const TRUST_ROWS = [
 export default function ProviderDetailPage() {
   return (
     <div>
-      <div className="flex items-center justify-between" style={{ padding: '28px 36px', borderBottom: '1px solid var(--border)', background: 'var(--card)' }}>
+      <div className="flex items-center justify-between" style={{ padding: 'clamp(20px, 5vw, 28px) clamp(16px, 4vw, 36px)', borderBottom: '1px solid var(--border)', background: 'var(--card)' }}>
         <div className="flex items-center gap-2">
           <Link href="/dashboard/providers" className="p-1"><ArrowLeft size={18} style={{ color: 'var(--text-3)' }} /></Link>
           <h1 style={{ fontSize: '22px', fontWeight: 700, letterSpacing: '-.8px' }}>DeepL Agent</h1>
@@ -24,7 +24,7 @@ export default function ProviderDetailPage() {
           LIVE ON FABRIC
         </span>
       </div>
-      <div className="animate-fade-in" style={{ padding: '24px 36px 48px' }}>
+      <div className="animate-fade-in" style={{ padding: 'clamp(16px, 4vw, 24px) clamp(16px, 4vw, 36px) 48px' }}>
         {/* Detail header */}
         <div className="flex items-center gap-5" style={{ marginBottom: '28px' }}>
           <div className="flex items-center justify-center rounded-[14px] text-2xl font-bold text-white" style={{ width: '56px', height: '56px', background: 'linear-gradient(135deg,#068cff,#0066cc)' }}>D</div>
@@ -35,7 +35,7 @@ export default function ProviderDetailPage() {
         </div>
 
         {/* 5-col stat grid */}
-        <div className="stat-grid" style={{ gridTemplateColumns: 'repeat(5, 1fr)', marginBottom: '28px' }}>
+        <div className="stat-grid grid-5col" style={{ gridTemplateColumns: 'repeat(5, 1fr)', marginBottom: '28px' }}>
           {[
             { label: 'Trust Score', value: '4.17', color: 'var(--blue)' },
             { label: 'Price', value: '$0.001' },
@@ -51,7 +51,7 @@ export default function ProviderDetailPage() {
         </div>
 
         {/* 2-col layout */}
-        <div className="grid gap-5" style={{ gridTemplateColumns: '2fr 1fr' }}>
+        <div className="grid gap-5 grid-2col" style={{ gridTemplateColumns: '2fr 1fr' }}>
           {/* Trust Breakdown */}
           <div className="card">
             <div className="card-header">

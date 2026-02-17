@@ -42,14 +42,14 @@ export default function BillingPage() {
   return (
     <div>
       {/* Page header */}
-      <div className="flex items-center justify-between" style={{ padding: '28px 36px', borderBottom: '1px solid var(--border)', background: 'var(--card)' }}>
+      <div className="flex items-center justify-between" style={{ padding: 'clamp(20px, 5vw, 28px) clamp(16px, 4vw, 36px)', borderBottom: '1px solid var(--border)', background: 'var(--card)' }}>
         <div>
           <h1 style={{ fontSize: '22px', fontWeight: 700, letterSpacing: '-.8px' }}>Billing</h1>
           <p style={{ fontSize: '13px', color: 'var(--text-3)', marginTop: '2px' }}>Manage your plan and payment methods</p>
         </div>
       </div>
 
-      <div className="animate-fade-in" style={{ padding: '24px 36px 48px' }}>
+      <div className="animate-fade-in" style={{ padding: 'clamp(16px, 4vw, 24px) clamp(16px, 4vw, 36px) 48px' }}>
 
         {/* Current Plan Card */}
         <div className="card" style={{ marginBottom: '24px' }}>
@@ -58,7 +58,7 @@ export default function BillingPage() {
             <span style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', padding: '3px 10px', borderRadius: '6px', background: 'var(--blue-subtle)', color: 'var(--blue)', fontWeight: 500 }}>Pro</span>
           </div>
           <div className="card-body">
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '24px' }}>
+            <div className="grid-4col" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '24px' }}>
               <div>
                 <div style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', textTransform: 'uppercase', letterSpacing: '.8px', color: 'var(--text-3)', marginBottom: '6px' }}>Monthly Price</div>
                 <div style={{ fontSize: '20px', fontWeight: 700, letterSpacing: '-.5px' }}>$39<span style={{ fontSize: '13px', fontWeight: 400, color: 'var(--text-3)' }}>/mo</span></div>
@@ -150,7 +150,7 @@ export default function BillingPage() {
         </div>
 
         {/* Payment Method & Billing History side by side */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: '20px' }}>
+        <div className="grid-2col" style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: '20px' }}>
 
           {/* Payment Method */}
           <div className="card">
