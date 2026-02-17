@@ -235,7 +235,9 @@ h3 { font-size: 16px; font-weight: 600; letter-spacing: -.3px; }
   flex-direction: column;
   position: fixed;
   top: 0;
-  bottom: 0;
+  left: 0;
+  height: 100vh;
+  height: 100dvh;
   z-index: 200;
   transition: left .25s ease-in-out;
   overflow: hidden;
