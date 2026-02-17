@@ -153,7 +153,7 @@ export default function SettingsPage() {
                   <div className="setting-label">{w.label}</div>
                   <div className="tooltip-text">{w.desc}</div>
                 </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', width: '100%' }}>
+                <div className="settings-slider-row" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                   <input
                     type="range"
                     min={0}

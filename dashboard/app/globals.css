@@ -1037,6 +1037,7 @@ h3 { font-size: 16px; font-weight: 600; letter-spacing: -.3px; }
   .settings-webhook-actions { flex-direction: column; width: 100%; }
   .settings-webhook-actions .btn-sm { width: 100%; justify-content: center; display: flex; }
   .settings-danger-btn { width: 100%; justify-content: center; display: flex; }
+  .settings-slider-row { width: 100%; }
   .budget-controls { flex-direction: column; gap: 10px; max-width: none; width: 100%; }
   .budget-edit-btn { width: 100%; justify-content: center; display: flex; }
   .apikey-revoke-btn { width: 100%; justify-content: center; display: flex; }
