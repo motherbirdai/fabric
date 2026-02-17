@@ -24,7 +24,7 @@ export default function AnalyticsPage() {
         </div>
 
         {/* Charts row 1 */}
-        <div className="grid grid-cols-2 gap-5" style={{ marginTop: '20px' }}>
+        <div className="grid-2col" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', marginTop: '20px' }}>
           <div className="card">
             <div className="card-header">
               <h3>Requests (7d)</h3>
