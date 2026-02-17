@@ -48,7 +48,7 @@ function DashboardShell({ children }: { children: React.ReactNode }) {
       <div className="main">
         <div className="mobile-header">
           <div className="mobile-header-logo">
-            <FabricLogo style={{ height: '20px', width: 'auto' }} />
+            <FabricLogo style={{ height: '30px', width: 'auto' }} />
           </div>
           <button className="mobile-hamburger" onClick={() => setMobileOpen(!mobileOpen)}>
             <Menu size={20} />
