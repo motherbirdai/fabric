@@ -1014,6 +1014,9 @@ h3 { font-size: 16px; font-weight: 600; letter-spacing: -.3px; }
   .events-actions .btn-sm { flex: 1; }
   .fav-actions { display: flex; gap: 8px; width: 100%; }
   .fav-actions > * { flex: 1; justify-content: center; display: flex; align-items: center; }
+  .apikey-actions { display: flex; gap: 8px; width: 100%; }
+  .apikey-icon-btn { flex: 1; }
+  .apikey-regen-btn { flex: 2; }
   .page-content { padding: 16px 16px 36px; }
 
   /* Inline grids → stack */

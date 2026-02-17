@@ -73,11 +73,10 @@ export default function ApiKeysPage() {
               }}>
                 {revealed ? SESSION_KEY_FULL : SESSION_KEY_MASKED}
               </code>
-              <div style={{ display: 'flex', gap: '8px', flexShrink: 0 }}>
+              <div className="apikey-actions">
                 <button
-                  className="flex items-center justify-center"
+                  className="apikey-icon-btn flex items-center justify-center"
                   style={{
-                    width: '36px',
                     height: '36px',
                     borderRadius: '8px',
                     border: '1px solid var(--border)',
@@ -95,9 +94,8 @@ export default function ApiKeysPage() {
                   )}
                 </button>
                 <button
-                  className="flex items-center justify-center"
+                  className="apikey-icon-btn flex items-center justify-center"
                   style={{
-                    width: '36px',
                     height: '36px',
                     borderRadius: '8px',
                     border: '1px solid var(--border)',
@@ -114,7 +112,7 @@ export default function ApiKeysPage() {
                     <Copy size={15} style={{ color: 'var(--text-3)' }} />
                   )}
                 </button>
-                <button className="btn-sm flex items-center gap-2" style={{ fontSize: '12px', padding: '7px 16px' }}>
+                <button className="apikey-regen-btn btn-sm flex items-center justify-center gap-2" style={{ fontSize: '12px', padding: '7px 16px' }}>
                   <RefreshCw size={13} />
                   Regenerate
                 </button>
