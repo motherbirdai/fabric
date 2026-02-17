@@ -78,8 +78,7 @@ export default function SettingsPage() {
                 <div className="setting-label">Webhook URL</div>
                 <div className="setting-desc">Receive POST notifications for gateway events</div>
               </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <span style={{ fontFamily: 'var(--font-mono)', fontSize: '12px', color: 'var(--text-3)' }}>Not configured</span>
+              <div className="settings-webhook-actions">
                 <button className="btn-sm" style={{
                   fontSize: '12px',
                   padding: '5px 12px',
@@ -92,6 +91,7 @@ export default function SettingsPage() {
                 }}>
                   Configure
                 </button>
+                <span style={{ fontFamily: 'var(--font-mono)', fontSize: '12px', color: 'var(--text-3)' }}>Not configured</span>
               </div>
             </div>
             <div className="setting-row">
@@ -189,7 +189,7 @@ export default function SettingsPage() {
                 <div className="setting-label">Revoke All Keys</div>
                 <div className="setting-desc">Invalidate all existing API keys immediately</div>
               </div>
-              <button style={btnDangerStyle}>
+              <button className="settings-danger-btn" style={btnDangerStyle}>
                 Revoke Keys
               </button>
             </div>
@@ -198,7 +198,7 @@ export default function SettingsPage() {
                 <div className="setting-label">Delete Account</div>
                 <div className="setting-desc">Permanently delete your account and all data</div>
               </div>
-              <button style={btnDangerStyle}>
+              <button className="settings-danger-btn" style={btnDangerStyle}>
                 Delete Account
               </button>
             </div>

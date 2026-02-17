@@ -1017,6 +1017,9 @@ h3 { font-size: 16px; font-weight: 600; letter-spacing: -.3px; }
   .apikey-actions { display: flex; gap: 8px; width: 100%; }
   .apikey-icon-btn { flex: 1; }
   .apikey-regen-btn { flex: 2; }
+  .settings-webhook-actions { display: flex; flex-direction: column; gap: 6px; width: 100%; }
+  .settings-webhook-actions .btn-sm { width: 100%; justify-content: center; display: flex; }
+  .settings-danger-btn { width: 100%; justify-content: center; display: flex; }
   .page-content { padding: 16px 16px 36px; }
 
   /* Inline grids → stack */
