@@ -1012,6 +1012,8 @@ h3 { font-size: 16px; font-weight: 600; letter-spacing: -.3px; }
   .page-header-bar .header-actions .btn-sm.btn-primary-fixed { width: 100%; justify-content: center; }
   .events-actions { display: flex; gap: 8px; }
   .events-actions .btn-sm { flex: 1; }
+  .fav-actions { display: flex; gap: 8px; width: 100%; }
+  .fav-actions > * { flex: 1; justify-content: center; display: flex; align-items: center; }
   .page-content { padding: 16px 16px 36px; }
 
   /* Inline grids → stack */

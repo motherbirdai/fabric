@@ -27,8 +27,8 @@ export default function FavoritesPage() {
                     <div style={{ fontSize: '12px', color: 'var(--text-3)', marginTop: '2px' }}>{f.cat} · Trust: {f.trust} · Added {f.days} days ago</div>
                   </div>
                 </div>
-                <div className="flex items-center gap-2">
-                  <span style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', padding: '3px 8px', borderRadius: '6px', background: 'var(--green-subtle)', color: 'var(--green)' }}>+15% boost</span>
+                <div className="fav-actions">
+                  <span style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', padding: '3px 8px', borderRadius: '6px', background: 'var(--green-subtle)', color: 'var(--green)', textAlign: 'center' }}>+15% boost</span>
                   <button className="btn-sm" style={{ fontSize: '12px', padding: '5px 12px' }}>Remove</button>
                 </div>
               </div>
