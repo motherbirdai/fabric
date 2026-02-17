@@ -127,10 +127,6 @@ export function Sidebar({
           ))}
         </nav>
 
-        <div className="sidebar-branding">
-          <FabricLogo />
-        </div>
-
         <div className="sidebar-footer">
           <div className="sidebar-footer-row">
             <button className="sidebar-signout" onClick={handleLogout}>

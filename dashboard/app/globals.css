@@ -113,7 +113,7 @@ h3 { font-size: 16px; font-weight: 600; letter-spacing: -.3px; }
   margin-bottom: clamp(24px, 5vh, 48px);
 }
 .login-logo svg {
-  height: 64px;
+  height: 96px;
   width: auto;
   display: inline-block;
   margin-bottom: 4px;
