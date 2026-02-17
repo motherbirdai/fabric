@@ -45,7 +45,7 @@ export default function BudgetsPage() {
               </div>
               <div className="budget-controls">
                 <div style={{ width: '100%' }}>
-                  <div className="flex justify-between" style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', color: 'var(--text-3)', marginBottom: '3px' }}><span>$0.14</span><span>$5.00</span></div>
+                  <div className="flex justify-between" className="budget-digits" style={{ fontFamily: 'var(--font-mono)', color: 'var(--text-3)', marginBottom: '3px' }}><span>$0.14</span><span>$5.00</span></div>
                   <div style={{ width: '100%', height: '4px', background: 'var(--bg)', borderRadius: '2px', overflow: 'hidden' }}><div style={{ width: '2.8%', height: '100%', background: 'var(--blue)', borderRadius: '2px' }} /></div>
                 </div>
                 <button className="btn-sm budget-edit-btn" style={{ fontSize: '12px', padding: '5px 12px' }}>Edit</button>
@@ -63,7 +63,7 @@ export default function BudgetsPage() {
               </div>
               <div className="budget-controls">
                 <div style={{ width: '100%' }}>
-                  <div className="flex justify-between" style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', color: 'var(--text-3)', marginBottom: '3px' }}><span>$3.22</span><span>$45.00</span></div>
+                  <div className="flex justify-between" className="budget-digits" style={{ fontFamily: 'var(--font-mono)', color: 'var(--text-3)', marginBottom: '3px' }}><span>$3.22</span><span>$45.00</span></div>
                   <div style={{ width: '100%', height: '4px', background: 'var(--bg)', borderRadius: '2px', overflow: 'hidden' }}><div style={{ width: '7.2%', height: '100%', background: 'var(--amber)', borderRadius: '2px' }} /></div>
                 </div>
                 <button className="btn-sm budget-edit-btn" style={{ fontSize: '12px', padding: '5px 12px' }}>Edit</button>
