@@ -19,7 +19,7 @@ async function request<T>(path: string, opts: {
 } = {}): Promise<T> {
   const headers: Record<string, string> = { 'Content-Type': 'application/json' };
   const key = opts.apiKey || getStoredApiKey();
-  if (key) headers['x-api-key'] = key;
+  if (key) headers['Authorization'] = `Bearer ${key}`;
 
   const res = await fetch(`${GATEWAY_URL}${path}`, {
     method: opts.method || 'GET',
@@ -105,9 +105,9 @@ export const api = {
   // Chain
   getChainStatus: () => request<{ chainId: number; blockNumber: number; gasPrice: string }>('/v1/chain/status'),
 
-  // Auth check — validate API key against health endpoint
+  // Auth check — validate API key against a protected endpoint
   validateKey: (apiKey: string) =>
-    request<{ status: string }>('/health', { apiKey }),
+    request<{ budgets: Budget[] }>('/v1/budget', { apiKey }),
 };
 
 // ─── Types ───
