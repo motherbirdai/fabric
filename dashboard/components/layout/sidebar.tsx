@@ -97,6 +97,9 @@ export function Sidebar({
       />
 
       <aside className={`sidebar${mobileOpen ? ' open' : ''}`}>
+        <div className="sidebar-branding">
+          <FabricLogo style={{ height: '22px', width: 'auto' }} />
+        </div>
         <nav className="sidebar-nav">
           <div className="nav-section-label" style={{ marginTop: 0, marginBottom: '4px' }}>
             Dashboard

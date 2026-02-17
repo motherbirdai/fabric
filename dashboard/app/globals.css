@@ -242,6 +242,10 @@ h3 { font-size: 16px; font-weight: 600; letter-spacing: -.3px; }
   transition: left .25s ease-in-out;
   overflow: hidden;
 }
+.sidebar-branding {
+  padding: 20px 20px 0;
+  flex-shrink: 0;
+}
 .sidebar-nav {
   flex: 1 1 0;
   min-height: 0;
@@ -440,6 +444,7 @@ h3 { font-size: 16px; font-weight: 600; letter-spacing: -.3px; }
   .sidebar { left: -260px; }
   .sidebar.open { left: 0; }
   .sidebar-overlay.open { display: block; }
+  .sidebar-branding { display: none; }
 }
 
 /* ═══════════════ SCROLLBAR ═══════════════ */
