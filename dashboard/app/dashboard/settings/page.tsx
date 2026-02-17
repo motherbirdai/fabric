@@ -87,7 +87,7 @@ export default function SettingsPage() {
                 }}>
                   Configure
                 </button>
-                <span style={{ fontFamily: 'var(--font-mono)', fontSize: '12px', color: 'var(--text-3)' }}>Not configured</span>
+                <span style={{ fontFamily: 'var(--font-mono)', fontSize: '12px', color: 'var(--text-3)' }}>Coming soon</span>
               </div>
             </div>
             <div className="setting-row">
@@ -185,7 +185,7 @@ export default function SettingsPage() {
                 <div className="setting-label">Revoke All Keys</div>
                 <div className="setting-desc">Invalidate all existing API keys immediately</div>
               </div>
-              <button className="settings-danger-btn" style={btnDangerStyle}>
+              <button className="settings-danger-btn" style={{ ...btnDangerStyle, opacity: 0.5, cursor: 'not-allowed' }} disabled title="Coming soon">
                 Revoke Keys
               </button>
             </div>
@@ -194,7 +194,7 @@ export default function SettingsPage() {
                 <div className="setting-label">Delete Account</div>
                 <div className="setting-desc">Permanently delete your account and all data</div>
               </div>
-              <button className="settings-danger-btn" style={btnDangerStyle}>
+              <button className="settings-danger-btn" style={{ ...btnDangerStyle, opacity: 0.5, cursor: 'not-allowed' }} disabled title="Coming soon">
                 Delete Account
               </button>
             </div>

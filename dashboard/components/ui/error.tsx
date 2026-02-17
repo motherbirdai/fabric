@@ -9,7 +9,7 @@ interface ErrorCardProps {
 
 export function ErrorCard({ message, onRetry }: ErrorCardProps) {
   return (
-    <div className="card">
+    <div className="card" style={{ borderLeft: '3px solid var(--red)' }}>
       <div className="empty-state">
         <AlertTriangle size={48} style={{ margin: '0 auto 16px', color: 'var(--red)', opacity: 0.5 }} />
         <h3 style={{ fontSize: '15px', fontWeight: 600, marginBottom: '4px', color: 'var(--text-2)' }}>

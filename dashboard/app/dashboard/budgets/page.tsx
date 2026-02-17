@@ -252,7 +252,7 @@ export default function BudgetsPage() {
                       </div>
                     </div>
                     {isExpanded && status && (
-                      <div style={{ padding: '0 24px 16px', display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr', gap: '12px' }}>
+                      <div className="grid-4col" style={{ padding: '0 24px 16px', display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '12px' }}>
                         <div style={{ padding: '12px 16px', background: 'var(--bg)', borderRadius: '10px' }}>
                           <div style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', textTransform: 'uppercase', letterSpacing: '.8px', color: 'var(--text-3)', marginBottom: '4px' }}>Remaining</div>
                           <div style={{ fontFamily: 'var(--font-mono)', fontSize: '14px', fontWeight: 600, color: 'var(--green)' }}>${status.remaining.toFixed(2)}</div>

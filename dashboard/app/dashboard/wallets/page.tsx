@@ -21,11 +21,11 @@ export default function WalletsPage() {
   const walletList = walletsData?.wallets || [];
   const maxWallets = walletsData?.maxWallets ?? 0;
 
-  // Fetch balances once wallets load
+  // Fetch balances only for wallets that have an address
   useEffect(() => {
     if (walletList.length === 0) return;
     walletList.forEach((w) => {
-      if (!w.agentId) return;
+      if (!w.agentId || !w.address) return;
       getWalletBalance(w.agentId)
         .then((bal) => setBalances((prev) => ({ ...prev, [w.agentId]: bal })))
         .catch(() => { /* ignore balance fetch errors */ });
@@ -148,7 +148,7 @@ export default function WalletsPage() {
               <div className="card-body-flush">
                 {walletList.map((w) => {
                   const bal = balances[w.agentId];
-                  const balStr = bal ? `$${parseFloat(bal.balances?.usdc || '0').toFixed(2)}` : '...';
+                  const balStr = !w.address ? 'No wallet' : bal ? `$${parseFloat(bal.balances?.usdc || '0').toFixed(2)}` : '...';
                   const shortAddr = w.address ? `${w.address.slice(0, 6)}...${w.address.slice(-4)}` : 'No address';
 
                   return (

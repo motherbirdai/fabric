@@ -8,6 +8,8 @@ import { PageSkeleton } from '@/components/ui/loading';
 import { ErrorCard } from '@/components/ui/error';
 import { createCheckout, createPortalSession, changePlan, ApiError } from '@/lib/api';
 
+const STRIPE_NOT_CONFIGURED_MSG = 'Stripe is not configured on the gateway. Contact your administrator to set up billing.';
+
 const PLANS = [
   {
     id: 'FREE',
@@ -53,30 +55,34 @@ export default function BillingPage() {
   const isSuccess = searchParams.get('success') === '1';
   const isCanceled = searchParams.get('canceled') === '1';
 
+  const stripeConfigured = sub?.stripeConfigured ?? false;
+
   const handlePlanChange = async (planId: string) => {
+    if (!stripeConfigured) { setPlanError(STRIPE_NOT_CONFIGURED_MSG); return; }
     setChangingPlan(planId);
     setPlanError('');
     setPlanSuccess('');
     try {
       if (currentPlan === 'FREE') {
-        // Redirect to Stripe Checkout
         const successUrl = `${window.location.origin}/dashboard/billing?success=1`;
         const cancelUrl = `${window.location.origin}/dashboard/billing?canceled=1`;
         const result = await createCheckout(planId, successUrl, cancelUrl);
         window.location.href = result.url;
         return;
       } else {
-        // Change plan directly
         const result = await changePlan(planId);
         setPlanSuccess(result.message || 'Plan changed successfully!');
         await subRefetch();
       }
     } catch (err) {
       if (err instanceof ApiError) {
-        const msg = typeof err.body === 'object' && err.body && 'error' in (err.body as Record<string, unknown>)
-          ? String((err.body as Record<string, string>).error)
-          : err.message;
-        setPlanError(msg);
+        if (err.status === 503) { setPlanError(STRIPE_NOT_CONFIGURED_MSG); }
+        else {
+          const msg = typeof err.body === 'object' && err.body && 'error' in (err.body as Record<string, unknown>)
+            ? String((err.body as Record<string, string>).error)
+            : err.message;
+          setPlanError(msg);
+        }
       } else {
         setPlanError('Failed to change plan. Please try again.');
       }
@@ -86,16 +92,20 @@ export default function BillingPage() {
   };
 
   const handleUpdatePayment = async () => {
+    if (!stripeConfigured) { setPlanError(STRIPE_NOT_CONFIGURED_MSG); return; }
     try {
       const returnUrl = `${window.location.origin}/dashboard/billing`;
       const result = await createPortalSession(returnUrl);
       window.location.href = result.url;
     } catch (err) {
       if (err instanceof ApiError) {
-        const msg = typeof err.body === 'object' && err.body && 'error' in (err.body as Record<string, unknown>)
-          ? String((err.body as Record<string, string>).error)
-          : err.message;
-        setPlanError(msg);
+        if (err.status === 503) { setPlanError(STRIPE_NOT_CONFIGURED_MSG); }
+        else {
+          const msg = typeof err.body === 'object' && err.body && 'error' in (err.body as Record<string, unknown>)
+            ? String((err.body as Record<string, string>).error)
+            : err.message;
+          setPlanError(msg);
+        }
       } else {
         setPlanError('Failed to open payment portal. Please try again.');
       }
@@ -153,7 +163,7 @@ export default function BillingPage() {
                 </div>
                 <div>
                   <div style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', textTransform: 'uppercase', letterSpacing: '.8px', color: 'var(--text-3)', marginBottom: '6px' }}>Stripe</div>
-                  <div style={{ fontSize: '20px', fontWeight: 700, letterSpacing: '-.5px' }}>{sub?.stripeConfigured ? 'Connected' : 'Not configured'}</div>
+                  <div style={{ fontSize: '20px', fontWeight: 700, letterSpacing: '-.5px', color: stripeConfigured ? 'var(--green)' : 'var(--text-3)' }}>{stripeConfigured ? 'Connected' : 'Not configured'}</div>
                 </div>
                 <div>
                   <div style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', textTransform: 'uppercase', letterSpacing: '.8px', color: 'var(--text-3)', marginBottom: '6px' }}>Plan Tier</div>
