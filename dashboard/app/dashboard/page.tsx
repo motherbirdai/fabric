@@ -14,7 +14,7 @@ export default function OverviewPage() {
             <span className="status-pill online">Gateway connected</span>
           </div>
           <p style={{ fontSize: '13px', color: 'var(--text-3)', marginTop: '2px' }}>
-            Your Fabric gateway at a glance · <span style={{ fontFamily: 'var(--font-mono)', fontSize: '11px' }}>Updated just now</span>
+            Your Fabric gateway at a glance
           </p>
         </div>
       </div>
