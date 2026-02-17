@@ -163,7 +163,7 @@ export default function ApiKeysPage() {
                     </div>
                   </div>
                 </div>
-                <button className="btn-sm btn-sm-danger" style={{
+                <button className="btn-sm btn-sm-danger apikey-revoke-btn" style={{
                   fontSize: '12px',
                   padding: '5px 14px',
                   background: 'var(--card)',
