@@ -59,13 +59,12 @@ function LoginForm() {
           </button>
           <button
             className="login-tab"
-            style={{ opacity: 0.45, cursor: 'not-allowed', position: 'relative' }}
+            style={{ opacity: 0.45, cursor: 'not-allowed', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }}
             disabled
             title="Coming soon"
           >
             <Lock size={12} />
             Wallet
-            <span style={{ fontSize: '9px', fontFamily: 'var(--font-mono)', letterSpacing: '.5px', marginLeft: '4px', opacity: 0.7 }}>SOON</span>
           </button>
         </div>
 
