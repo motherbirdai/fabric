@@ -1020,6 +1020,8 @@ h3 { font-size: 16px; font-weight: 600; letter-spacing: -.3px; }
   .settings-webhook-actions { display: flex; flex-direction: column; gap: 6px; width: 100%; }
   .settings-webhook-actions .btn-sm { width: 100%; justify-content: center; display: flex; }
   .settings-danger-btn { width: 100%; justify-content: center; display: flex; }
+  .budget-controls { display: flex; flex-direction: column; gap: 10px; width: 100%; }
+  .budget-edit-btn { width: 100%; justify-content: center; display: flex; }
   .page-content { padding: 16px 16px 36px; }
 
   /* Inline grids → stack */
