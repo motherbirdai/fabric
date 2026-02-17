@@ -238,12 +238,13 @@ h3 { font-size: 16px; font-weight: 600; letter-spacing: -.3px; }
   bottom: 0;
   z-index: 200;
   transition: left .25s ease-in-out;
-  overflow-y: auto;
-  overflow-x: hidden;
+  overflow: hidden;
 }
 .sidebar-nav {
-  flex: 1 0 auto;
+  flex: 1 1 0;
+  min-height: 0;
   padding: 20px 12px 16px;
+  overflow-y: auto;
 }
 .nav-section-label {
   font-family: var(--font-mono);
@@ -306,9 +307,6 @@ h3 { font-size: 16px; font-weight: 600; letter-spacing: -.3px; }
   padding: 16px;
   border-top: 1px solid var(--border);
   flex-shrink: 0;
-  position: sticky;
-  bottom: 0;
-  background: var(--card);
 }
 .sidebar-footer-row {
   display: flex;
