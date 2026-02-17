@@ -41,7 +41,7 @@ function LoginForm() {
     <div className="login-page">
       <div className="login-card">
         <div className="login-logo">
-          <FabricLogo />
+          <FabricLogo style={{ height: '96px', width: 'auto' }} />
           <p>The trust layer for the agent economy</p>
         </div>
 

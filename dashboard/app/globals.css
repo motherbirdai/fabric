@@ -238,6 +238,7 @@ h3 { font-size: 16px; font-weight: 600; letter-spacing: -.3px; }
   bottom: 0;
   z-index: 200;
   transition: left .25s ease-in-out;
+  overflow: hidden;
 }
 .sidebar-nav {
   flex: 1;
