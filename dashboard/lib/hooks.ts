@@ -151,6 +151,43 @@ export function useHealth(): UseApiResult<HealthStatus> {
   return useApi(() => api.health(), [], 'health');
 }
 
+// ─── Evaluation Scores (batch, cached) ──────────────────────────
+
+/** Map of provider ID → evaluation trust score */
+export type EvalScoreMap = Record<string, number>;
+
+/**
+ * Batch-fetches evaluation trust scores for all providers.
+ * Cached for 30s via the standard apiCache. Falls back to
+ * provider.trustScore when the evaluate endpoint fails.
+ */
+export function useEvalScores(providers: api.Provider[] | null): { scores: EvalScoreMap; loading: boolean } {
+  const ids = (providers || []).map(p => p.id).join(',');
+  const { data, loading } = useApi<EvalScoreMap>(
+    async () => {
+      if (!providers || providers.length === 0) return {};
+      const results = await Promise.allSettled(
+        providers.map(p => api.evaluateProvider(p.id))
+      );
+      const map: EvalScoreMap = {};
+      results.forEach((r, i) => {
+        const p = providers[i];
+        if (r.status === 'fulfilled' && r.value?.trust?.score != null) {
+          map[p.id] = r.value.trust.score;
+          // Populate individual evaluation cache so detail pages benefit
+          apiCache.set(`evaluation:${p.id}`, { data: r.value, ts: Date.now() });
+        } else if (p.trustScore != null) {
+          map[p.id] = p.trustScore;
+        }
+      });
+      return map;
+    },
+    [ids],
+    ids ? 'evalScores' : undefined,
+  );
+  return { scores: data || {}, loading };
+}
+
 // ─── SSE Event Stream ────────────────────────────────────────────
 
 export interface GatewayEvent {

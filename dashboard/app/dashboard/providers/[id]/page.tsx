@@ -195,8 +195,7 @@ export default function ProviderDetailPage() {
     );
   }
 
-  const trustScore = provider.trustScore;
-  const evalScore = evaluation?.trust?.score;
+  const trustScore = evaluation?.trust?.score ?? provider.trustScore;
   const scoreStr = trustScore != null ? trustScore.toFixed(2) : '—';
   const cat = formatCategory(provider.category || 'Unknown');
   const cc = CAT_CLASS_MAP[provider.category?.toLowerCase() || ''] || 'cat-search';
@@ -262,7 +261,7 @@ export default function ProviderDetailPage() {
           <div className="card">
             <div className="card-header">
               <span>Trust Breakdown</span>
-              <span style={{ fontFamily: 'var(--font-mono)', fontSize: '13px', color: 'var(--blue)', fontWeight: 500 }}>{evalScore != null ? evalScore.toFixed(2) : scoreStr} / 5.00</span>
+              <span style={{ fontFamily: 'var(--font-mono)', fontSize: '13px', color: 'var(--blue)', fontWeight: 500 }}>{scoreStr} / 5.00</span>
             </div>
             <div className="card-body">
               {breakdownRows.length > 0 ? (

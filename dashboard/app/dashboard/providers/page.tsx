@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useState, useEffect, useCallback } from 'react';
-import { useTitle, useProviders } from '@/lib/hooks';
+import { useTitle, useProviders, useEvalScores } from '@/lib/hooks';
 import { PageSkeleton } from '@/components/ui/loading';
 import { ErrorCard } from '@/components/ui/error';
 import { EmptyState } from '@/components/ui/empty';
@@ -49,6 +49,7 @@ export default function ProvidersPage() {
   const [showCatDropdown, setShowCatDropdown] = useState(false);
   const [showTrustDropdown, setShowTrustDropdown] = useState(false);
   const { data: providers, loading, error, refetch } = useProviders();
+  const { scores: evalScores } = useEvalScores(providers);
 
   // Close dropdowns on click outside
   const closeDropdowns = useCallback(() => {
@@ -74,7 +75,7 @@ export default function ProvidersPage() {
       (p.category || '').toLowerCase().includes(search.toLowerCase());
     const matchesCategory = !categoryFilter ||
       (p.category || '').toLowerCase() === categoryFilter.toLowerCase();
-    const matchesTrust = (p.trustScore ?? 0) >= minTrust;
+    const matchesTrust = (evalScores[p.id] ?? p.trustScore ?? 0) >= minTrust;
     return matchesSearch && matchesCategory && matchesTrust;
   });
 
@@ -171,7 +172,8 @@ export default function ProvidersPage() {
           ) : (
             <div className="provider-grid">
               {filtered.map((p) => {
-                const score = p.trustScore != null ? p.trustScore.toFixed(2) : '—';
+                const trustVal = evalScores[p.id] ?? p.trustScore;
+                const score = trustVal != null ? trustVal.toFixed(2) : '—';
                 const letter = p.name.charAt(0).toUpperCase();
                 const gradient = nameToGradient(p.name);
                 const cat = formatCategory(p.category || 'Unknown');
