@@ -4,7 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { ArrowLeft } from 'lucide-react';
-import { useTitle, useProvider, useProviderEvaluation, useWallets } from '@/lib/hooks';
+import { useTitle, useProvider, useProviderEvaluation, useWallets, invalidateCache } from '@/lib/hooks';
 import { createFavorite, ApiError } from '@/lib/api';
 import { PageSkeleton } from '@/components/ui/loading';
 import { ErrorCard } from '@/components/ui/error';
@@ -75,6 +75,7 @@ export default function ProviderDetailPage() {
     setFavSuccess(false);
     try {
       await createFavorite({ agentId: effectiveAgentId, providerId: id });
+      invalidateCache(`favorites:${effectiveAgentId}`);
       setFavSuccess(true);
       setTimeout(() => {
         setShowFavForm(false);

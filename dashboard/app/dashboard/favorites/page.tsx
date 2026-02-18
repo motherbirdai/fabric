@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { Star } from 'lucide-react';
-import { useTitle, useWallets, useFavorites, useProviders } from '@/lib/hooks';
+import { useTitle, useWallets, useFavorites, useProviders, invalidateCache } from '@/lib/hooks';
 import { PageSkeleton } from '@/components/ui/loading';
 import { ErrorCard } from '@/components/ui/error';
 import { EmptyState } from '@/components/ui/empty';
@@ -57,7 +57,8 @@ export default function FavoritesPage() {
     setRemoveError('');
     try {
       await deleteFavorite(id);
-      await refetch();
+      if (selectedAgent) invalidateCache(`favorites:${selectedAgent}`);
+      refetch();
     } catch (err) {
       if (err instanceof ApiError) {
         const msg = typeof err.body === 'object' && err.body && 'error' in (err.body as Record<string, unknown>)
@@ -101,6 +102,7 @@ export default function FavoritesPage() {
       setShowAddForm(false);
       setSelectedProviderId('');
       setAddPriority('50');
+      if (selectedAgent) invalidateCache(`favorites:${selectedAgent}`);
       await refetch();
     } catch (err) {
       if (err instanceof ApiError) {
