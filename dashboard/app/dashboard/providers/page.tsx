@@ -105,7 +105,7 @@ export default function ProvidersPage() {
         <div className="animate-fade-in" style={{ padding: 'clamp(16px, 4vw, 24px) clamp(16px, 4vw, 36px) 48px' }}>
           <div className="provider-search-bar">
             <input
-              style={{ flex: '1 1 200px', minWidth: 0, padding: '10px 16px', borderRadius: '10px', fontSize: '16px', outline: 'none', background: 'var(--card)', border: '1px solid var(--border)', fontFamily: 'var(--font-sans)', color: 'var(--text)' }}
+              style={{ flex: '1 1 200px', minWidth: 0, padding: '0 16px', height: '40px', borderRadius: '10px', fontSize: '16px', outline: 'none', background: 'var(--card)', border: '1px solid var(--border)', fontFamily: 'var(--font-sans)', color: 'var(--text)' }}
               placeholder="Search providers..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
@@ -113,7 +113,7 @@ export default function ProvidersPage() {
             <div style={{ position: 'relative' }} onClick={(e) => e.stopPropagation()}>
               <button
                 className="btn-sm provider-filter-btn"
-                style={{ fontFamily: 'var(--font-mono)', fontSize: '12px', padding: '10px 18px', whiteSpace: 'nowrap', display: 'inline-flex', alignItems: 'center', gap: '4px', minWidth: '120px', justifyContent: 'center', background: categoryFilter ? 'var(--blue-subtle)' : undefined, color: categoryFilter ? 'var(--blue)' : undefined, borderColor: categoryFilter ? 'var(--blue)' : undefined }}
+                style={{ fontFamily: 'var(--font-mono)', fontSize: '12px', padding: '0 18px', height: '40px', whiteSpace: 'nowrap', display: 'inline-flex', alignItems: 'center', gap: '4px', minWidth: '120px', justifyContent: 'center', background: categoryFilter ? 'var(--blue-subtle)' : undefined, color: categoryFilter ? 'var(--blue)' : undefined, borderColor: categoryFilter ? 'var(--blue)' : undefined }}
                 onClick={() => { setShowCatDropdown(!showCatDropdown); setShowTrustDropdown(false); }}
               >
                 {categoryFilter ? formatCategory(categoryFilter) : 'Category'}
@@ -146,7 +146,7 @@ export default function ProvidersPage() {
             <div style={{ position: 'relative' }} onClick={(e) => e.stopPropagation()}>
               <button
                 className="btn-sm provider-filter-btn"
-                style={{ fontFamily: 'var(--font-mono)', fontSize: '12px', padding: '10px 18px', whiteSpace: 'nowrap', display: 'inline-flex', alignItems: 'center', gap: '4px', minWidth: '120px', justifyContent: 'center', background: minTrust > 0 ? 'var(--blue-subtle)' : undefined, color: minTrust > 0 ? 'var(--blue)' : undefined, borderColor: minTrust > 0 ? 'var(--blue)' : undefined }}
+                style={{ fontFamily: 'var(--font-mono)', fontSize: '12px', padding: '0 18px', height: '40px', whiteSpace: 'nowrap', display: 'inline-flex', alignItems: 'center', gap: '4px', minWidth: '120px', justifyContent: 'center', background: minTrust > 0 ? 'var(--blue-subtle)' : undefined, color: minTrust > 0 ? 'var(--blue)' : undefined, borderColor: minTrust > 0 ? 'var(--blue)' : undefined }}
                 onClick={() => { setShowTrustDropdown(!showTrustDropdown); setShowCatDropdown(false); }}
               >
                 {minTrust > 0 ? `≥ ${minTrust.toFixed(1)}` : 'Min Trust'}
