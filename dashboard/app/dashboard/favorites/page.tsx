@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { Star } from 'lucide-react';
-import { useTitle, useWallets, useFavorites } from '@/lib/hooks';
+import { useTitle, useWallets, useFavorites, useProviders } from '@/lib/hooks';
 import { PageSkeleton } from '@/components/ui/loading';
 import { ErrorCard } from '@/components/ui/error';
 import { EmptyState } from '@/components/ui/empty';
@@ -27,6 +27,15 @@ export default function FavoritesPage() {
   }, [agentIds, selectedAgent]);
 
   const { data: favorites, loading: favsLoading, error, refetch } = useFavorites(selectedAgent);
+  const { data: providers } = useProviders();
+
+  // Build provider name lookup
+  const providerNames: Record<string, string> = {};
+  const providerCategories: Record<string, string> = {};
+  (providers || []).forEach(p => {
+    providerNames[p.id] = p.name;
+    providerCategories[p.id] = p.category;
+  });
 
   const loading = walletsLoading || favsLoading;
 
@@ -220,9 +229,9 @@ export default function FavoritesPage() {
                         <Star size={18} style={{ color: 'var(--blue)' }} />
                       </div>
                       <div>
-                        <div style={{ fontSize: '14px' }}>{f.providerName || f.providerId}</div>
+                        <div style={{ fontSize: '14px' }}>{f.providerName || providerNames[f.providerId] || f.providerId}</div>
                         <div style={{ fontSize: '12px', color: 'var(--text-3)', marginTop: '2px' }}>
-                          {f.category || 'Provider'}
+                          {f.category || providerCategories[f.providerId] || 'Provider'}
                           {f.trustScore != null && ` · Trust: ${f.trustScore.toFixed(2)}`}
                           {f.createdAt && ` · Added ${new Date(f.createdAt).toLocaleDateString()}`}
                         </div>
