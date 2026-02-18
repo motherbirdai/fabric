@@ -20,9 +20,11 @@ function getApiKey(): string | null {
 async function request<T>(path: string, opts: RequestInit = {}): Promise<T> {
   const key = getApiKey();
   const headers: Record<string, string> = {
-    'Content-Type': 'application/json',
     ...(opts.headers as Record<string, string>),
   };
+  if (opts.body) {
+    headers['Content-Type'] = 'application/json';
+  }
   if (key) {
     headers['Authorization'] = `Bearer ${key}`;
   }
