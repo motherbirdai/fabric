@@ -107,7 +107,8 @@ export default function ProvidersPage() {
               {showCatDropdown && (
                 <div style={{ position: 'absolute', top: '100%', left: 0, marginTop: '4px', minWidth: '180px', background: 'var(--card)', border: '1px solid var(--border)', borderRadius: '10px', boxShadow: '0 8px 24px rgba(0,0,0,.12)', zIndex: 10, overflow: 'hidden' }}>
                   <div
-                    style={{ padding: '8px 14px', fontSize: '13px', cursor: 'pointer', color: !categoryFilter ? 'var(--blue)' : 'var(--text)', fontWeight: !categoryFilter ? 600 : 400 }}
+                    className="dropdown-option"
+                    style={{ color: !categoryFilter ? 'var(--blue)' : 'var(--text)', fontWeight: !categoryFilter ? 600 : 400 }}
                     onClick={() => { setCategoryFilter(''); setShowCatDropdown(false); }}
                   >
                     All Categories
@@ -115,7 +116,8 @@ export default function ProvidersPage() {
                   {categories.map(cat => (
                     <div
                       key={cat}
-                      style={{ padding: '8px 14px', fontSize: '13px', cursor: 'pointer', color: categoryFilter === cat ? 'var(--blue)' : 'var(--text)', fontWeight: categoryFilter === cat ? 600 : 400 }}
+                      className="dropdown-option"
+                      style={{ color: categoryFilter === cat ? 'var(--blue)' : 'var(--text)', fontWeight: categoryFilter === cat ? 600 : 400 }}
                       onClick={() => { setCategoryFilter(cat); setShowCatDropdown(false); }}
                     >
                       {formatCategory(cat)}
@@ -137,7 +139,8 @@ export default function ProvidersPage() {
                   {[0, 1, 2, 3, 4].map(val => (
                     <div
                       key={val}
-                      style={{ padding: '8px 14px', fontSize: '13px', cursor: 'pointer', color: minTrust === val ? 'var(--blue)' : 'var(--text)', fontWeight: minTrust === val ? 600 : 400 }}
+                      className="dropdown-option"
+                      style={{ color: minTrust === val ? 'var(--blue)' : 'var(--text)', fontWeight: minTrust === val ? 600 : 400 }}
                       onClick={() => { setMinTrust(val); setShowTrustDropdown(false); }}
                     >
                       {val === 0 ? 'Any score' : `≥ ${val.toFixed(1)}`}

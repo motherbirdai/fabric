@@ -608,6 +608,17 @@ h3 { font-size: 16px; font-weight: 600; letter-spacing: -.3px; }
   .provider-filter-btn { flex: 1; }
 }
 
+/* Filter dropdown options */
+.dropdown-option {
+  padding: 8px 14px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: background .1s;
+}
+.dropdown-option:hover {
+  background: var(--bg);
+}
+
 /* Settings sections */
 .settings-section { margin-bottom: 28px; }
 .settings-section h3 {
