@@ -148,6 +148,7 @@ export interface Favorite {
   providerId: string;
   providerName?: string;
   category?: string;
+  priority?: number;
   trustScore?: number;
   createdAt?: string;
   [key: string]: unknown;

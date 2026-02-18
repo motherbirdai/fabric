@@ -240,7 +240,7 @@ export default function FavoritesPage() {
                       </div>
                     </div>
                     <div className="fav-actions">
-                      <span style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', padding: '3px 8px', borderRadius: '6px', background: 'var(--green-subtle)', color: 'var(--green)', textAlign: 'center' }}>+15% boost</span>
+                      <span style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', padding: '3px 8px', borderRadius: '6px', background: 'var(--blue-subtle)', color: 'var(--blue)', textAlign: 'center' }}>Priority: {f.priority ?? 50}</span>
                       <button
                         className="btn-sm"
                         style={{ fontSize: '12px', padding: '5px 12px', opacity: removingId === f.id ? 0.5 : 1 }}
@@ -260,7 +260,7 @@ export default function FavoritesPage() {
             <div className="card-header"><h3>How Favorites Work</h3></div>
             <div className="card-body-flush">
               <div style={{ padding: '16px', fontSize: '14px', color: 'var(--text-2)', lineHeight: 1.7 }}>
-                When you favorite a provider, they receive a <strong>+15% boost</strong> in trust score during routing. This means your agents will prefer these providers when multiple options are available for the same category. You can favorite providers from the Providers page or via the <span style={{ fontFamily: 'var(--font-mono)', fontSize: '12px', background: 'rgba(6,140,255,.06)', color: 'var(--blue)', padding: '1px 5px', borderRadius: '4px' }}>POST /v1/favorites</span> API endpoint.
+                When you favorite a provider, they receive a routing boost based on the <strong>priority</strong> you set (0–100). Higher priority means stronger preference when multiple providers are available for the same category. You can favorite providers from the Providers page or via the <span style={{ fontFamily: 'var(--font-mono)', fontSize: '12px', background: 'rgba(6,140,255,.06)', color: 'var(--blue)', padding: '1px 5px', borderRadius: '4px' }}>POST /v1/favorites</span> API endpoint.
               </div>
             </div>
           </div>
