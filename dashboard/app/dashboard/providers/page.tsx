@@ -188,7 +188,7 @@ export default function ProvidersPage() {
                   >
                     <div className="flex items-center justify-between" style={{ marginBottom: '10px' }}>
                       <div className="flex items-center gap-3">
-                        <div className="flex items-center justify-center rounded-[10px] text-[16px] font-bold text-white" style={{ width: '36px', height: '36px', background: gradient }}>{letter}</div>
+                        <div className="flex items-center justify-center rounded-[10px] text-[16px] font-bold text-white" style={{ width: '36px', height: '36px', background: gradient, filter: 'grayscale(100%)' }}>{letter}</div>
                         <div style={{ fontSize: '16px', fontWeight: 600, letterSpacing: '-.3px' }}>{p.name}</div>
                       </div>
                       <div style={{ fontFamily: 'var(--font-mono)', fontSize: '14px', color: 'var(--green)', fontWeight: 500 }}>{score}</div>
