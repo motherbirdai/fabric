@@ -232,7 +232,7 @@ export default function ProviderDetailPage() {
       <div className="animate-fade-in" style={{ padding: 'clamp(16px, 4vw, 24px) clamp(16px, 4vw, 36px) 48px' }}>
         {/* Detail header */}
         <div className="flex items-center gap-5" style={{ marginBottom: '28px' }}>
-          <div className="flex items-center justify-center rounded-[14px] text-2xl font-bold text-white" style={{ width: '56px', height: '56px', background: gradient }}>{letter}</div>
+          <div className="flex items-center justify-center rounded-[14px] text-2xl font-bold text-white" style={{ width: '56px', height: '56px', background: '#9ca3af' }}>{letter}</div>
           <div>
             <h2 style={{ fontSize: '24px', fontWeight: 700, letterSpacing: '-1px' }}>{provider.name}</h2>
             <span className={`${cc} inline-block rounded-[5px]`} style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', letterSpacing: '.5px', padding: '3px 10px', textTransform: 'uppercase', marginTop: '4px' }}>{cat}</span>
