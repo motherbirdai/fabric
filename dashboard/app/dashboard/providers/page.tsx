@@ -113,11 +113,13 @@ export default function ProvidersPage() {
             <div style={{ position: 'relative' }} onClick={(e) => e.stopPropagation()}>
               <button
                 className="btn-sm provider-filter-btn"
-                style={{ fontFamily: 'var(--font-mono)', fontSize: '12px', padding: '10px 18px', whiteSpace: 'nowrap', display: 'inline-flex', alignItems: 'center', gap: '4px', background: categoryFilter ? 'var(--blue-subtle)' : undefined, color: categoryFilter ? 'var(--blue)' : undefined, borderColor: categoryFilter ? 'var(--blue)' : undefined }}
+                style={{ fontFamily: 'var(--font-mono)', fontSize: '12px', padding: '10px 18px', whiteSpace: 'nowrap', display: 'inline-flex', alignItems: 'center', gap: '4px', minWidth: '120px', justifyContent: 'center', background: categoryFilter ? 'var(--blue-subtle)' : undefined, color: categoryFilter ? 'var(--blue)' : undefined, borderColor: categoryFilter ? 'var(--blue)' : undefined }}
                 onClick={() => { setShowCatDropdown(!showCatDropdown); setShowTrustDropdown(false); }}
               >
                 {categoryFilter ? formatCategory(categoryFilter) : 'Category'}
-                {showCatDropdown ? <X size={12} /> : <span>↓</span>}
+                {categoryFilter && !showCatDropdown ? (
+                  <X size={12} onClick={(e) => { e.stopPropagation(); setCategoryFilter(''); }} style={{ cursor: 'pointer' }} />
+                ) : showCatDropdown ? <X size={12} /> : <span>↓</span>}
               </button>
               {showCatDropdown && (
                 <div style={{ position: 'absolute', top: '100%', left: 0, marginTop: '4px', minWidth: '180px', background: 'var(--card)', border: '1px solid var(--border)', borderRadius: '10px', boxShadow: '0 8px 24px rgba(0,0,0,.12)', zIndex: 10, overflow: 'hidden' }}>
@@ -144,11 +146,13 @@ export default function ProvidersPage() {
             <div style={{ position: 'relative' }} onClick={(e) => e.stopPropagation()}>
               <button
                 className="btn-sm provider-filter-btn"
-                style={{ fontFamily: 'var(--font-mono)', fontSize: '12px', padding: '10px 18px', whiteSpace: 'nowrap', display: 'inline-flex', alignItems: 'center', gap: '4px', background: minTrust > 0 ? 'var(--blue-subtle)' : undefined, color: minTrust > 0 ? 'var(--blue)' : undefined, borderColor: minTrust > 0 ? 'var(--blue)' : undefined }}
+                style={{ fontFamily: 'var(--font-mono)', fontSize: '12px', padding: '10px 18px', whiteSpace: 'nowrap', display: 'inline-flex', alignItems: 'center', gap: '4px', minWidth: '120px', justifyContent: 'center', background: minTrust > 0 ? 'var(--blue-subtle)' : undefined, color: minTrust > 0 ? 'var(--blue)' : undefined, borderColor: minTrust > 0 ? 'var(--blue)' : undefined }}
                 onClick={() => { setShowTrustDropdown(!showTrustDropdown); setShowCatDropdown(false); }}
               >
                 {minTrust > 0 ? `≥ ${minTrust.toFixed(1)}` : 'Min Trust'}
-                {showTrustDropdown ? <X size={12} /> : <span>↓</span>}
+                {minTrust > 0 && !showTrustDropdown ? (
+                  <X size={12} onClick={(e) => { e.stopPropagation(); setMinTrust(0); }} style={{ cursor: 'pointer' }} />
+                ) : showTrustDropdown ? <X size={12} /> : <span>↓</span>}
               </button>
               {showTrustDropdown && (
                 <div style={{ position: 'absolute', top: '100%', right: 0, marginTop: '4px', minWidth: '140px', background: 'var(--card)', border: '1px solid var(--border)', borderRadius: '10px', boxShadow: '0 8px 24px rgba(0,0,0,.12)', zIndex: 10, overflow: 'hidden' }}>
