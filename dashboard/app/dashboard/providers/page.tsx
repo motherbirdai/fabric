@@ -1,12 +1,12 @@
 'use client';
 
 import Link from 'next/link';
-import { useState } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useTitle, useProviders } from '@/lib/hooks';
 import { PageSkeleton } from '@/components/ui/loading';
 import { ErrorCard } from '@/components/ui/error';
 import { EmptyState } from '@/components/ui/empty';
-import { Search } from 'lucide-react';
+import { Search, X } from 'lucide-react';
 
 function nameToGradient(name: string): string {
   let hash = 0;
@@ -49,6 +49,19 @@ export default function ProvidersPage() {
   const [showCatDropdown, setShowCatDropdown] = useState(false);
   const [showTrustDropdown, setShowTrustDropdown] = useState(false);
   const { data: providers, loading, error, refetch } = useProviders();
+
+  // Close dropdowns on click outside
+  const closeDropdowns = useCallback(() => {
+    setShowCatDropdown(false);
+    setShowTrustDropdown(false);
+  }, []);
+
+  useEffect(() => {
+    if (!showCatDropdown && !showTrustDropdown) return;
+    const handler = () => closeDropdowns();
+    document.addEventListener('click', handler);
+    return () => document.removeEventListener('click', handler);
+  }, [showCatDropdown, showTrustDropdown, closeDropdowns]);
 
   // Derive unique categories from provider data
   const categories = Array.from(
@@ -96,13 +109,14 @@ export default function ProvidersPage() {
               value={search}
               onChange={(e) => setSearch(e.target.value)}
             />
-            <div style={{ position: 'relative' }}>
+            <div style={{ position: 'relative' }} onClick={(e) => e.stopPropagation()}>
               <button
                 className="btn-sm provider-filter-btn"
-                style={{ fontFamily: 'var(--font-mono)', fontSize: '12px', padding: '10px 18px', whiteSpace: 'nowrap', background: categoryFilter ? 'var(--blue-subtle)' : undefined, color: categoryFilter ? 'var(--blue)' : undefined, borderColor: categoryFilter ? 'var(--blue)' : undefined }}
+                style={{ fontFamily: 'var(--font-mono)', fontSize: '12px', padding: '10px 18px', whiteSpace: 'nowrap', display: 'inline-flex', alignItems: 'center', gap: '4px', background: categoryFilter ? 'var(--blue-subtle)' : undefined, color: categoryFilter ? 'var(--blue)' : undefined, borderColor: categoryFilter ? 'var(--blue)' : undefined }}
                 onClick={() => { setShowCatDropdown(!showCatDropdown); setShowTrustDropdown(false); }}
               >
-                {categoryFilter ? formatCategory(categoryFilter) : 'Category'} ↓
+                {categoryFilter ? formatCategory(categoryFilter) : 'Category'}
+                {showCatDropdown ? <X size={12} /> : <span>↓</span>}
               </button>
               {showCatDropdown && (
                 <div style={{ position: 'absolute', top: '100%', left: 0, marginTop: '4px', minWidth: '180px', background: 'var(--card)', border: '1px solid var(--border)', borderRadius: '10px', boxShadow: '0 8px 24px rgba(0,0,0,.12)', zIndex: 10, overflow: 'hidden' }}>
@@ -126,13 +140,14 @@ export default function ProvidersPage() {
                 </div>
               )}
             </div>
-            <div style={{ position: 'relative' }}>
+            <div style={{ position: 'relative' }} onClick={(e) => e.stopPropagation()}>
               <button
                 className="btn-sm provider-filter-btn"
-                style={{ fontFamily: 'var(--font-mono)', fontSize: '12px', padding: '10px 18px', whiteSpace: 'nowrap', background: minTrust > 0 ? 'var(--blue-subtle)' : undefined, color: minTrust > 0 ? 'var(--blue)' : undefined, borderColor: minTrust > 0 ? 'var(--blue)' : undefined }}
+                style={{ fontFamily: 'var(--font-mono)', fontSize: '12px', padding: '10px 18px', whiteSpace: 'nowrap', display: 'inline-flex', alignItems: 'center', gap: '4px', background: minTrust > 0 ? 'var(--blue-subtle)' : undefined, color: minTrust > 0 ? 'var(--blue)' : undefined, borderColor: minTrust > 0 ? 'var(--blue)' : undefined }}
                 onClick={() => { setShowTrustDropdown(!showTrustDropdown); setShowCatDropdown(false); }}
               >
-                {minTrust > 0 ? `≥ ${minTrust.toFixed(1)}` : 'Min Trust'} ↓
+                {minTrust > 0 ? `≥ ${minTrust.toFixed(1)}` : 'Min Trust'}
+                {showTrustDropdown ? <X size={12} /> : <span>↓</span>}
               </button>
               {showTrustDropdown && (
                 <div style={{ position: 'absolute', top: '100%', right: 0, marginTop: '4px', minWidth: '140px', background: 'var(--card)', border: '1px solid var(--border)', borderRadius: '10px', boxShadow: '0 8px 24px rgba(0,0,0,.12)', zIndex: 10, overflow: 'hidden' }}>
