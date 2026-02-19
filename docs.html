@@ -4,397 +4,370 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Fabric Docs — The trust layer for the agent economy</title>
-<meta name="description" content="Developer documentation for Fabric — MCP tools, WebMCP integration, REST API, smart contracts, SDKs, and deployment guides.">
-<meta property="og:title" content="Fabric Docs — Developer Documentation">
-<meta property="og:description" content="MCP tools, WebMCP integration, REST API, smart contracts, SDKs, and deployment guides.">
-<meta property="og:image" content="https://fabriclayer.dev/og-image.png">
-<meta property="og:url" content="https://fabriclayer.dev/docs">
-<meta property="og:type" content="website">
-<meta property="og:site_name" content="Fabric">
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Fabric Docs — Developer Documentation">
-<meta name="twitter:description" content="MCP tools, WebMCP integration, REST API, smart contracts, SDKs, and deployment guides.">
-<meta name="twitter:image" content="https://fabriclayer.dev/og-image.png">
-<link rel="icon" type="image/x-icon" href="/favicon.ico">
-<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
-<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,300;1,9..40,400&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
-:root{--black:#000;--blue:#068cff;--pink:#fe83e0;--white:#fff;--bg:#f7f7f7;--text:#0a0a0a;--text-2:#555;--text-3:#999;--border:#e5e5e5;--sans:'DM Sans',-apple-system,BlinkMacSystemFont,sans-serif;--mono:'DM Mono','SF Mono',monospace}
+:root{--black:#000;--blue:#068cff;--pink:#fe83e0;--white:#fff;--bg:#fafafa;--text:#0a0a0a;--text-2:#555;--text-3:#999;--border:#e5e5e5;--green:#0dc956;--orange:#f7931e;--sans:'DM Sans',-apple-system,BlinkMacSystemFont,sans-serif;--mono:'DM Mono','SF Mono',monospace}
 *{margin:0;padding:0;box-sizing:border-box}html{scroll-behavior:smooth;overflow-y:scroll}
-body{background:var(--white);color:var(--text);font-family:var(--sans);font-size:16px;line-height:1.7;-webkit-font-smoothing:antialiased;overflow-x:clip;padding-left:env(safe-area-inset-left);padding-right:env(safe-area-inset-right)}
+body{background:var(--white);color:var(--text);font-family:var(--sans);font-size:16px;line-height:1.7;-webkit-font-smoothing:antialiased;overflow-x:clip}
 ::selection{background:var(--blue);color:var(--white)}
-a{color:var(--blue);text-decoration:none;-webkit-tap-highlight-color:transparent}a:hover{text-decoration:underline}
+a{color:var(--blue);text-decoration:none}a:hover{text-decoration:underline}
 
-/* ─── NAV (identical to landing page) ─── */
-nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(255,255,255,.9);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
-.nav-inner{max-width:1200px;margin:0 auto;padding:0 16px;height:52px;display:flex;align-items:center;justify-content:space-between}
-.nav-logo{display:flex;align-items:center;text-decoration:none}
-.nav-logo:hover{text-decoration:none}
-.nav-logo svg{height:12px;width:auto}
-.nav-links{display:none;align-items:center;gap:32px;list-style:none}
-.nav-links a{font-size:14px;font-weight:500;color:var(--text-2);transition:color .2s;text-decoration:none}
-.nav-links a:hover{color:var(--text);text-decoration:none}
-.nav-links a.active{color:var(--text);font-weight:600}
-.nav-cta{background:var(--black);color:var(--white)!important;padding:8px 20px;border-radius:8px;font-weight:600!important;transition:all .2s!important}
-.nav-cta:hover{background:#222!important;text-decoration:none!important}
-.mobile-nav-toggle{display:block;background:none;border:none;cursor:pointer;padding:8px;-webkit-tap-highlight-color:transparent}
-.mobile-nav-toggle span{display:block;width:20px;height:2px;background:var(--text);margin:5px 0;transition:all .3s}
-.mobile-menu{display:none;position:fixed;top:52px;left:0;right:0;bottom:0;background:var(--white);z-index:99;padding:24px;flex-direction:column;gap:4px;overflow-y:auto;-webkit-overflow-scrolling:touch}
-.mobile-menu.open{display:flex}
-.mobile-menu a{display:block;padding:14px 0;font-size:18px;font-weight:500;color:var(--text);border-bottom:1px solid var(--border);text-decoration:none}
-.mobile-menu a:hover{text-decoration:none}
-.mobile-menu a:last-child{border-bottom:none}
-.mobile-menu .nav-cta{display:inline-block;margin-top:16px;text-align:center;padding:14px 28px;border-bottom:none}
-.mobile-menu .menu-divider{height:1px;background:var(--border);margin:8px 0}
-.mobile-menu .menu-label{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--text-3);padding:12px 0 4px;border-bottom:none}
-.mobile-menu .toc-link{font-size:15px;padding:10px 0;color:var(--text-2)}
-.mobile-menu .toc-link:hover{color:var(--text)}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;background:var(--white);border-bottom:1px solid var(--border);padding:0 2rem;height:56px}
+.nav-inner{max-width:1400px;margin:0 auto;height:100%;display:flex;align-items:center;justify-content:space-between}
+.nav-left{display:flex;align-items:center;gap:1.25rem}
+.nav-logo{display:flex;align-items:center;gap:0.65rem;text-decoration:none;color:var(--black)}.nav-logo:hover{text-decoration:none}
+.nav-logo svg{height:19px;width:auto}
+.nav-logo-text{font-family:var(--mono);font-size:0.78rem;font-weight:400;letter-spacing:0.02em;color:var(--text-3);border-left:1px solid var(--border);padding-left:0.65rem;pointer-events:none;text-decoration:none}
+.nav-right{display:flex;align-items:center;gap:0.75rem}
+.nav-links{display:flex;align-items:center;gap:1.5rem}
+.nav-links a{font-family:var(--mono);font-size:0.78rem;font-weight:400;color:var(--text-2);text-decoration:none;transition:color .15s}
+.nav-links a:hover{color:var(--pink);text-decoration:none}
+.nav-cta{background:var(--black);color:var(--white)!important;padding:7px 18px;border-radius:8px;font-weight:500!important;transition:all .2s!important}.nav-cta:hover{background:#222!important;text-decoration:none!important}
+.burger{display:none;flex-direction:column;gap:4px;background:none;border:none;cursor:pointer;padding:6px;border-radius:6px;transition:background .15s}
+.burger:hover{background:rgba(0,0,0,.04)}
+.burger span{display:block;width:18px;height:1.5px;background:var(--text);border-radius:1px;transition:all .25s}
+.burger.open span:nth-child(1){transform:translateY(5.5px) rotate(45deg)}
+.burger.open span:nth-child(2){opacity:0}
+.burger.open span:nth-child(3){transform:translateY(-5.5px) rotate(-45deg)}
+.mobile-menu{position:fixed;top:56px;right:0;z-index:99;background:var(--white);border:1px solid var(--border);border-radius:0 0 0 12px;box-shadow:0 8px 30px rgba(0,0,0,0.08);padding:0.5rem 0;display:none;min-width:180px}
+.mobile-menu.open{display:block}
+.mobile-menu a{display:block;font-family:var(--mono);font-size:0.78rem;color:var(--text-2);text-decoration:none;padding:0.55rem 1.25rem;transition:all .12s}
+.mobile-menu a:hover{background:var(--bg);color:var(--pink);text-decoration:none}
+.mobile-menu .nav-cta{margin:0.5rem 1rem;text-align:center;border-radius:8px;padding:8px 18px}
 
-/* ─── Docs layout ─── */
-.docs-layout{display:grid;grid-template-columns:1fr;min-height:calc(100vh - 52px);margin-top:52px}
-
-/* Sidebar (desktop only) */
-.sidebar{display:none;border-right:1px solid var(--border);padding:24px 0;overflow-y:auto;scrollbar-width:thin;scrollbar-color:var(--border) transparent}
-.sidebar::-webkit-scrollbar{width:4px}
+.docs-layout{display:grid;grid-template-columns:1fr;min-height:100vh;margin-top:56px}
+.sidebar{display:none;border-right:1px solid var(--border);padding:28px 0;overflow-y:auto;scrollbar-width:thin;scrollbar-color:var(--border) transparent}
+.sidebar::-webkit-scrollbar{width:3px}
 .sidebar::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
-.sidebar-logo{display:flex;align-items:center;gap:8px;padding:0 24px 24px;border-bottom:1px solid var(--border);margin-bottom:16px;text-decoration:none}
-.sidebar-logo:hover{text-decoration:none}
-.sidebar-logo svg{height:14px;width:auto}
-.sidebar-logo .docs-badge{font-family:var(--mono);font-size:11px;background:rgba(6,140,255,.08);color:var(--blue);padding:2px 8px;border-radius:4px}
+.sidebar-head{padding:0 24px 20px;margin-bottom:8px;border-bottom:1px solid var(--border)}
+.sidebar-badge{font-family:var(--mono);font-size:0.62rem;font-weight:500;color:var(--blue);background:rgba(6,140,255,.06);padding:3px 8px;border-radius:5px;letter-spacing:.3px;text-transform:uppercase}
+.nav-group{margin-bottom:4px}
+.nav-group-title{font-family:var(--mono);font-size:0.6rem;font-weight:500;text-transform:uppercase;letter-spacing:1.2px;color:var(--text-3);padding:12px 24px 4px}
+.nav-item{display:block;padding:5px 24px 5px 28px;font-size:0.82rem;color:var(--text-2);text-decoration:none;transition:all .15s;border-left:2px solid transparent;margin-left:4px}
+.nav-item:hover{color:var(--text);text-decoration:none}
+.nav-item.active{color:var(--blue);border-left-color:var(--blue);font-weight:500}
 
-.nav-group{margin-bottom:8px}
-.nav-group-title{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--text-3);padding:8px 24px 4px}
-.nav-item{display:block;padding:6px 24px 6px 32px;font-size:14px;color:var(--text-2);text-decoration:none;transition:all .2s;border-left:2px solid transparent}
-.nav-item:hover{color:var(--text);background:var(--bg);text-decoration:none}
-.nav-item.active{color:var(--blue);border-left-color:var(--blue);background:rgba(6,140,255,.04);font-weight:500}
-
-/* Content */
 .content{padding:32px 20px 80px;overflow-x:hidden;min-width:0;width:100%}
-.content h1{font-size:28px;font-weight:700;letter-spacing:-1px;line-height:1.15;margin-bottom:8px;word-wrap:break-word}
-.content .subtitle{font-size:16px;color:var(--text-2);margin-bottom:32px;line-height:1.6}
-.content h2{font-size:22px;font-weight:700;letter-spacing:-.5px;margin:40px 0 12px;padding-top:20px;border-top:1px solid var(--border)}
+.content h1,.content h2,.content h3,.content h4{scroll-margin-top:80px}
+.content h1{font-size:28px;font-weight:700;letter-spacing:-1.2px;line-height:1.1;margin-bottom:8px;text-wrap:balance}
+.content .subtitle{font-size:15px;color:var(--text-2);margin-bottom:32px;line-height:1.65;text-wrap:pretty}
+.content h2{font-size:21px;font-weight:700;letter-spacing:-.5px;margin:48px 0 12px;padding-top:24px;border-top:1px solid var(--border)}
 .content h2:first-of-type{border-top:none;padding-top:0}
-.content h3{font-size:18px;font-weight:600;margin:28px 0 10px;letter-spacing:-.3px}
-.content h4{font-size:16px;font-weight:600;margin:24px 0 8px}
-.content p{margin-bottom:16px;color:var(--text);font-size:15px}
+.content h3{font-size:17px;font-weight:600;margin:28px 0 10px;letter-spacing:-.2px}
+.content h4{font-size:15px;font-weight:600;margin:20px 0 8px}
+.content p{margin-bottom:16px;color:var(--text);font-size:14.5px;text-wrap:pretty}
 .content ul,.content ol{margin:0 0 16px 20px}
-.content li{margin-bottom:8px;font-size:15px}
+.content li{margin-bottom:6px;font-size:14.5px}
 .content strong{font-weight:600}
 
-/* Code blocks */
-.code{background:var(--black);border-radius:8px;padding:14px;margin:12px 0 20px;overflow-x:auto;-webkit-overflow-scrolling:touch;position:relative;max-width:100%}
-.code pre{font-family:var(--mono);font-size:12px;line-height:1.7;color:rgba(255,255,255,.7);margin:0;white-space:pre;overflow-x:auto}
-.code .kw{color:var(--blue)}.code .str{color:var(--pink)}.code .cmt{color:rgba(255,255,255,.25)}.code .fn{color:rgba(255,255,255,.95)}
-.code-label{position:absolute;top:8px;right:12px;font-family:var(--mono);font-size:10px;color:rgba(255,255,255,.2);letter-spacing:.5px}
-.inline-code{font-family:var(--mono);font-size:12px;background:rgba(6,140,255,.06);color:var(--blue);padding:2px 6px;border-radius:4px;word-break:break-all}
+.code{background:#0a0a0a;border-radius:10px;padding:16px 18px;margin:12px 0 20px;overflow-x:auto;position:relative}
+.code pre{font-family:var(--mono);font-size:12.5px;line-height:1.75;color:rgba(255,255,255,.65);margin:0;white-space:pre;overflow-x:auto}
+.code .kw{color:var(--blue)}.code .str{color:var(--pink)}.code .cmt{color:rgba(255,255,255,.22)}.code .fn{color:rgba(255,255,255,.92)}
+.code-label{position:absolute;top:10px;right:14px;font-family:var(--mono);font-size:0.55rem;color:rgba(255,255,255,.18);letter-spacing:.5px;text-transform:uppercase}
+.inline-code{font-family:var(--mono);font-size:0.8em;background:rgba(6,140,255,.06);color:var(--blue);padding:2px 6px;border-radius:4px}
 
-/* Callout */
-.callout{border-left:3px solid var(--blue);background:rgba(6,140,255,.04);padding:12px 16px;border-radius:0 8px 8px 0;margin:12px 0 20px}
-.callout.pink{border-left-color:var(--pink);background:rgba(254,131,224,.04)}
-.callout p{margin:0;font-size:13px}
-.callout strong{display:block;margin-bottom:4px}
+.callout{border-left:3px solid var(--blue);background:rgba(6,140,255,.03);padding:14px 18px;border-radius:0 10px 10px 0;margin:14px 0 22px}
+.callout.pink{border-left-color:var(--pink);background:rgba(254,131,224,.03)}
+.callout p{margin:0;font-size:13.5px}.callout strong{display:block;margin-bottom:4px;font-size:13.5px}
 
-/* Table */
-.doc-table{width:100%;border-collapse:collapse;margin:12px 0 20px;font-size:13px;display:block;overflow-x:auto;-webkit-overflow-scrolling:touch}
-.doc-table th{text-align:left;padding:10px 12px;background:var(--bg);font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:.5px;color:var(--text-2);border-bottom:1px solid var(--border);white-space:nowrap}
-.doc-table td{padding:10px 12px;border-bottom:1px solid var(--border);vertical-align:top;white-space:nowrap}
+.doc-table{width:100%;border-collapse:collapse;margin:12px 0 20px;font-size:13px;display:block;overflow-x:auto}
+.doc-table th{text-align:left;padding:10px 14px;background:var(--bg);font-family:var(--mono);font-weight:500;font-size:0.65rem;text-transform:uppercase;letter-spacing:.6px;color:var(--text-2);border-bottom:1px solid var(--border);white-space:nowrap}
+.doc-table td{padding:10px 14px;border-bottom:1px solid var(--border);vertical-align:top;font-size:13.5px}
 .doc-table tr:last-child td{border-bottom:none}
 
-/* Tags */
-.tag{display:inline-block;font-family:var(--mono);font-size:11px;padding:2px 8px;border-radius:4px;letter-spacing:.3px}
+.tag{display:inline-block;font-family:var(--mono);font-size:0.6rem;padding:2px 7px;border-radius:4px;letter-spacing:.3px;font-weight:500}
 .tag-b{color:var(--blue);background:rgba(6,140,255,.08)}
 .tag-p{color:var(--pink);background:rgba(254,131,224,.08)}
-.tag-g{color:#00b368;background:rgba(0,179,104,.08)}
+.tag-g{color:var(--green);background:rgba(13,201,86,.08)}
+.tag-o{color:var(--orange);background:rgba(247,147,30,.08)}
+.tag-r{color:var(--red);background:rgba(232,45,53,.08)}
 
-/* Params */
-.param{margin:6px 0;padding:10px 12px;background:var(--bg);border-radius:8px;font-size:13px}
+.param{margin:6px 0;padding:10px 14px;background:var(--bg);border-radius:8px;font-size:13.5px}
 .param-name{font-family:var(--mono);font-weight:600;color:var(--text);font-size:13px}
-.param-type{font-family:var(--mono);color:var(--blue);font-size:11px;margin-left:8px}
-.param-req{font-size:11px;color:var(--pink);margin-left:8px}
+.param-type{font-family:var(--mono);color:var(--blue);font-size:0.65rem;margin-left:8px}
+.param-req{font-family:var(--mono);font-size:0.6rem;color:var(--pink);margin-left:8px}
 .param-desc{color:var(--text-2);margin-top:4px;font-size:13px}
 
-/* Footer */
-.doc-footer{border-top:1px solid var(--border);padding:24px 0;margin-top:48px;font-size:12px;color:var(--text-3);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
+.doc-footer{border-top:1px solid var(--border);padding:24px 0;margin-top:48px;font-family:var(--mono);font-size:0.65rem;color:var(--text-3);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
 .doc-footer a{color:var(--text-2);text-decoration:none}.doc-footer a:hover{color:var(--text)}
 
-/* ─── Desktop (901px+) ─── */
+@media(max-width:768px){
+.nav-links{display:none!important}.burger{display:flex}nav{padding:0 1rem}
+}
 @media(min-width:901px){
-.nav-inner{padding:0 40px;height:64px}
-.nav-logo svg{height:14px}
-.nav-links{display:flex}
-.mobile-nav-toggle{display:none}
-.mobile-menu{display:none!important}
-.docs-layout{grid-template-columns:260px 1fr;margin-top:64px}
-.sidebar{display:block;position:sticky;top:64px;height:calc(100vh - 64px);align-self:start}
-.content{padding:48px 64px 120px;max-width:800px}
-.content h1{font-size:40px;letter-spacing:-2px}
-.content .subtitle{font-size:18px;margin-bottom:48px}
-.content h2{font-size:28px;letter-spacing:-1px;margin:64px 0 16px;padding-top:32px}
-.content h3{font-size:20px;margin:32px 0 12px}
-.content p{font-size:16px}
-.content li{font-size:16px}
-.content ul,.content ol{margin:0 0 16px 24px}
-.code{padding:24px;border-radius:12px;margin:16px 0 24px}
+.burger{display:none}
+.docs-layout{grid-template-columns:240px 1fr;max-width:1200px;margin:56px auto 0}
+.sidebar{display:block;position:sticky;top:56px;height:calc(100vh - 56px);align-self:start}
+.content{padding:48px 64px 120px;max-width:820px}
+.content h1{font-size:38px;letter-spacing:-2px}
+.content .subtitle{font-size:17px;margin-bottom:48px}
+.content h2{font-size:26px;letter-spacing:-.8px;margin:56px 0 16px;padding-top:32px}
+.content h3{font-size:19px;margin:32px 0 12px}
+.content p{font-size:15.5px}.content li{font-size:15.5px}
+.code{padding:20px 24px;border-radius:12px;margin:16px 0 24px}
 .code pre{font-size:13px;line-height:1.8}
-.callout{padding:16px 20px;margin:16px 0 24px}
-.callout p{font-size:14px}
-.doc-table{font-size:14px;display:table}
-.doc-table th{padding:12px 16px;font-size:13px}
-.doc-table td{padding:12px 16px;white-space:normal}
-.param{padding:12px 16px;font-size:14px}
-.param-name{font-size:14px}
-.param-type{font-size:12px}
-.param-desc{font-size:14px}
-.doc-footer{padding:32px 0;margin-top:64px;font-size:13px}
-.inline-code{font-size:14px;padding:2px 8px}
+.callout{padding:16px 22px;margin:16px 0 24px}.callout p{font-size:14px}.callout strong{font-size:14px}
+.doc-table{font-size:14px;display:table}.doc-table th{padding:11px 16px}.doc-table td{padding:11px 16px;white-space:normal}
+.param{padding:12px 16px;font-size:14px}.param-name{font-size:13.5px}.param-desc{font-size:13.5px}
+.doc-footer{padding:32px 0;margin-top:64px}
+.inline-code{font-size:0.82em;padding:2px 7px}
 }
 </style>
 </head>
 <body>
 
-<!-- NAV (identical to landing page) -->
-<nav><div class="nav-inner">
-<a href="/" class="nav-logo">
-<svg viewBox="195 58 440 108" fill="var(--black)"><path d="M218.4,158.28v-56.57h-19.23v-12.12h19.23v-15.05c0-4.18,1.25-7.52,3.76-10.03,2.51-2.51,5.85-3.76,10.03-3.76h17.7v12.12h-13.1c-2.7,0-4.04,1.39-4.04,4.18v12.54h19.79v12.12h-19.79v56.57h-14.35Z"/><path d="M283.19,160.23c-4.92,0-9.31-.84-13.17-2.51-3.86-1.67-6.92-4.13-9.2-7.38-2.28-3.25-3.41-7.2-3.41-11.84s1.14-8.66,3.41-11.77c2.28-3.11,5.39-5.46,9.34-7.04,3.95-1.58,8.43-2.37,13.45-2.37h20.9v-4.46c0-3.99-1.21-7.2-3.62-9.61-2.42-2.41-6.13-3.62-11.15-3.62s-8.69,1.16-11.29,3.48c-2.6,2.32-4.32,5.34-5.16,9.06l-13.38-4.32c1.11-3.71,2.9-7.08,5.36-10.1,2.46-3.02,5.73-5.46,9.82-7.32,4.09-1.86,9.01-2.79,14.77-2.79,8.92,0,15.93,2.28,21.04,6.83,5.11,4.55,7.66,11.01,7.66,19.37v28.29c0,2.79,1.3,4.18,3.9,4.18h5.85v11.98h-10.73c-3.25,0-5.9-.84-7.94-2.51-2.04-1.67-3.07-3.95-3.07-6.83v-.42h-2.09c-.74,1.39-1.86,3.02-3.34,4.88-1.49,1.86-3.67,3.46-6.55,4.81-2.88,1.35-6.69,2.02-11.43,2.02ZM285.28,148.38c5.76,0,10.4-1.65,13.93-4.95,3.53-3.3,5.29-7.82,5.29-13.58v-1.39h-20.06c-3.81,0-6.88.81-9.2,2.44-2.32,1.63-3.48,4.02-3.48,7.18s1.21,5.67,3.62,7.52c2.41,1.86,5.71,2.79,9.89,2.79Z"/><path d="M376.69,160.23c-6.69,0-11.82-1.21-15.4-3.62-3.58-2.41-6.25-5.11-8.01-8.08h-2.23v9.75h-14.07V60.74h14.35v38.18h2.23c1.11-1.86,2.6-3.64,4.46-5.36,1.86-1.72,4.32-3.14,7.38-4.25,3.07-1.11,6.83-1.67,11.29-1.67,5.76,0,11.05,1.39,15.88,4.18,4.83,2.79,8.68,6.83,11.56,12.12,2.88,5.29,4.32,11.61,4.32,18.95v2.09c0,7.43-1.46,13.77-4.39,19.02-2.93,5.25-6.78,9.27-11.56,12.05-4.79,2.79-10.06,4.18-15.81,4.18ZM372.51,147.69c6.22,0,11.36-2,15.4-5.99,4.04-3.99,6.06-9.71,6.06-17.14v-1.25c0-7.34-2-13-5.99-17-4-3.99-9.15-5.99-15.47-5.99s-11.22,2-15.26,5.99c-4.04,3.99-6.06,9.66-6.06,17v1.25c0,7.43,2.02,13.15,6.06,17.14,4.04,4,9.13,5.99,15.26,5.99Z"/><path d="M420.58,158.28v-68.69h14.07v8.08h2.23c1.11-2.88,2.9-4.99,5.36-6.34,2.46-1.35,5.5-2.02,9.13-2.02h8.22v12.96h-8.78c-4.65,0-8.45,1.28-11.43,3.83-2.97,2.56-4.46,6.48-4.46,11.77v40.41h-14.35Z"/><path d="M478.68,80.25c-2.79,0-5.13-.91-7.04-2.72-1.91-1.81-2.86-4.16-2.86-7.04s.95-5.23,2.86-7.04c1.9-1.81,4.25-2.72,7.04-2.72s5.25.91,7.11,2.72c1.86,1.81,2.79,4.16,2.79,7.04s-.93,5.23-2.79,7.04c-1.86,1.81-4.23,2.72-7.11,2.72ZM471.43,158.28v-68.69h14.35v68.69h-14.35Z"/><path d="M532.74,160.23c-6.6,0-12.56-1.39-17.9-4.18-5.34-2.79-9.57-6.83-12.68-12.12-3.11-5.29-4.67-11.66-4.67-19.09v-1.81c0-7.43,1.55-13.77,4.67-19.02,3.11-5.25,7.34-9.29,12.68-12.12,5.34-2.83,11.31-4.25,17.9-4.25s12.21,1.21,16.86,3.62c4.64,2.42,8.38,5.62,11.22,9.61,2.83,3.99,4.67,8.41,5.5,13.24l-13.93,2.93c-.47-3.07-1.44-5.85-2.93-8.36-1.49-2.51-3.58-4.5-6.27-5.99-2.7-1.48-6.08-2.23-10.17-2.23s-7.59.91-10.8,2.72c-3.2,1.81-5.74,4.41-7.59,7.8-1.86,3.39-2.79,7.5-2.79,12.33v1.25c0,4.83.93,8.97,2.79,12.4,1.86,3.44,4.39,6.04,7.59,7.8,3.2,1.77,6.8,2.65,10.8,2.65,6.04,0,10.64-1.55,13.79-4.67,3.16-3.11,5.16-7.08,5.99-11.91l13.93,3.2c-1.11,4.74-3.09,9.1-5.92,13.1-2.83,4-6.57,7.18-11.22,9.54-4.65,2.37-10.27,3.55-16.86,3.55Z"/></svg>
-</a>
-<ul class="nav-links">
-<li><a href="/#how">How it works</a></li>
-<li><a href="/#features">Features</a></li>
-<li><a href="/#pricing">Pricing</a></li>
-<li><a href="/#stack">Stack</a></li>
-<li><a href="docs.html" class="active">Docs</a></li>
-<li><a href="#" class="nav-cta">Get started</a></li>
-</ul>
-<button class="mobile-nav-toggle" onclick="toggleMobileMenu()" aria-label="Menu">
-<span></span><span></span><span></span>
-</button>
-</div></nav>
-
-<!-- Mobile menu (site links + docs TOC) -->
+<nav>
+  <div class="nav-inner">
+  <div class="nav-left">
+    <a href="https://www.fabriclayer.ai" class="nav-logo">
+      <svg viewBox="0 0 532.89 134.52" fill="currentColor"><g><polygon points="81.89 134.52 57.62 91.2 57.47 134.36 44.03 134.42 44.02 89.24 70.74 89.18 96.4 134.26 81.89 134.52"/><polygon points="11.23 30.83 22.93 22.12 67.73 42.65 42.7 7.77 53.47 0 80.03 36.5 58.51 52.19 11.23 30.83"/><polygon points="119.88 23.38 130.65 31.15 104.1 67.74 82.61 52.07 88.3 .43 100.17 8.99 94.53 57.97 119.88 23.38"/><polygon points="128.82 101.47 124.85 114.19 81.92 100.27 90.13 74.95 140.86 64.46 136.53 78.35 88.31 88.08 128.82 101.47"/><polygon points="11.54 99.78 45.11 63.3 4.15 76.4 0 63.79 42.95 49.87 51.16 75.15 16.22 113.51 11.54 99.78"/></g><g><path d="M184.55,115.05v-56.57h-19.23v-12.12h19.23v-15.05c0-4.18,1.25-7.52,3.76-10.03,2.51-2.51,5.85-3.76,10.03-3.76h17.7v12.12h-13.1c-2.7,0-4.04,1.39-4.04,4.18v12.54h19.79v12.12h-19.79v56.57h-14.35Z"/><path d="M249.34,117c-4.92,0-9.31-.84-13.17-2.51-3.86-1.67-6.92-4.13-9.2-7.38-2.28-3.25-3.41-7.2-3.41-11.84s1.14-8.66,3.41-11.77c2.28-3.11,5.39-5.46,9.34-7.04,3.95-1.58,8.43-2.37,13.45-2.37h20.9v-4.46c0-3.99-1.21-7.2-3.62-9.61-2.42-2.41-6.13-3.62-11.15-3.62s-8.69,1.16-11.29,3.48c-2.6,2.32-4.32,5.34-5.16,9.06l-13.38-4.32c1.11-3.71,2.9-7.08,5.36-10.1,2.46-3.02,5.73-5.46,9.82-7.32,4.09-1.86,9.01-2.79,14.77-2.79,8.92,0,15.93,2.28,21.04,6.83,5.11,4.55,7.66,11.01,7.66,19.37v28.29c0,2.79,1.3,4.18,3.9,4.18h5.85v11.98h-10.73c-3.25,0-5.9-.84-7.94-2.51-2.04-1.67-3.07-3.95-3.07-6.83v-.42h-2.09c-.74,1.39-1.86,3.02-3.34,4.88-1.49,1.86-3.67,3.46-6.55,4.81-2.88,1.35-6.69,2.02-11.43,2.02ZM251.43,105.16c5.76,0,10.4-1.65,13.93-4.95,3.53-3.3,5.29-7.82,5.29-13.58v-1.39h-20.06c-3.81,0-6.88.81-9.2,2.44-2.32,1.63-3.48,4.02-3.48,7.18s1.21,5.67,3.62,7.52c2.41,1.86,5.71,2.79,9.89,2.79Z"/><path d="M342.84,117c-6.69,0-11.82-1.21-15.4-3.62-3.58-2.41-6.25-5.11-8.01-8.08h-2.23v9.75h-14.07V17.52h14.35v38.18h2.23c1.11-1.86,2.6-3.64,4.46-5.36,1.86-1.72,4.32-3.14,7.38-4.25,3.07-1.11,6.83-1.67,11.29-1.67,5.76,0,11.05,1.39,15.88,4.18,4.83,2.79,8.68,6.83,11.56,12.12,2.88,5.29,4.32,11.61,4.32,18.95v2.09c0,7.43-1.46,13.77-4.39,19.02-2.93,5.25-6.78,9.27-11.56,12.05-4.79,2.79-10.06,4.18-15.81,4.18ZM338.66,104.46c6.22,0,11.36-2,15.4-5.99,4.04-3.99,6.06-9.71,6.06-17.14v-1.25c0-7.34-2-13-5.99-17-4-3.99-9.15-5.99-15.47-5.99s-11.22,2-15.26,5.99c-4.04,3.99-6.06,9.66-6.06,17v1.25c0,7.43,2.02,13.15,6.06,17.14,4.04,4,9.13,5.99,15.26,5.99Z"/><path d="M386.73,115.05V46.36h14.07v8.08h2.23c1.11-2.88,2.9-4.99,5.36-6.34,2.46-1.35,5.5-2.02,9.13-2.02h8.22v12.96h-8.78c-4.65,0-8.45,1.28-11.43,3.83-2.97,2.56-4.46,6.48-4.46,11.77v40.41h-14.35Z"/><path d="M444.83,37.02c-2.79,0-5.13-.91-7.04-2.72-1.91-1.81-2.86-4.16-2.86-7.04s.95-5.23,2.86-7.04c1.9-1.81,4.25-2.72,7.04-2.72s5.25.91,7.11,2.72c1.86,1.81,2.79,4.16,2.79,7.04s-.93,5.23-2.79,7.04c-1.86,1.81-4.23,2.72-7.11,2.72ZM437.59,115.05V46.36h14.35v68.69h-14.35Z"/><path d="M498.89,117c-6.6,0-12.56-1.39-17.9-4.18-5.34-2.79-9.57-6.83-12.68-12.12-3.11-5.29-4.67-11.66-4.67-19.09v-1.81c0-7.43,1.55-13.77,4.67-19.02,3.11-5.25,7.34-9.29,12.68-12.12,5.34-2.83,11.31-4.25,17.9-4.25s12.21,1.21,16.86,3.62c4.64,2.42,8.38,5.62,11.22,9.61,2.83,3.99,4.67,8.41,5.5,13.24l-13.93,2.93c-.47-3.07-1.44-5.85-2.93-8.36-1.49-2.51-3.58-4.5-6.27-5.99-2.7-1.48-6.08-2.23-10.17-2.23s-7.59.91-10.8,2.72c-3.2,1.81-5.74,4.41-7.59,7.8-1.86,3.39-2.79,7.5-2.79,12.33v1.25c0,4.83.93,8.97,2.79,12.4,1.86,3.44,4.39,6.04,7.59,7.8,3.2,1.77,6.8,2.65,10.8,2.65,6.04,0,10.64-1.55,13.79-4.67,3.16-3.11,5.16-7.08,5.99-11.91l13.93,3.2c-1.11,4.74-3.09,9.1-5.92,13.1-2.83,4-6.57,7.18-11.22,9.54-4.65,2.37-10.27,3.55-16.86,3.55Z"/></g></svg>
+      </a>
+      <span class="nav-logo-text">docs</span>
+  </div>
+  <div class="nav-right">
+    <div class="nav-links">
+      <a href="https://www.fabriclayer.ai">Home</a>
+      <a href="https://trust.fabriclayer.dev">Trust Index</a>
+      <a href="api.html">API</a>
+      <a href="blog.html">Blog</a>
+    
+    </div>
+    <button class="burger" id="burgerBtn" aria-label="Menu"><span></span><span></span><span></span></button>
+  </div>
+  </div>
+</nav>
 <div class="mobile-menu" id="mobileMenu">
-<a href="/" onclick="closeMobile()">Home</a>
-<a href="/#how" onclick="closeMobile()">How it works</a>
-<a href="/#features" onclick="closeMobile()">Features</a>
-<a href="/#pricing" onclick="closeMobile()">Pricing</a>
-<a href="/#stack" onclick="closeMobile()">Stack</a>
-<div class="menu-divider"></div>
-<div class="menu-label">Documentation</div>
-<a href="#overview" class="toc-link" onclick="closeMobile()">Overview</a>
-<a href="#quickstart" class="toc-link" onclick="closeMobile()">Quickstart</a>
-<a href="#architecture" class="toc-link" onclick="closeMobile()">Architecture</a>
-<a href="#tool-discover" class="toc-link" onclick="closeMobile()">MCP: discover</a>
-<a href="#tool-route" class="toc-link" onclick="closeMobile()">MCP: route</a>
-<a href="#tool-evaluate" class="toc-link" onclick="closeMobile()">MCP: evaluate</a>
-<a href="#trust-scoring" class="toc-link" onclick="closeMobile()">Trust Scoring</a>
-<a href="#payments" class="toc-link" onclick="closeMobile()">Payments & x402</a>
-<a href="#contracts" class="toc-link" onclick="closeMobile()">Smart Contracts</a>
-<a href="#webmcp" class="toc-link" onclick="closeMobile()">WebMCP Integration</a>
-<a href="#rest-api" class="toc-link" onclick="closeMobile()">REST API</a>
-<a href="#sdks" class="toc-link" onclick="closeMobile()">SDKs</a>
-<a href="#billing" class="toc-link" onclick="closeMobile()">Billing</a>
-<a href="#" class="nav-cta" onclick="closeMobile()">Get started</a>
+  <a href="https://www.fabriclayer.ai">Home</a>
+  <a href="https://trust.fabriclayer.dev">Trust Index</a>
+  <a href="api.html">API</a>
+  <a href="blog.html">Blog</a>
+
 </div>
 
-<!-- Docs layout -->
 <div class="docs-layout">
-
-<!-- SIDEBAR (desktop only) -->
 <aside class="sidebar">
-<a href="/" class="sidebar-logo">
-<svg viewBox="195 58 440 108" fill="var(--black)"><path d="M218.4,158.28v-56.57h-19.23v-12.12h19.23v-15.05c0-4.18,1.25-7.52,3.76-10.03,2.51-2.51,5.85-3.76,10.03-3.76h17.7v12.12h-13.1c-2.7,0-4.04,1.39-4.04,4.18v12.54h19.79v12.12h-19.79v56.57h-14.35Z"/><path d="M283.19,160.23c-4.92,0-9.31-.84-13.17-2.51-3.86-1.67-6.92-4.13-9.2-7.38-2.28-3.25-3.41-7.2-3.41-11.84s1.14-8.66,3.41-11.77c2.28-3.11,5.39-5.46,9.34-7.04,3.95-1.58,8.43-2.37,13.45-2.37h20.9v-4.46c0-3.99-1.21-7.2-3.62-9.61-2.42-2.41-6.13-3.62-11.15-3.62s-8.69,1.16-11.29,3.48c-2.6,2.32-4.32,5.34-5.16,9.06l-13.38-4.32c1.11-3.71,2.9-7.08,5.36-10.1,2.46-3.02,5.73-5.46,9.82-7.32,4.09-1.86,9.01-2.79,14.77-2.79,8.92,0,15.93,2.28,21.04,6.83,5.11,4.55,7.66,11.01,7.66,19.37v28.29c0,2.79,1.3,4.18,3.9,4.18h5.85v11.98h-10.73c-3.25,0-5.9-.84-7.94-2.51-2.04-1.67-3.07-3.95-3.07-6.83v-.42h-2.09c-.74,1.39-1.86,3.02-3.34,4.88-1.49,1.86-3.67,3.46-6.55,4.81-2.88,1.35-6.69,2.02-11.43,2.02ZM285.28,148.38c5.76,0,10.4-1.65,13.93-4.95,3.53-3.3,5.29-7.82,5.29-13.58v-1.39h-20.06c-3.81,0-6.88.81-9.2,2.44-2.32,1.63-3.48,4.02-3.48,7.18s1.21,5.67,3.62,7.52c2.41,1.86,5.71,2.79,9.89,2.79Z"/><path d="M376.69,160.23c-6.69,0-11.82-1.21-15.4-3.62-3.58-2.41-6.25-5.11-8.01-8.08h-2.23v9.75h-14.07V60.74h14.35v38.18h2.23c1.11-1.86,2.6-3.64,4.46-5.36,1.86-1.72,4.32-3.14,7.38-4.25,3.07-1.11,6.83-1.67,11.29-1.67,5.76,0,11.05,1.39,15.88,4.18,4.83,2.79,8.68,6.83,11.56,12.12,2.88,5.29,4.32,11.61,4.32,18.95v2.09c0,7.43-1.46,13.77-4.39,19.02-2.93,5.25-6.78,9.27-11.56,12.05-4.79,2.79-10.06,4.18-15.81,4.18ZM372.51,147.69c6.22,0,11.36-2,15.4-5.99,4.04-3.99,6.06-9.71,6.06-17.14v-1.25c0-7.34-2-13-5.99-17-4-3.99-9.15-5.99-15.47-5.99s-11.22,2-15.26,5.99c-4.04,3.99-6.06,9.66-6.06,17v1.25c0,7.43,2.02,13.15,6.06,17.14,4.04,4,9.13,5.99,15.26,5.99Z"/><path d="M420.58,158.28v-68.69h14.07v8.08h2.23c1.11-2.88,2.9-4.99,5.36-6.34,2.46-1.35,5.5-2.02,9.13-2.02h8.22v12.96h-8.78c-4.65,0-8.45,1.28-11.43,3.83-2.97,2.56-4.46,6.48-4.46,11.77v40.41h-14.35Z"/><path d="M478.68,80.25c-2.79,0-5.13-.91-7.04-2.72-1.91-1.81-2.86-4.16-2.86-7.04s.95-5.23,2.86-7.04c1.9-1.81,4.25-2.72,7.04-2.72s5.25.91,7.11,2.72c1.86,1.81,2.79,4.16,2.79,7.04s-.93,5.23-2.79,7.04c-1.86,1.81-4.23,2.72-7.11,2.72ZM471.43,158.28v-68.69h14.35v68.69h-14.35Z"/><path d="M532.74,160.23c-6.6,0-12.56-1.39-17.9-4.18-5.34-2.79-9.57-6.83-12.68-12.12-3.11-5.29-4.67-11.66-4.67-19.09v-1.81c0-7.43,1.55-13.77,4.67-19.02,3.11-5.25,7.34-9.29,12.68-12.12,5.34-2.83,11.31-4.25,17.9-4.25s12.21,1.21,16.86,3.62c4.64,2.42,8.38,5.62,11.22,9.61,2.83,3.99,4.67,8.41,5.5,13.24l-13.93,2.93c-.47-3.07-1.44-5.85-2.93-8.36-1.49-2.51-3.58-4.5-6.27-5.99-2.7-1.48-6.08-2.23-10.17-2.23s-7.59.91-10.8,2.72c-3.2,1.81-5.74,4.41-7.59,7.8-1.86,3.39-2.79,7.5-2.79,12.33v1.25c0,4.83.93,8.97,2.79,12.4,1.86,3.44,4.39,6.04,7.59,7.8,3.2,1.77,6.8,2.65,10.8,2.65,6.04,0,10.64-1.55,13.79-4.67,3.16-3.11,5.16-7.08,5.99-11.91l13.93,3.2c-1.11,4.74-3.09,9.1-5.92,13.1-2.83,4-6.57,7.18-11.22,9.54-4.65,2.37-10.27,3.55-16.86,3.55Z"/></svg>
-<span class="docs-badge">docs</span>
-</a>
-
-<div class="nav-group">
-<div class="nav-group-title">Getting Started</div>
-<a href="#overview" class="nav-item">Overview</a>
+<div class="sidebar-head"><span class="sidebar-badge">Documentation</span></div>
+<div class="nav-group"><div class="nav-group-title">Getting Started</div>
+<a href="#overview" class="nav-item active">Overview</a></div>
+<div class="nav-group"><div class="nav-group-title">Trust Score</div>
+<a href="#trust-overview" class="nav-item">How it works</a>
+<a href="#trust-signals" class="nav-item">Six signals</a>
+<a href="#trust-formula" class="nav-item">Scoring formula</a>
+<a href="#trust-thresholds" class="nav-item">Score thresholds</a>
+<a href="#trust-refresh" class="nav-item">Data freshness</a></div>
+<div class="nav-group"><div class="nav-group-title">Getting Started</div>
 <a href="#quickstart" class="nav-item">Quickstart</a>
-<a href="#architecture" class="nav-item">Architecture</a>
-</div>
-<div class="nav-group">
-<div class="nav-group-title">MCP Tools</div>
+<a href="#architecture" class="nav-item">Architecture</a></div>
+<div class="nav-group"><div class="nav-group-title">MCP Tools</div>
 <a href="#tool-discover" class="nav-item">discover</a>
 <a href="#tool-route" class="nav-item">route</a>
 <a href="#tool-evaluate" class="nav-item">evaluate</a>
 <a href="#tool-budget" class="nav-item">budget</a>
 <a href="#tool-feedback" class="nav-item">feedback</a>
-<a href="#tool-favorites" class="nav-item">favorites</a>
-</div>
-<div class="nav-group">
-<div class="nav-group-title">Concepts</div>
-<a href="#trust-scoring" class="nav-item">Trust Scoring</a>
-<a href="#payments" class="nav-item">Payments & x402</a>
+<a href="#tool-favorites" class="nav-item">favorites</a></div>
+<div class="nav-group"><div class="nav-group-title">Concepts</div>
+<a href="#payments" class="nav-item">Payments &amp; x402</a>
 <a href="#budgets" class="nav-item">Budget Controls</a>
-<a href="#identity" class="nav-item">Agent Identity</a>
-</div>
-<div class="nav-group">
-<div class="nav-group-title">Smart Contracts</div>
+<a href="#identity" class="nav-item">Agent Identity</a></div>
+<div class="nav-group"><div class="nav-group-title">Smart Contracts</div>
 <a href="#contracts" class="nav-item">Overview</a>
 <a href="#contract-registry" class="nav-item">FabricRegistry</a>
-<a href="#contract-identity" class="nav-item">FabricIdentity</a>
-</div>
-<div class="nav-group">
-<div class="nav-group-title">WebMCP</div>
-<a href="#webmcp" class="nav-item">Overview</a>
-</div>
-<div class="nav-group">
-<div class="nav-group-title">Integration</div>
+<a href="#contract-identity" class="nav-item">FabricIdentity</a></div>
+<div class="nav-group"><div class="nav-group-title">WebMCP</div>
+<a href="#webmcp" class="nav-item">Integration</a></div>
+<div class="nav-group"><div class="nav-group-title">Integration</div>
 <a href="#rest-api" class="nav-item">REST API</a>
 <a href="#sdks" class="nav-item">SDKs</a>
 <a href="#billing" class="nav-item">Billing</a>
-<a href="#rate-limits" class="nav-item">Rate Limits</a>
-</div>
-<div class="nav-group">
-<div class="nav-group-title">Reference</div>
+<a href="#rate-limits" class="nav-item">Rate Limits</a></div>
+<div class="nav-group"><div class="nav-group-title">Reference</div>
 <a href="#config" class="nav-item">Configuration</a>
 <a href="#pricing" class="nav-item">Pricing</a>
 <a href="#protocols" class="nav-item">Protocol Stack</a>
 <a href="#deployment" class="nav-item">Deployment</a>
-</div>
+<a href="#legal" class="nav-item">Legal</a></div>
 </aside>
 
-<!-- CONTENT -->
 <main class="content">
-
 <h1 id="overview">Fabric Documentation</h1>
-<p class="subtitle">The trust layer for the agent economy. Fabric is a production-ready gateway that gives AI agents the ability to discover services via ERC-8004 smart contracts on Base, verify reputation with a live scoring engine, and pay autonomously via x402 with managed USDC wallets.</p>
+<p class="subtitle">Fabric is the trust layer for the agent economy — a production-ready gateway that lets AI agents discover services, verify reputation through live scoring, and pay autonomously via x402 with managed USDC wallets.</p>
 
-<div class="callout">
-<p><strong>Production-ready</strong> — 111 files, 9 test suites (116 cases), 2 Solidity contracts (40 tests), TypeScript &amp; Python SDKs, Stripe billing, Prometheus monitoring, CI/CD pipeline. <a href="#">Get your API key</a>.</p>
-</div>
+<h2 id="trust-overview">Trust Score</h2>
+<p>The Fabric Trust Score is the core of everything Fabric does. Before an agent discovers, routes to, or pays any service — it checks the score. The score determines whether a provider is trusted, flagged for caution, or blocked outright.</p>
+<p>Every AI service indexed by Fabric receives a composite score from <strong>0.00 to 5.00</strong>, computed from six independently weighted signals. Each signal scores 0–5 individually, then is multiplied by its weight. The six weighted contributions sum to the final score.</p>
+<p>All scoring data is generated automatically from public sources. No manual reviews. No paid placements. No provider involvement required. A provider doesn't need to opt in — or even know they're being scored — for Fabric to evaluate them.</p>
 
-<!-- QUICKSTART -->
+<div class="callout"><p><strong>Why six signals?</strong> Any single metric can be gamed. Download counts can be inflated. GitHub stars can be bought. Even vulnerability databases have blind spots. By combining six independent signals across security, operations, maintenance, adoption, transparency, and publisher identity — an attacker would need to simultaneously spoof all of them to pass. That's the point.</p></div>
+
+<h2 id="trust-signals">The six signals</h2>
+
+<h3>1. Vulnerability &amp; Safety <span class="inline-code">×0.25</span></h3>
+<p>The highest-weighted signal. Measures known security vulnerabilities, malware indicators, and dependency chain risk across the package's entire tree.</p>
+<p>Fabric scans for open CVEs (weighted by severity), flagged dependencies, presence of install scripts that execute on download, typosquatting indicators, and known malware signatures. The scan covers the full dependency tree — not just the top-level package.</p>
+<p>Scoring starts at 5.0 and deducts based on findings. Zero vulnerabilities and a clean dependency chain scores a full 5.0. A critical unpatched CVE floors the score at 1.0 or below. Active malware detection results in a zero.</p>
+<div class="callout"><p><strong>Supply chain depth matters.</strong> A package with zero direct vulnerabilities can still score poorly if it depends on a library that depends on a library with a critical CVE. Fabric traces the full tree.</p></div>
+
+<h3>2. Operational Health <span class="inline-code">×0.20</span></h3>
+<p>The only signal that requires Fabric's own infrastructure. We actively monitor services for uptime, latency, and behavioral consistency — no provider can fake this one.</p>
+<p>Scoring is based on rolling 30-day metrics. 99.9%+ uptime and sub-500ms p50 latency scores 5.0. Each downtime incident deducts based on duration and frequency. Latency spikes above p99 thresholds reduce the score. The heaviest penalty is for behavioral inconsistency — when a service returns different responses to identical inputs across checks.</p>
+<p>Services with no endpoint to monitor (CLI tools, local packages) receive minimal signal here, which naturally suppresses their overall score unless other signals compensate.</p>
+
+<h3>3. Maintenance Activity <span class="inline-code">×0.20</span></h3>
+<p>Is anyone home? Abandoned software is a security risk regardless of how clean the code is today. This signal captures the human factor behind a project.</p>
+<p>Fabric evaluates recency of last commit, commit frequency over a rolling 90-day window, median time to first response on issues, ratio of open to closed issues, pull request merge velocity, and release cadence consistency. An actively maintained project with regular releases scores 5.0. No commits in 12+ months drops to 1.0 or below.</p>
+<p>Fabric accounts for false positives — some stable, mature projects have low commit frequency by design. Release cadence and issue responsiveness carry more weight than raw commit volume.</p>
+
+<h3>4. Adoption <span class="inline-code">×0.15</span></h3>
+<p>Not a security signal per se, but a strong proxy for how many eyes are on the project. High adoption means more users finding and reporting issues, more pressure to maintain quality, and a larger blast radius if something goes wrong — which motivates faster fixes.</p>
+<p>Fabric uses a logarithmic scale against ecosystem peers. A package with millions of weekly downloads scores differently than one with fifty. But raw numbers aren't the whole story — Fabric normalises against category averages so niche tools aren't penalised simply for being specialised. Download velocity (growth trend) matters more than absolute count.</p>
+
+<div class="callout"><p><strong>Adoption is gameable.</strong> This is the one signal attackers can inflate. The ClawHub malware incident proved it — "What Would Elon Do" hit #1 by downloads despite being active malware. That's why adoption is weighted at only 0.15 and the other five signals independently flagged it.</p></div>
+
+<h3>5. Transparency <span class="inline-code">×0.10</span></h3>
+<p>Can you see what it does before you run it? Open source projects with clear documentation, proper licensing, and published schemas are inherently more trustworthy than black boxes.</p>
+<p>Fabric uses a checklist-based approach: is the source code public? Is there a recognised licence? Does the README exceed a meaningful length with code examples? Is there a SECURITY.md? Are input/output schemas published? Is there a model card, API documentation, or linked research? Each element contributes to the score, capping at 5.0.</p>
+<p>This signal is largely static — it only needs re-evaluation when a new version or repository update is detected.</p>
+
+<h3>6. Publisher Trust <span class="inline-code">×0.10</span></h3>
+<p>Who built this? A first-time anonymous account publishing a critical infrastructure tool is a very different risk profile than a verified organisation with fifty other maintained packages.</p>
+<p>Fabric evaluates account age, organisational membership, number of other maintained packages, consistency of identity across registries, whether a verified domain or email is linked, and any prior security incidents. New anonymous accounts start near 1.0. Established publishers with clean track records across multiple registries score well above 4.0.</p>
+<p>Cross-referencing identities across package registries helps detect consistent publishers versus throwaway accounts created specifically to distribute a single package.</p>
+
+<h2 id="trust-formula">Scoring formula</h2>
+<p>The final score is a weighted sum. Each signal contributes proportionally to its weight — security and operational signals carry 65% of the total because they directly affect safety. Adoption and reputation are supporting evidence, not primary drivers.</p>
+<div class="code"><span class="code-label">formula</span><pre><span class="fn">trust_score</span> =
+  (<span class="str">vulnerability_safety</span> × <span class="fn">0.25</span>)
++ (<span class="str">operational_health</span>   × <span class="fn">0.20</span>)
++ (<span class="str">maintenance_activity</span> × <span class="fn">0.20</span>)
++ (<span class="str">adoption</span>             × <span class="fn">0.15</span>)
++ (<span class="str">transparency</span>         × <span class="fn">0.10</span>)
++ (<span class="str">publisher_trust</span>      × <span class="fn">0.10</span>)
+
+<span class="cmt">// Each signal: 0.00 – 5.00</span>
+<span class="cmt">// Weights sum to: 1.00</span>
+<span class="cmt">// Max possible score: 5.00</span></pre></div>
+
+<h4>Example calculation</h4>
+<div class="code"><span class="code-label">example</span><pre><span class="cmt">// A well-maintained open source image generation API</span>
+<span class="fn">trust_score</span> = (<span class="fn">4.8</span> × 0.25) + (<span class="fn">4.5</span> × 0.20) + (<span class="fn">3.4</span> × 0.20) + (<span class="fn">2.1</span> × 0.15) + (<span class="fn">3.7</span> × 0.10) + (<span class="fn">4.3</span> × 0.10)
+            = 1.20 + 0.90 + 0.68 + 0.32 + 0.37 + 0.43
+            = <span class="fn">3.90</span> <span class="cmt">// ✅ Trusted</span></pre></div>
+
+<h4>Custom weights</h4>
+<p>Pro and Team plans can override default weights to match their priorities. If your use case values speed over security, or cost over quality — you can rebalance the formula without changing the underlying data.</p>
+<div class="code"><span class="code-label">config</span><pre>{
+  <span class="fn">"trustWeights"</span>: {
+    <span class="fn">"vulnerabilitySafety"</span>: <span class="str">0.40</span>,   <span class="cmt">// boost security</span>
+    <span class="fn">"operationalHealth"</span>:  <span class="str">0.25</span>,
+    <span class="fn">"maintenance"</span>:        <span class="str">0.15</span>,
+    <span class="fn">"adoption"</span>:           <span class="str">0.10</span>,
+    <span class="fn">"transparency"</span>:       <span class="str">0.05</span>,
+    <span class="fn">"publisherTrust"</span>:     <span class="str">0.05</span>
+  }
+}</pre></div>
+
+<h2 id="trust-thresholds">Score thresholds</h2>
+<p>Every indexed service falls into one of three tiers based on its composite score. These labels are shown publicly on the Trust Index and are used by the API to power agent-side routing decisions.</p>
+<table class="doc-table"><tr><th>Score</th><th>Status</th><th>Agent behaviour</th></tr>
+<tr><td>3.34 – 5.00</td><td><span class="tag tag-g">Trusted</span></td><td>Low risk across all signals. Agents can auto-approve. Safe to use without human confirmation.</td></tr>
+<tr><td>1.67 – 3.33</td><td><span class="tag tag-o">Caution</span></td><td>Some signals flagged. Agents should request human confirmation before granting access.</td></tr>
+<tr><td>0.00 – 1.66</td><td><span class="tag tag-r">Blocked</span></td><td>Significant risks detected. Agents deny by default. Manual override required.</td></tr></table>
+
+<h4>Score modifiers</h4>
+<p>Two additional multipliers can reduce a provider's score below what the six signals alone would produce:</p>
+<table class="doc-table"><tr><th>Condition</th><th>Effect</th></tr>
+<tr><td>Provider with fewer than 10 transactions</td><td>"New provider" penalty — 0.8× multiplier on final score</td></tr>
+<tr><td>Provider inactive for 7+ days</td><td>"Inactive" flag — 0.7× multiplier on final score</td></tr></table>
+
+<h2 id="trust-refresh">Data freshness</h2>
+<p>The scoring engine runs continuously against 10,000+ indexed AI services. Full dataset refresh runs daily via batch. Event-driven re-checks are triggered by three conditions: a new version release, a new CVE disclosure affecting the service's ecosystem, or a user search that returns stale data.</p>
+<p>This keeps scores current without polling every service every five minutes. Most signals (transparency, publisher trust, adoption) change slowly and only need daily checks. Vulnerability data is the most time-sensitive and is refreshed more aggressively — hourly syncs against advisory databases, with immediate re-scoring when a relevant CVE is published.</p>
+<p>Operational Health is the exception — Fabric Monitor runs its own pings on a 15-minute cycle for top-traffic services, with daily checks for the long tail. This is Fabric's proprietary data. Nobody else is monitoring AI service behaviour at this scale.</p>
+
+<div class="callout"><p><strong>No manual reviews. No paid placements.</strong> Trust scores are fully automated. Providers cannot pay for a higher score, request manual review, or influence their ranking. The only way to improve a score is to improve the underlying signals — fix vulnerabilities, maintain the project, improve uptime, verify your identity.</p></div>
+
 <h2 id="quickstart">Quickstart</h2>
 <p>Get Fabric running with your agent in under 5 minutes.</p>
-
 <h3>1. Install the SDK</h3>
 <div class="code"><span class="code-label">bash</span><pre>npm install @usefabric/mcp</pre></div>
-
 <h3>2. Configure your server</h3>
 <div class="code"><span class="code-label">typescript</span><pre><span class="kw">import</span> { FabricServer } <span class="kw">from</span> <span class="str">'@usefabric/mcp'</span>
 
 <span class="kw">const</span> <span class="fn">fabric</span> = <span class="kw">new</span> <span class="fn">FabricServer</span>({
   <span class="fn">apiKey</span>: process.env.<span class="fn">FABRIC_KEY</span>,
-  <span class="fn">budget</span>: <span class="str">'$5/day'</span>,           <span class="cmt">// Daily spend limit</span>
-  <span class="fn">trustThreshold</span>: <span class="str">0.8</span>,       <span class="cmt">// Min trust score (0-1)</span>
-  <span class="fn">chain</span>: <span class="str">'base'</span>,              <span class="cmt">// Payment chain</span>
-  <span class="fn">fallbackEnabled</span>: <span class="str">true</span>,     <span class="cmt">// Auto-retry on failure</span>
+  <span class="fn">budget</span>: <span class="str">'$5/day'</span>,           <span class="cmt">// daily spend limit</span>
+  <span class="fn">trustThreshold</span>: <span class="str">0.8</span>,       <span class="cmt">// min trust score (0–1)</span>
+  <span class="fn">chain</span>: <span class="str">'base'</span>,              <span class="cmt">// payment chain</span>
+  <span class="fn">fallbackEnabled</span>: <span class="str">true</span>,     <span class="cmt">// auto-retry on failure</span>
 })</pre></div>
-
 <h3>3. Add to your MCP config</h3>
 <div class="code"><span class="code-label">json</span><pre>{
   <span class="fn">"mcpServers"</span>: {
     <span class="fn">"fabric"</span>: {
       <span class="fn">"command"</span>: <span class="str">"npx"</span>,
       <span class="fn">"args"</span>: [<span class="str">"@usefabric/mcp"</span>],
-      <span class="fn">"env"</span>: {
-        <span class="fn">"FABRIC_KEY"</span>: <span class="str">"your-api-key"</span>
-      }
+      <span class="fn">"env"</span>: { <span class="fn">"FABRIC_KEY"</span>: <span class="str">"your-api-key"</span> }
     }
   }
 }</pre></div>
-
 <h3>4. Use from your agent</h3>
 <p>Your agent now has access to six tools: <span class="inline-code">discover</span>, <span class="inline-code">route</span>, <span class="inline-code">evaluate</span>, <span class="inline-code">budget</span>, <span class="inline-code">feedback</span>, and <span class="inline-code">favorites</span>.</p>
-
 <div class="code"><span class="code-label">agent prompt</span><pre><span class="cmt">// Your agent can now say things like:</span>
 <span class="str">"Use Fabric to find an image generation service and generate a logo"</span>
 <span class="str">"Check my remaining budget on Fabric"</span>
 <span class="str">"Evaluate the trust score of provider 0x1234..."</span></pre></div>
 
-<!-- ARCHITECTURE -->
 <h2 id="architecture">Architecture</h2>
-<p>Fabric sits between your AI agent and the broader agent economy. It reads on-chain data from ERC-8004 smart contracts on Base, computes trust scores using a live scoring engine with time-decay, handles x402 payments via managed wallets, and enforces budget controls with Stripe billing for subscriptions.</p>
-
+<p>Fabric sits between your AI agent and the broader agent economy. It reads on-chain data from ERC-8004 smart contracts on Base, computes trust scores with a live scoring engine, handles x402 payments via managed wallets, and enforces budget controls.</p>
 <div class="code"><span class="code-label">architecture</span><pre><span class="fn">Your Agent</span> <span class="cmt">(Claude, Cursor, LangChain, custom)</span>
     <span class="cmt">│</span>
-    <span class="cmt">├── MCP protocol</span>  <span class="cmt">(6 tools: discover, route, evaluate, budget, feedback, favorites)</span>
-    <span class="cmt">├── REST API</span>      <span class="cmt">(22 endpoints, /v1/*)</span>
+    <span class="cmt">├── MCP protocol</span>  <span class="cmt">(6 tools)</span>
+    <span class="cmt">├── REST API</span>      <span class="cmt">(22 endpoints)</span>
     <span class="cmt">└── SDKs</span>          <span class="cmt">(TypeScript + Python)</span>
     <span class="cmt">│</span>
     <span class="cmt">▼</span>
-<span class="fn">Fabric Gateway</span> <span class="cmt">(Elysia + Bun)</span>
-    <span class="cmt">├──</span> <span class="kw">Auth</span>              <span class="cmt">→ API key validation + plan enforcement</span>
-    <span class="cmt">├──</span> <span class="kw">Rate Limiter</span>       <span class="cmt">→ sliding window (Redis sorted sets)</span>
-    <span class="cmt">├──</span> <span class="kw">Usage Tracker</span>      <span class="cmt">→ per-request metering + overage</span>
-    <span class="cmt">├──</span> <span class="str">Trust Scorer</span>       <span class="cmt">→ live scoring + time-decay + circuit breaker</span>
+<span class="fn">Fabric Gateway</span>
+    <span class="cmt">├──</span> <span class="kw">Auth</span>              <span class="cmt">→ API key + plan enforcement</span>
+    <span class="cmt">├──</span> <span class="kw">Rate Limiter</span>       <span class="cmt">→ sliding window (Redis)</span>
+    <span class="cmt">├──</span> <span class="str">Trust Scorer</span>       <span class="cmt">→ 6-signal weighted scoring</span>
     <span class="cmt">├──</span> <span class="str">Provider Selector</span>  <span class="cmt">→ composite ranking + fallback</span>
-    <span class="cmt">├──</span> <span class="str">Route Executor</span>     <span class="cmt">→ x402 → direct → mock (3-tier)</span>
-    <span class="cmt">├──</span> <span class="fn">Budget Engine</span>      <span class="cmt">→ per-agent/task limits + daily/weekly/monthly reset</span>
-    <span class="cmt">└──</span> <span class="fn">Billing</span>           <span class="cmt">→ Stripe subscriptions + overage + invoices</span>
+    <span class="cmt">├──</span> <span class="str">Route Executor</span>     <span class="cmt">→ x402 → direct → mock</span>
+    <span class="cmt">├──</span> <span class="fn">Budget Engine</span>      <span class="cmt">→ multi-level spend limits</span>
+    <span class="cmt">└──</span> <span class="fn">Billing</span>           <span class="cmt">→ Stripe subscriptions</span>
     <span class="cmt">│</span>
     <span class="cmt">▼</span>
 <span class="fn">Base L2</span>
-    <span class="cmt">├──</span> <span class="str">FabricRegistry.sol</span>  <span class="cmt">→ ERC-8004 agent/provider registry</span>
-    <span class="cmt">├──</span> <span class="str">FabricIdentity.sol</span>  <span class="cmt">→ ERC-721 identity NFTs</span>
-    <span class="cmt">└──</span> <span class="str">USDC transfers</span>      <span class="cmt">→ x402 payment settlement</span></pre></div>
+    <span class="cmt">├──</span> <span class="str">FabricRegistry.sol</span>  <span class="cmt">→ ERC-8004 registry</span>
+    <span class="cmt">├──</span> <span class="str">FabricIdentity.sol</span>  <span class="cmt">→ ERC-721 identity</span>
+    <span class="cmt">└──</span> <span class="str">USDC transfers</span>      <span class="cmt">→ x402 settlement</span></pre></div>
+<div class="callout pink"><p><strong>No crypto knowledge required.</strong> Fabric handles wallet creation, funding, and transaction signing. Your agent just calls <span class="inline-code">route()</span> and gets results.</p></div>
 
-<div class="callout pink">
-<p><strong>No crypto knowledge required.</strong> Fabric handles wallet creation, funding, and transaction signing. Your agent just calls <span class="inline-code">route()</span> and gets results.</p>
-</div>
-
-<!-- MCP TOOLS -->
 <h2 id="tool-discover">Tool: discover</h2>
-<p>Find services by capability. Queries the ERC-8004 Identity Registry and returns a ranked list of providers with trust scores and pricing.</p>
-
-<div class="param">
-<span class="param-name">capability</span><span class="param-type">string</span><span class="param-req">required</span>
-<div class="param-desc">What your agent needs, e.g. <span class="inline-code">"image-generation"</span>, <span class="inline-code">"data-lookup"</span>, <span class="inline-code">"code-review"</span></div>
-</div>
-<div class="param">
-<span class="param-name">maxResults</span><span class="param-type">number</span>
-<div class="param-desc">Maximum providers to return. Default: 10</div>
-</div>
-<div class="param">
-<span class="param-name">minTrust</span><span class="param-type">number</span>
-<div class="param-desc">Minimum trust score (0-1). Overrides server-level trustThreshold for this query.</div>
-</div>
-<div class="param">
-<span class="param-name">maxPrice</span><span class="param-type">string</span>
-<div class="param-desc">Maximum price per request, e.g. <span class="inline-code">"$0.05"</span></div>
-</div>
-
+<p>Find services by capability. Queries the ERC-8004 registry and returns a ranked list of providers with trust scores and pricing.</p>
+<div class="param"><span class="param-name">capability</span><span class="param-type">string</span><span class="param-req">required</span><div class="param-desc">What your agent needs — e.g. <span class="inline-code">"image-generation"</span>, <span class="inline-code">"data-lookup"</span></div></div>
+<div class="param"><span class="param-name">maxResults</span><span class="param-type">number</span><div class="param-desc">Maximum providers to return. Default: 10</div></div>
+<div class="param"><span class="param-name">minTrust</span><span class="param-type">number</span><div class="param-desc">Minimum trust score (0–1). Overrides server-level threshold.</div></div>
+<div class="param"><span class="param-name">maxPrice</span><span class="param-type">string</span><div class="param-desc">Maximum price per request, e.g. <span class="inline-code">"$0.05"</span></div></div>
 <div class="code"><span class="code-label">response</span><pre>{
-  <span class="fn">"providers"</span>: [
-    {
-      <span class="fn">"agentId"</span>: <span class="str">"0x1a2b...3c4d"</span>,
-      <span class="fn">"name"</span>: <span class="str">"PixelForge"</span>,
-      <span class="fn">"capability"</span>: <span class="str">"image-generation"</span>,
-      <span class="fn">"trustScore"</span>: <span class="str">0.94</span>,
-      <span class="fn">"price"</span>: <span class="str">"$0.02"</span>,
-      <span class="fn">"uptime"</span>: <span class="str">0.998</span>,
-      <span class="fn">"totalReviews"</span>: <span class="str">1247</span>,
-      <span class="fn">"endpoint"</span>: <span class="str">"https://pixelforge.ai/v1"</span>
-    },
-    <span class="cmt">// ...</span>
-  ],
+  <span class="fn">"providers"</span>: [{
+    <span class="fn">"agentId"</span>: <span class="str">"0x1a2b...3c4d"</span>,
+    <span class="fn">"name"</span>: <span class="str">"PixelForge"</span>,
+    <span class="fn">"trustScore"</span>: <span class="str">0.94</span>,
+    <span class="fn">"price"</span>: <span class="str">"$0.02"</span>,
+    <span class="fn">"uptime"</span>: <span class="str">0.998</span>
+  }],
   <span class="fn">"totalFound"</span>: <span class="str">12</span>,
-  <span class="fn">"filtered"</span>: <span class="str">4</span> <span class="cmt">// below trust threshold</span>
+  <span class="fn">"filtered"</span>: <span class="str">4</span>
 }</pre></div>
 
 <h2 id="tool-route">Tool: route</h2>
-<p>End-to-end: discover → score → pay → return result. The primary tool most agents will use. Handles everything in a single call.</p>
-
-<div class="param">
-<span class="param-name">capability</span><span class="param-type">string</span><span class="param-req">required</span>
-<div class="param-desc">Service capability needed</div>
-</div>
-<div class="param">
-<span class="param-name">input</span><span class="param-type">object</span><span class="param-req">required</span>
-<div class="param-desc">Payload to send to the service provider</div>
-</div>
-<div class="param">
-<span class="param-name">priority</span><span class="param-type">"quality" | "speed" | "cost"</span>
-<div class="param-desc">How to weight the scoring. Default: <span class="inline-code">"quality"</span></div>
-</div>
-<div class="param">
-<span class="param-name">preferredProvider</span><span class="param-type">string</span>
-<div class="param-desc">Agent ID to try first (from favorites list)</div>
-</div>
-
-<div class="code"><span class="code-label">example</span><pre><span class="cmt">// Agent calls route with a task</span>
-fabric.route({
+<p>The primary tool most agents will use. Handles discover → score → pay → return in a single call.</p>
+<div class="param"><span class="param-name">capability</span><span class="param-type">string</span><span class="param-req">required</span><div class="param-desc">Service capability needed</div></div>
+<div class="param"><span class="param-name">input</span><span class="param-type">object</span><span class="param-req">required</span><div class="param-desc">Payload to send to the service provider</div></div>
+<div class="param"><span class="param-name">priority</span><span class="param-type">"quality" | "speed" | "cost"</span><div class="param-desc">How to weight scoring. Default: <span class="inline-code">"quality"</span></div></div>
+<div class="param"><span class="param-name">preferredProvider</span><span class="param-type">string</span><div class="param-desc">Agent ID to try first (from favorites)</div></div>
+<div class="code"><span class="code-label">example</span><pre>fabric.route({
   <span class="fn">capability</span>: <span class="str">"image-generation"</span>,
   <span class="fn">input</span>: { <span class="fn">prompt</span>: <span class="str">"A blue octopus reading a newspaper"</span> },
   <span class="fn">priority</span>: <span class="str">"quality"</span>
@@ -406,582 +379,255 @@ fabric.route({
   <span class="fn">"provider"</span>: <span class="str">"PixelForge"</span>,
   <span class="fn">"cost"</span>: <span class="str">"$0.02"</span>,
   <span class="fn">"latency"</span>: <span class="str">"240ms"</span>,
-  <span class="fn">"txHash"</span>: <span class="str">"0xabc..."</span>,
-  <span class="fn">"trustScore"</span>: <span class="str">0.94</span>,
-  <span class="fn">"fallbackUsed"</span>: <span class="str">false</span>
+  <span class="fn">"trustScore"</span>: <span class="str">0.94</span>
 }</pre></div>
 
 <h2 id="tool-evaluate">Tool: evaluate</h2>
-<p>Get a detailed trust profile for a specific agent. Reads the full reputation history from the ERC-8004 Reputation Registry and computes a breakdown.</p>
-
-<div class="param">
-<span class="param-name">agentId</span><span class="param-type">string</span><span class="param-req">required</span>
-<div class="param-desc">The ERC-8004 agent ID (NFT token ID or address)</div>
-</div>
-
-<div class="code"><span class="code-label">response</span><pre>{
-  <span class="fn">"agentId"</span>: <span class="str">"0x1a2b...3c4d"</span>,
-  <span class="fn">"name"</span>: <span class="str">"PixelForge"</span>,
-  <span class="fn">"overallTrust"</span>: <span class="str">0.94</span>,
-  <span class="fn">"breakdown"</span>: {
-    <span class="fn">"uptime"</span>: <span class="str">0.998</span>,
-    <span class="fn">"quality"</span>: <span class="str">0.92</span>,
-    <span class="fn">"responseTime"</span>: <span class="str">0.88</span>,
-    <span class="fn">"reviewerCredibility"</span>: <span class="str">0.96</span>,
-    <span class="fn">"priceEfficiency"</span>: <span class="str">0.91</span>
-  },
-  <span class="fn">"totalFeedback"</span>: <span class="str">1247</span>,
-  <span class="fn">"registeredSince"</span>: <span class="str">"2026-01-30"</span>,
-  <span class="fn">"capabilities"</span>: [<span class="str">"image-generation"</span>, <span class="str">"image-editing"</span>],
-  <span class="fn">"x402Enabled"</span>: <span class="str">true</span>
-}</pre></div>
+<p>Get a detailed trust profile for a specific agent with a multi-signal breakdown.</p>
+<div class="param"><span class="param-name">agentId</span><span class="param-type">string</span><span class="param-req">required</span><div class="param-desc">The ERC-8004 agent ID (NFT token ID or address)</div></div>
 
 <h2 id="tool-budget">Tool: budget</h2>
 <p>Check remaining budget, view spend history, and update limits.</p>
-
-<div class="param">
-<span class="param-name">action</span><span class="param-type">"check" | "history" | "update"</span><span class="param-req">required</span>
-<div class="param-desc">What to do with the budget</div>
-</div>
-
-<table class="doc-table">
-<tr><th>Action</th><th>Description</th><th>Returns</th></tr>
-<tr><td><span class="inline-code">check</span></td><td>Current balance and remaining daily limit</td><td>Balance, spent today, daily limit</td></tr>
-<tr><td><span class="inline-code">history</span></td><td>Transaction log with provider, cost, timestamp</td><td>Array of recent transactions</td></tr>
-<tr><td><span class="inline-code">update</span></td><td>Change daily/per-task limits</td><td>Updated configuration</td></tr>
-</table>
+<div class="param"><span class="param-name">action</span><span class="param-type">"check" | "history" | "update"</span><span class="param-req">required</span><div class="param-desc">What to do with the budget</div></div>
+<table class="doc-table"><tr><th>Action</th><th>Description</th><th>Returns</th></tr>
+<tr><td><span class="inline-code">check</span></td><td>Current balance and daily limit</td><td>Balance, spent, limit</td></tr>
+<tr><td><span class="inline-code">history</span></td><td>Transaction log</td><td>Recent transactions</td></tr>
+<tr><td><span class="inline-code">update</span></td><td>Change limits</td><td>Updated config</td></tr></table>
 
 <h2 id="tool-feedback">Tool: feedback</h2>
-<p>Post reputation feedback to the ERC-8004 Reputation Registry after a completed interaction. Called automatically by <span class="inline-code">route</span>, but can also be invoked manually.</p>
-
-<div class="param">
-<span class="param-name">agentId</span><span class="param-type">string</span><span class="param-req">required</span>
-<div class="param-desc">Provider agent ID to rate</div>
-</div>
-<div class="param">
-<span class="param-name">score</span><span class="param-type">number</span><span class="param-req">required</span>
-<div class="param-desc">Quality score 0–100</div>
-</div>
-<div class="param">
-<span class="param-name">tags</span><span class="param-type">string[]</span>
-<div class="param-desc">Up to 2 tag labels, e.g. <span class="inline-code">["fast", "accurate"]</span></div>
-</div>
+<p>Post reputation feedback to the on-chain registry. Called automatically by <span class="inline-code">route</span>, or invoke manually.</p>
+<div class="param"><span class="param-name">agentId</span><span class="param-type">string</span><span class="param-req">required</span><div class="param-desc">Provider agent ID to rate</div></div>
+<div class="param"><span class="param-name">score</span><span class="param-type">number</span><span class="param-req">required</span><div class="param-desc">Quality score 0–100</div></div>
+<div class="param"><span class="param-name">tags</span><span class="param-type">string[]</span><div class="param-desc">Up to 2 labels, e.g. <span class="inline-code">["fast", "accurate"]</span></div></div>
 
 <h2 id="tool-favorites">Tool: favorites</h2>
-<p>Manage a list of preferred providers. When a favorite is available for a capability, Fabric will try it first before discovering alternatives.</p>
+<p>Manage preferred providers. Favorites are tried first before discovering alternatives.</p>
+<div class="param"><span class="param-name">action</span><span class="param-type">"list" | "add" | "remove"</span><span class="param-req">required</span><div class="param-desc">Manage favorites list</div></div>
+<div class="param"><span class="param-name">agentId</span><span class="param-type">string</span><div class="param-desc">Required for add/remove</div></div>
 
-<div class="param">
-<span class="param-name">action</span><span class="param-type">"list" | "add" | "remove"</span><span class="param-req">required</span>
-<div class="param-desc">Manage favorites list</div>
-</div>
-<div class="param">
-<span class="param-name">agentId</span><span class="param-type">string</span>
-<div class="param-desc">Required for add/remove actions</div>
-</div>
-
-<!-- CONCEPTS -->
-<h2 id="trust-scoring">Trust Scoring</h2>
-<p>Fabric's scoring engine reads raw reputation data from the ERC-8004 Reputation Registry and computes a composite trust score using a proprietary weighted algorithm.</p>
-
-<h3>Scoring factors</h3>
-<table class="doc-table">
-<tr><th>Factor</th><th>Weight</th><th>Source</th></tr>
-<tr><td>Uptime</td><td>25%</td><td>Success rate from on-chain feedback</td></tr>
-<tr><td>Quality</td><td>30%</td><td>Average quality scores from reviews</td></tr>
-<tr><td>Response time</td><td>15%</td><td>Latency measurements from feedback metadata</td></tr>
-<tr><td>Reviewer credibility</td><td>20%</td><td>Weighted by reviewer's own reputation (Sybil resistance)</td></tr>
-<tr><td>Price efficiency</td><td>10%</td><td>Quality-adjusted cost relative to peers</td></tr>
-</table>
-
-<div class="callout">
-<p><strong>Sybil resistance.</strong> The ERC-8004 spec stores feedback with the reviewer's address. Fabric weights reviews by the reviewer's own on-chain reputation — a brand-new address with no history has near-zero influence on scores.</p>
-</div>
-
-<h3>Priority modes</h3>
-<p>When using <span class="inline-code">route</span>, the <span class="inline-code">priority</span> parameter adjusts these weights:</p>
-<ul>
-<li><strong>quality</strong> (default) — Maximizes quality and reviewer credibility scores</li>
-<li><strong>speed</strong> — Boosts response time weight to 40%</li>
-<li><strong>cost</strong> — Boosts price efficiency weight to 40%</li>
-</ul>
-
-<h2 id="payments">Payments & x402</h2>
-<p>Fabric uses the <a href="https://x402.org">x402 protocol</a> for agent-to-agent payments. When a service provider returns HTTP 402 Payment Required, Fabric automatically constructs and signs the payment, then retries the request.</p>
-
-<h3>How it works</h3>
+<h2 id="payments">Payments &amp; x402</h2>
+<p>Fabric uses the <a href="https://x402.org">x402 protocol</a> for agent-to-agent payments. When a provider returns HTTP 402, Fabric automatically signs the payment and retries.</p>
+<h3>Payment flow</h3>
 <ol>
 <li>Agent calls a provider's x402-enabled endpoint via Fabric</li>
-<li>Provider returns <span class="inline-code">402</span> with payment requirements in headers</li>
-<li>Fabric checks budget limits — rejects if over budget</li>
+<li>Provider returns <span class="inline-code">402</span> with payment requirements</li>
+<li>Fabric checks budget limits</li>
 <li>Fabric signs USDC payment from the managed wallet</li>
-<li>Payment settles on Base via Coinbase CDP facilitator</li>
-<li>Fabric retries the request with payment proof</li>
-<li>Provider returns the result</li>
+<li>Payment settles on Base</li>
+<li>Fabric retries with payment proof → provider returns result</li>
 </ol>
-
-<h3>Supported chains & tokens</h3>
-<table class="doc-table">
-<tr><th>Chain</th><th>Token</th><th>Avg. tx cost</th></tr>
-<tr><td>Base</td><td>USDC</td><td>~$0.00025</td></tr>
-<tr><td>Ethereum (planned)</td><td>USDC</td><td>~$0.50–2.00</td></tr>
-<tr><td>Solana (planned)</td><td>USDC</td><td>~$0.001</td></tr>
-</table>
+<h3>Supported chains</h3>
+<table class="doc-table"><tr><th>Chain</th><th>Token</th><th>Avg. tx cost</th><th>Status</th></tr>
+<tr><td>Base</td><td>USDC</td><td>~$0.00025</td><td><span class="tag tag-g">Live</span></td></tr>
+<tr><td>Ethereum</td><td>USDC</td><td>~$0.50–2.00</td><td><span class="tag tag-o">Planned</span></td></tr>
+<tr><td>Solana</td><td>USDC</td><td>~$0.001</td><td><span class="tag tag-o">Planned</span></td></tr></table>
 
 <h2 id="budgets">Budget Controls</h2>
-<p>Fabric enforces spending limits at multiple levels to prevent runaway agent costs.</p>
-
-<table class="doc-table">
-<tr><th>Level</th><th>Description</th><th>Default</th></tr>
-<tr><td>Per-request</td><td>Max spend on a single service call</td><td>$0.50</td></tr>
-<tr><td>Per-task</td><td>Max spend for a multi-step task</td><td>$2.00</td></tr>
-<tr><td>Daily</td><td>Total spend across all agents per day</td><td>$5.00</td></tr>
-<tr><td>Monthly</td><td>Hard cap for billing period</td><td>$50.00</td></tr>
-</table>
-
-<p>When a limit is hit, Fabric returns an error to the agent with a clear message about which budget was exceeded. Limits are configurable via the <span class="inline-code">budget</span> tool or the developer dashboard.</p>
+<p>Spending limits enforced at multiple levels to prevent runaway costs.</p>
+<table class="doc-table"><tr><th>Level</th><th>Description</th><th>Default</th></tr>
+<tr><td>Per-request</td><td>Max per service call</td><td>$0.50</td></tr>
+<tr><td>Per-task</td><td>Max per multi-step task</td><td>$2.00</td></tr>
+<tr><td>Daily</td><td>Total per day</td><td>$5.00</td></tr>
+<tr><td>Monthly</td><td>Hard cap</td><td>$50.00</td></tr></table>
 
 <h2 id="identity">Agent Identity</h2>
-<p>Fabric is built on two smart contracts deployed to Base L2, implementing the <a href="https://eips.ethereum.org/EIPS/eip-8004">ERC-8004</a> standard for on-chain agent identity and reputation.</p>
-
-<h3>On-chain data model</h3>
+<p>Built on two smart contracts on Base L2 implementing the <a href="https://eips.ethereum.org/EIPS/eip-8004">ERC-8004</a> standard for on-chain agent identity and reputation.</p>
 <ul>
-<li><strong>FabricRegistry (ERC-8004):</strong> Stores provider ID (bytes32), owner address, endpoint URL, category, name, reputation score (×1000), total interactions, registration timestamp, active status</li>
-<li><strong>FabricIdentity (ERC-721):</strong> NFT per agent linking to registry ID. One token per registryId (deduped). Full ERC-721 Enumerable support.</li>
-<li><strong>Reputation updates:</strong> Batched by the Fabric operator to amortise gas. Scores are aggregated off-chain from feedback, then committed periodically.</li>
+<li><strong>FabricRegistry (ERC-8004)</strong> — provider ID, owner, endpoint, category, name, reputation, interactions</li>
+<li><strong>FabricIdentity (ERC-721)</strong> — NFT per agent linking to registry, one token per registryId</li>
+<li><strong>Reputation updates</strong> — batched by operator to amortise gas</li>
 </ul>
 
-<!-- SMART CONTRACTS -->
 <h2 id="contracts">Smart Contracts</h2>
-<p>Two Solidity contracts deployed on Base L2 using Foundry. 40 test cases. Optimised for cheap reads and batched operator writes.</p>
-
-<h3 id="contract-registry">FabricRegistry.sol — ERC-8004</h3>
-<p>On-chain registry for AI agent/provider identities. Stores endpoint, category, name, and reputation scores.</p>
-
-<div class="code"><span class="code-label">solidity — register a provider</span><pre><span class="cmt">// Anyone can register</span>
+<p>Two Solidity contracts on Base L2. 40 test cases. Optimised for cheap reads and batched writes.</p>
+<h3 id="contract-registry">FabricRegistry.sol</h3>
+<div class="code"><span class="code-label">solidity</span><pre><span class="cmt">// Anyone can register</span>
 registry.<span class="fn">registerAgent</span>(
-  keccak256(<span class="str">"prov_flux_001"</span>),      <span class="cmt">// bytes32 agentId</span>
-  <span class="str">"https://flux.ai/v1/generate"</span>,  <span class="cmt">// endpoint</span>
-  <span class="str">"image-generation"</span>,             <span class="cmt">// category</span>
-  <span class="str">"Flux Pro"</span>                       <span class="cmt">// name</span>
+  keccak256(<span class="str">"prov_flux_001"</span>),
+  <span class="str">"https://flux.ai/v1/generate"</span>,
+  <span class="str">"image-generation"</span>,
+  <span class="str">"Flux Pro"</span>
 );
 
 <span class="cmt">// Operator batches reputation updates</span>
-registry.<span class="fn">batchUpdateReputation</span>(
-  agentIds,       <span class="cmt">// bytes32[]</span>
-  scores,         <span class="cmt">// uint256[] (×1000, e.g. 4500 = 4.5)</span>
-  interactions    <span class="cmt">// uint256[] (accumulates)</span>
-);
+registry.<span class="fn">batchUpdateReputation</span>(agentIds, scores, interactions);</pre></div>
+<table class="doc-table"><tr><th>Function</th><th>Access</th><th>Description</th></tr>
+<tr><td><span class="inline-code">registerAgent</span></td><td>Anyone</td><td>Register provider</td></tr>
+<tr><td><span class="inline-code">updateAgent</span></td><td>Owner</td><td>Update endpoint/status</td></tr>
+<tr><td><span class="inline-code">batchUpdateReputation</span></td><td>Operator</td><td>Batch update scores</td></tr>
+<tr><td><span class="inline-code">getAgent</span></td><td>View</td><td>Get by bytes32 ID</td></tr>
+<tr><td><span class="inline-code">getAgentsByCategory</span></td><td>View</td><td>Paginated query</td></tr></table>
+<h3 id="contract-identity">FabricIdentity.sol</h3>
+<div class="code"><span class="code-label">solidity</span><pre><span class="kw">uint256</span> tokenId = identity.<span class="fn">mint</span>(
+  agentWallet,
+  <span class="str">"Flux Pro"</span>,
+  keccak256(<span class="str">"prov_flux_001"</span>)
+);</pre></div>
 
-<span class="cmt">// Read providers by category (paginated)</span>
-Agent[] <span class="kw">memory</span> agents = registry.<span class="fn">getAgentsByCategory</span>(<span class="str">"image-generation"</span>, 0, 10);</pre></div>
-
-<table class="doc-table">
-<tr><th>Function</th><th>Access</th><th>Description</th></tr>
-<tr><td><span class="inline-code">registerAgent</span></td><td>Anyone</td><td>Register a new provider with endpoint, category, name</td></tr>
-<tr><td><span class="inline-code">updateAgent</span></td><td>Agent owner</td><td>Update endpoint or active status</td></tr>
-<tr><td><span class="inline-code">deactivateAgent</span></td><td>Agent owner</td><td>Set agent inactive</td></tr>
-<tr><td><span class="inline-code">batchUpdateReputation</span></td><td>Operator</td><td>Batch update scores + interactions</td></tr>
-<tr><td><span class="inline-code">getAgent</span></td><td>View</td><td>Get agent by bytes32 ID</td></tr>
-<tr><td><span class="inline-code">getAgentsByCategory</span></td><td>View</td><td>Paginated category query</td></tr>
-<tr><td><span class="inline-code">getReputation</span></td><td>View</td><td>Score + interaction count</td></tr>
-<tr><td><span class="inline-code">totalAgents</span></td><td>View</td><td>Total registered count</td></tr>
-</table>
-
-<h3 id="contract-identity">FabricIdentity.sol — ERC-721</h3>
-<p>Non-fungible identity tokens for agents. Each token links to a registry entry. One NFT per registryId (deduped). Full ERC-721 + Enumerable.</p>
-
-<div class="code"><span class="code-label">solidity — mint identity</span><pre><span class="cmt">// Operator mints identity NFT</span>
-<span class="kw">uint256</span> tokenId = identity.<span class="fn">mint</span>(
-  agentWallet,                     <span class="cmt">// address to</span>
-  <span class="str">"Flux Pro"</span>,                      <span class="cmt">// agentName</span>
-  keccak256(<span class="str">"prov_flux_001"</span>)       <span class="cmt">// registryId (must match registry)</span>
-);
-
-<span class="cmt">// Read agent data from NFT</span>
-(<span class="kw">string</span> name, <span class="kw">bytes32</span> regId, <span class="kw">uint256</span> createdAt) = identity.<span class="fn">getAgentData</span>(tokenId);</pre></div>
-
-<div class="code"><span class="code-label">deploy with Foundry</span><pre><span class="cmt"># Deploy both contracts</span>
-forge script script/Deploy.s.sol:DeployFabric \
-  --rpc-url $BASE_SEPOLIA_RPC_URL \
-  --private-key $PRIVATE_KEY \
-  --broadcast --verify
-
-<span class="cmt"># Seed 5 test providers</span>
-forge script script/Deploy.s.sol:SeedProviders --rpc-url $BASE_SEPOLIA_RPC_URL --broadcast
-
-<span class="cmt"># Mint identity NFTs</span>
-forge script script/Deploy.s.sol:MintIdentities --rpc-url $BASE_SEPOLIA_RPC_URL --broadcast</pre></div>
-
-<!-- REST API -->
 <h2 id="webmcp">WebMCP Integration</h2>
-<p>Fabric integrates with the <a href="https://github.com/nicolo-ribaudo/webmcp">W3C WebMCP spec</a> — the new browser-native API (<span class="inline-code">navigator.modelContext</span>) co-authored by Google and Microsoft that lets websites expose structured tools to AI agents. Fabric adds the missing pieces: <strong>trust verification</strong>, <strong>autonomous payments</strong>, and <strong>cross-origin discovery</strong>.</p>
-
-<div class="callout">
-<p><strong>WebMCP + Fabric = Complete Agent Stack</strong></p>
-<p>WebMCP provides the tool contract (what actions exist). Fabric provides the trust contract (should the agent use this tool?) and the payment contract (how does the agent pay?). Together they replace screenshot-based browser agents with structured, verified, paid tool calls.</p>
-</div>
-
-<h3>Architecture</h3>
-<div class="code"><span class="code-label">flow</span><pre>
-<span class="cmt">Browser (site)          Fabric Gateway            Base L2</span>
-<span class="cmt">──────────────          ──────────────            ────────</span>
-registerTool() <span class="kw">───────►</span> Index tool contract
-                        Compute trust score
-                        
-Agent calls tool <span class="kw">──────►</span> Verify trust ≥ threshold
-                        Settle x402 payment <span class="kw">──────►</span> USDC transfer
-                        Proxy to origin     <span class="kw">◄──────</span> Confirmation
-               <span class="kw">◄───────</span> Return result + receipt
-</pre></div>
-
-<h3>Browser SDK</h3>
-<div class="code"><span class="code-label">bash</span><pre>
-npm install @usefabric/webmcp
-</pre></div>
-
-<div class="code"><span class="code-label">typescript</span><pre>
-<span class="kw">import</span> { FabricWebMCP } <span class="kw">from</span> <span class="str">'@usefabric/webmcp'</span>
-
-<span class="kw">const</span> fabric = <span class="kw">new</span> <span class="fn">FabricWebMCP</span>({
-  apiKey: process.env.FABRIC_KEY,
-  gateway: <span class="str">'https://fabric-gateway.fly.dev'</span>,
-})
-
-<span class="cmt">// Register a tool — bridges navigator.modelContext with Fabric trust+payment</span>
-fabric.<span class="fn">registerTool</span>({
-  name: <span class="str">'searchProducts'</span>,
-  description: <span class="str">'Search the product catalog'</span>,
-  inputSchema: {
-    type: <span class="str">'object'</span>,
-    properties: {
-      query: { type: <span class="str">'string'</span> },
-      maxResults: { type: <span class="str">'number'</span> },
-    },
-    required: [<span class="str">'query'</span>],
-  },
-  category: <span class="str">'ecommerce'</span>,
-  pricePerCall: <span class="str">0.01</span>,                <span class="cmt">// $0.01 per call — settled via x402</span>
-  <span class="kw">async</span> <span class="fn">execute</span>(params) {
-    <span class="kw">return</span> <span class="kw">await</span> productSearch(params.query)
-  },
-})
-
-<span class="cmt">// Tools auto-sync to Fabric on registration</span>
-</pre></div>
-
-<h3>Execution Modes</h3>
-<p><strong>Server-proxied</strong> — Fabric calls the origin, handles payment, returns result:</p>
-<div class="code"><span class="code-label">typescript</span><pre>
-<span class="kw">const</span> result = <span class="kw">await</span> fabric.<span class="fn">execute</span>(
-  <span class="str">'searchProducts'</span>,
-  { query: <span class="str">'running shoes'</span> },
-  agentId
-)
-<span class="cmt">// result.payment.settled === true</span>
-<span class="cmt">// result.trust.score === 0.92</span>
-</pre></div>
-
-<p><strong>Client-delegated</strong> — Fabric authorises payment, browser executes locally:</p>
-<div class="code"><span class="code-label">typescript</span><pre>
-<span class="kw">const</span> result = <span class="kw">await</span> fabric.<span class="fn">executeLocal</span>(
-  <span class="str">'searchProducts'</span>,
-  { query: <span class="str">'running shoes'</span> },
-  agentId
-)
-<span class="cmt">// result.local === true — executed in-browser</span>
-</pre></div>
-
-<h3>REST API</h3>
-<table class="doc-table">
-<tr><th>Method</th><th>Endpoint</th><th>Description</th></tr>
-<tr><td><span class="tag tag-g">POST</span></td><td><span class="inline-code">/v1/webmcp/register</span></td><td>Register tools from an origin</td></tr>
-<tr><td><span class="tag tag-g">POST</span></td><td><span class="inline-code">/v1/webmcp/manifest</span></td><td>Register from manifest URL</td></tr>
-<tr><td><span class="tag tag-b">GET</span></td><td><span class="inline-code">/v1/webmcp/discover</span></td><td>Discover tools across origins</td></tr>
-<tr><td><span class="tag tag-b">GET</span></td><td><span class="inline-code">/v1/webmcp/tools/:id</span></td><td>Get tool details</td></tr>
-<tr><td><span class="tag tag-g">POST</span></td><td><span class="inline-code">/v1/webmcp/execute</span></td><td>Execute through trust+payment</td></tr>
-<tr><td><span class="tag tag-g">POST</span></td><td><span class="inline-code">/v1/webmcp/authorise</span></td><td>Get auth for client execution</td></tr>
-<tr><td><span class="tag tag-p">DELETE</span></td><td><span class="inline-code">/v1/webmcp/origin</span></td><td>Deactivate origin tools</td></tr>
-</table>
-
-<h3>MCP Tools</h3>
-<p>WebMCP tools are also accessible through Fabric's MCP interface:</p>
-<table class="doc-table">
-<tr><th>Tool</th><th>Description</th></tr>
-<tr><td><span class="inline-code">fabric_webmcp_discover</span></td><td>Find WebMCP tools by category, origin, trust score</td></tr>
-<tr><td><span class="inline-code">fabric_webmcp_execute</span></td><td>Execute a WebMCP tool through Fabric trust+payment</td></tr>
-<tr><td><span class="inline-code">fabric_webmcp_register</span></td><td>Register tool contracts from an origin</td></tr>
-</table>
-
-<h3>WebMCP vs MCP vs Fabric</h3>
-<table class="doc-table">
-<tr><th>Feature</th><th>MCP (Anthropic)</th><th>WebMCP (W3C)</th><th>Fabric</th></tr>
+<p>Fabric integrates with the <a href="https://github.com/nicolo-ribaudo/webmcp">W3C WebMCP spec</a> — the browser-native API that lets websites expose tools to AI agents. Fabric adds trust verification, autonomous payments, and cross-origin discovery.</p>
+<div class="callout"><p><strong>WebMCP + Fabric = Complete Agent Stack.</strong> WebMCP provides the tool contract. Fabric provides the trust contract and the payment contract. Together they replace screenshot-based browser agents with structured, verified, paid tool calls.</p></div>
+<table class="doc-table"><tr><th>Feature</th><th>MCP</th><th>WebMCP</th><th>Fabric</th></tr>
 <tr><td>Runtime</td><td>Server-side</td><td>Browser-native</td><td>Both</td></tr>
-<tr><td>Protocol</td><td>JSON-RPC</td><td>navigator.modelContext</td><td>REST + MCP</td></tr>
-<tr><td>Trust</td><td>None built-in</td><td>None built-in</td><td>7-signal scoring</td></tr>
-<tr><td>Payments</td><td>None built-in</td><td>None built-in</td><td>x402 / USDC on Base</td></tr>
-<tr><td>Discovery</td><td>Per-server</td><td>Per-page</td><td>Cross-origin registry</td></tr>
-<tr><td>User consent</td><td>Optional</td><td>Required (elicitation)</td><td>Configurable</td></tr>
-</table>
+<tr><td>Trust</td><td>None</td><td>None</td><td>6-signal scoring</td></tr>
+<tr><td>Payments</td><td>None</td><td>None</td><td>x402 / USDC</td></tr>
+<tr><td>Discovery</td><td>Per-server</td><td>Per-page</td><td>Cross-origin</td></tr></table>
 
 <h2 id="rest-api">REST API</h2>
-<p>22 endpoints across 7 route groups. All endpoints require <span class="inline-code">x-api-key</span> header (except health checks).</p>
+<p>22 endpoints across 7 route groups. All require <span class="inline-code">x-api-key</span> header (except health).</p>
+<table class="doc-table"><tr><th>Group</th><th>Endpoints</th><th>Description</th></tr>
+<tr><td>Discovery</td><td><span class="inline-code">GET /v1/discover</span></td><td>Find providers by category</td></tr>
+<tr><td>Routing</td><td><span class="inline-code">POST /v1/route</span></td><td>Discover → score → pay → return</td></tr>
+<tr><td>Evaluation</td><td><span class="inline-code">POST /v1/evaluate</span></td><td>Trust score breakdown</td></tr>
+<tr><td>Budgets</td><td><span class="inline-code">GET/POST /v1/budget</span></td><td>View/set limits</td></tr>
+<tr><td>Feedback</td><td><span class="inline-code">POST /v1/feedback</span></td><td>Submit feedback</td></tr>
+<tr><td>Favorites</td><td><span class="inline-code">GET/POST/DELETE /v1/favorites</span></td><td>Manage providers</td></tr>
+<tr><td>Wallets</td><td><span class="inline-code">GET/POST /v1/wallets</span></td><td>USDC wallets</td></tr>
+<tr><td>Billing</td><td><span class="inline-code">GET/POST /v1/billing/*</span></td><td>Subscriptions, invoices</td></tr>
+<tr><td>Health</td><td><span class="inline-code">GET /healthz /ready /health</span></td><td>Health checks</td></tr>
+<tr><td>MCP</td><td><span class="inline-code">POST /mcp</span></td><td>JSON-RPC (6 tools)</td></tr></table>
 
-<table class="doc-table">
-<tr><th>Group</th><th>Endpoints</th><th>Description</th></tr>
-<tr><td>Discovery</td><td><span class="inline-code">GET /v1/discover</span></td><td>Find providers by category with trust scores</td></tr>
-<tr><td>Routing</td><td><span class="inline-code">POST /v1/route</span></td><td>End-to-end: discover → score → pay → return</td></tr>
-<tr><td>Evaluation</td><td><span class="inline-code">POST /v1/evaluate</span></td><td>Evaluate a specific provider's trust score</td></tr>
-<tr><td>Budgets</td><td><span class="inline-code">GET/POST /v1/budget</span></td><td>View/set spending limits (per-agent, per-task, daily)</td></tr>
-<tr><td>Feedback</td><td><span class="inline-code">POST /v1/feedback</span></td><td>Submit provider feedback (1-5 score)</td></tr>
-<tr><td>Favorites</td><td><span class="inline-code">GET/POST/DELETE /v1/favorites</span></td><td>Manage preferred providers</td></tr>
-<tr><td>Wallets</td><td><span class="inline-code">GET/POST /v1/wallets</span></td><td>Create and manage USDC wallets</td></tr>
-<tr><td>Chain</td><td><span class="inline-code">GET /v1/chain/*</span></td><td>On-chain data: balance, tx status, gas</td></tr>
-<tr><td>Billing</td><td><span class="inline-code">GET/POST /v1/billing/*</span></td><td>Subscription, checkout, invoices, overage</td></tr>
-<tr><td>Health</td><td><span class="inline-code">GET /healthz /ready /health</span></td><td>Shallow, readiness, deep health checks</td></tr>
-<tr><td>Metrics</td><td><span class="inline-code">GET /metrics</span></td><td>Prometheus OpenMetrics format</td></tr>
-<tr><td>MCP</td><td><span class="inline-code">POST /mcp</span></td><td>MCP JSON-RPC handler (6 tools)</td></tr>
-</table>
-
-<!-- SDKs -->
 <h2 id="sdks">SDKs</h2>
 <p>First-class TypeScript and Python SDKs with full type safety.</p>
-
 <div class="code"><span class="code-label">typescript</span><pre><span class="kw">import</span> { FabricClient } <span class="kw">from</span> <span class="str">'@fabric/sdk'</span>
+<span class="kw">const</span> <span class="fn">fabric</span> = <span class="kw">new</span> <span class="fn">FabricClient</span>({ apiKey: <span class="str">'fab_...'</span> })
 
-<span class="kw">const</span> <span class="fn">fabric</span> = <span class="kw">new</span> <span class="fn">FabricClient</span>({ apiKey: <span class="str">'fab_...'</span>, baseUrl: <span class="str">'https://api.usefabric.ai'</span> })
-
-<span class="cmt">// Discover providers</span>
-<span class="kw">const</span> providers = <span class="kw">await</span> fabric.<span class="fn">discover</span>({ category: <span class="str">'image-generation'</span>, minTrust: <span class="str">0.8</span> })
-
-<span class="cmt">// Route (discover → score → pay → return)</span>
 <span class="kw">const</span> result = <span class="kw">await</span> fabric.<span class="fn">route</span>({
   capability: <span class="str">'image-generation'</span>,
   input: { prompt: <span class="str">'A sunset over the ocean'</span> },
-  priority: <span class="str">'quality'</span>
-})
-
-<span class="cmt">// Check budget</span>
-<span class="kw">const</span> budget = <span class="kw">await</span> fabric.<span class="fn">getBudget</span>()</pre></div>
-
+})</pre></div>
 <div class="code"><span class="code-label">python</span><pre><span class="kw">from</span> fabric_sdk <span class="kw">import</span> FabricClient
-
 fabric = FabricClient(api_key=<span class="str">"fab_..."</span>)
 
-<span class="cmt"># Async discover</span>
-providers = <span class="kw">await</span> fabric.<span class="fn">discover</span>(category=<span class="str">"translation"</span>, min_trust=<span class="str">0.7</span>)
-
-<span class="cmt"># Sync route</span>
 result = fabric.<span class="fn">route_sync</span>(
     capability=<span class="str">"translation"</span>,
     input={<span class="str">"text"</span>: <span class="str">"Hello world"</span>, <span class="str">"target"</span>: <span class="str">"es"</span>}
 )</pre></div>
 
-<!-- BILLING -->
 <h2 id="billing">Billing</h2>
-<p>Stripe-powered subscriptions with metered overage. 10 billing endpoints.</p>
+<p>Stripe-powered subscriptions with metered overage.</p>
+<table class="doc-table"><tr><th>Endpoint</th><th>Description</th></tr>
+<tr><td><span class="inline-code">GET /v1/billing/subscription</span></td><td>Current plan info</td></tr>
+<tr><td><span class="inline-code">POST /v1/billing/checkout</span></td><td>Stripe Checkout session</td></tr>
+<tr><td><span class="inline-code">POST /v1/billing/portal</span></td><td>Billing portal</td></tr>
+<tr><td><span class="inline-code">POST /v1/billing/plan</span></td><td>Change plan</td></tr>
+<tr><td><span class="inline-code">POST /v1/billing/cancel</span></td><td>Cancel subscription</td></tr>
+<tr><td><span class="inline-code">GET /v1/billing/invoices</span></td><td>Invoice history</td></tr>
+<tr><td><span class="inline-code">GET /v1/billing/overage</span></td><td>Overage summary</td></tr></table>
 
-<table class="doc-table">
-<tr><th>Endpoint</th><th>Description</th></tr>
-<tr><td><span class="inline-code">GET /v1/billing/subscription</span></td><td>Current plan + subscription info</td></tr>
-<tr><td><span class="inline-code">POST /v1/billing/checkout</span></td><td>Create Stripe Checkout session</td></tr>
-<tr><td><span class="inline-code">POST /v1/billing/portal</span></td><td>Open Stripe billing portal</td></tr>
-<tr><td><span class="inline-code">POST /v1/billing/plan</span></td><td>Change plan (proration preview)</td></tr>
-<tr><td><span class="inline-code">POST /v1/billing/cancel</span></td><td>Cancel at period end</td></tr>
-<tr><td><span class="inline-code">POST /v1/billing/reactivate</span></td><td>Reactivate cancelled subscription</td></tr>
-<tr><td><span class="inline-code">GET /v1/billing/invoices</span></td><td>List invoices (limit 12)</td></tr>
-<tr><td><span class="inline-code">GET /v1/billing/upcoming</span></td><td>Upcoming invoice estimate + projection</td></tr>
-<tr><td><span class="inline-code">GET /v1/billing/overage</span></td><td>Daily and period overage summary</td></tr>
-</table>
-
-<p>Webhook handler at <span class="inline-code">POST /webhooks/stripe</span> processes 6 event types: checkout completed, subscription created/updated/deleted, invoice paid, payment failed.</p>
-
-<!-- RATE LIMITS -->
 <h2 id="rate-limits">Rate Limits</h2>
-<p>Sliding window algorithm using Redis sorted sets. No boundary-burst issues.</p>
+<p>Sliding window via Redis sorted sets. No boundary-burst issues.</p>
+<table class="doc-table"><tr><th>Context</th><th>Limit</th><th>Window</th></tr>
+<tr><td>Per API key</td><td>100 req</td><td>1 min</td></tr>
+<tr><td>Per IP (unauth)</td><td>20 req</td><td>1 min</td></tr></table>
+<p>Headers: <span class="inline-code">X-RateLimit-Limit</span>, <span class="inline-code">X-RateLimit-Remaining</span>, <span class="inline-code">X-RateLimit-Reset</span>, <span class="inline-code">Retry-After</span>.</p>
 
-<table class="doc-table">
-<tr><th>Context</th><th>Limit</th><th>Window</th></tr>
-<tr><td>Per API key (authenticated)</td><td>100 requests</td><td>1 minute</td></tr>
-<tr><td>Per IP (unauthenticated)</td><td>20 requests</td><td>1 minute</td></tr>
-</table>
-
-<p>Response headers: <span class="inline-code">X-RateLimit-Limit</span>, <span class="inline-code">X-RateLimit-Remaining</span>, <span class="inline-code">X-RateLimit-Reset</span>, <span class="inline-code">Retry-After</span>. Health and metrics endpoints are exempt.</p>
-
-<!-- CONFIG -->
 <h2 id="config">Configuration</h2>
-
 <div class="code"><span class="code-label">full config</span><pre><span class="kw">new</span> <span class="fn">FabricServer</span>({
-  <span class="cmt">// Required</span>
   <span class="fn">apiKey</span>: <span class="str">"fab_..."</span>,
-
-  <span class="cmt">// Trust</span>
-  <span class="fn">trustThreshold</span>: <span class="str">0.8</span>,      <span class="cmt">// 0-1, min trust score</span>
-  <span class="fn">priority</span>: <span class="str">"quality"</span>,       <span class="cmt">// quality | speed | cost</span>
-  <span class="fn">fallbackEnabled</span>: <span class="str">true</span>,    <span class="cmt">// auto-retry next provider</span>
-  <span class="fn">maxFallbacks</span>: <span class="str">3</span>,          <span class="cmt">// max retry attempts</span>
-
-  <span class="cmt">// Payments</span>
-  <span class="fn">chain</span>: <span class="str">"base"</span>,             <span class="cmt">// payment chain</span>
-  <span class="fn">token</span>: <span class="str">"USDC"</span>,             <span class="cmt">// payment token</span>
-
-  <span class="cmt">// Budgets</span>
-  <span class="fn">budget</span>: <span class="str">"$5/day"</span>,          <span class="cmt">// daily limit</span>
-  <span class="fn">maxPerRequest</span>: <span class="str">"$0.50"</span>,   <span class="cmt">// per-call limit</span>
-  <span class="fn">maxPerTask</span>: <span class="str">"$2.00"</span>,      <span class="cmt">// per-task limit</span>
-
-  <span class="cmt">// Feedback</span>
-  <span class="fn">autoFeedback</span>: <span class="str">true</span>,       <span class="cmt">// post feedback after route</span>
-  <span class="fn">feedbackDelay</span>: <span class="str">5000</span>,      <span class="cmt">// ms delay before posting</span>
+  <span class="fn">trustThreshold</span>: <span class="str">0.8</span>,
+  <span class="fn">priority</span>: <span class="str">"quality"</span>,
+  <span class="fn">fallbackEnabled</span>: <span class="str">true</span>,
+  <span class="fn">maxFallbacks</span>: <span class="str">3</span>,
+  <span class="fn">chain</span>: <span class="str">"base"</span>,
+  <span class="fn">token</span>: <span class="str">"USDC"</span>,
+  <span class="fn">budget</span>: <span class="str">"$5/day"</span>,
+  <span class="fn">maxPerRequest</span>: <span class="str">"$0.50"</span>,
+  <span class="fn">maxPerTask</span>: <span class="str">"$2.00"</span>,
+  <span class="fn">autoFeedback</span>: <span class="str">true</span>,
+  <span class="fn">feedbackDelay</span>: <span class="str">5000</span>,
 })</pre></div>
 
-<!-- PRICING -->
 <h2 id="pricing">Pricing</h2>
+<p>Flat subscription plus routing fee on x402 transactions. No markup on gas.</p>
+<table class="doc-table"><tr><th>Plan</th><th>Price</th><th>Requests/day</th><th>Fee</th><th>Wallets</th></tr>
+<tr><td><span class="tag tag-g">Free</span></td><td>$0</td><td>50</td><td>—</td><td>0</td></tr>
+<tr><td><span class="tag tag-b">Builder</span></td><td>$9/mo</td><td>5,000</td><td>0.5%</td><td>3</td></tr>
+<tr><td><span class="tag tag-b">Pro</span></td><td>$39/mo</td><td>15,000</td><td>0.4%</td><td>10</td></tr>
+<tr><td><span class="tag tag-p">Team</span></td><td>$149/mo</td><td>50,000</td><td>0.3%</td><td>50</td></tr></table>
+<p>Overage: $0.001/request, billed monthly. Set a hard cap in your dashboard to prevent it.</p>
 
-<p>Fabric charges a flat monthly subscription plus a percentage routing fee on x402 transactions. No markup on Base gas fees — those come directly from your managed wallet.</p>
-
-<table class="doc-table">
-<tr><th>Plan</th><th>Price</th><th>Requests/day</th><th>Routing fee</th><th>Wallets</th><th>Features</th></tr>
-<tr><td><span class="tag tag-g">Free</span></td><td>$0</td><td>50</td><td>—</td><td>0</td><td>Discovery + evaluate only. No routing or payments.</td></tr>
-<tr><td><span class="tag tag-b">Builder</span></td><td>$9/mo</td><td>5,000</td><td>0.5%</td><td>3</td><td>Full routing + payments, budget controls, feedback</td></tr>
-<tr><td><span class="tag tag-b">Pro</span></td><td>$39/mo</td><td>15,000</td><td>0.4%</td><td>10</td><td>Custom trust weights, analytics dashboard, overage billing</td></tr>
-<tr><td><span class="tag tag-p">Team</span></td><td>$149/mo</td><td>50,000</td><td>0.3%</td><td>50</td><td>Multi-agent management, audit logs, SLA guarantees, dedicated support</td></tr>
-</table>
-
-<h4>Overage</h4>
-<p>Requests beyond your daily limit are billed at $0.001 per request, charged monthly in arrears. You can set a hard cap in your dashboard to prevent overage entirely.</p>
-
-<h4>What counts as a request?</h4>
-<p>Each call to <span class="inline-code">discover</span>, <span class="inline-code">route</span>, <span class="inline-code">evaluate</span>, <span class="inline-code">budget</span>, <span class="inline-code">feedback</span>, or <span class="inline-code">favorites</span> counts as one request. On the Free plan, only <span class="inline-code">discover</span> and <span class="inline-code">evaluate</span> are available.</p>
-
-<div class="callout">
-<strong>Free → Builder upgrade path</strong>
-<p>Free users can explore the registry and evaluate providers before committing. When you're ready to route and pay, upgrade to Builder — no credit card required for the first 7 days.</p>
-</div>
-
-<!-- PROTOCOL STACK -->
 <h2 id="protocols">Protocol Stack</h2>
-<table class="doc-table">
-<tr><th>Protocol</th><th>Role in Fabric</th><th>Maintainers</th></tr>
-<tr><td>ERC-8004</td><td>Agent identity + reputation registries</td><td>Ethereum Foundation, Coinbase, Google, MetaMask</td></tr>
-<tr><td>x402</td><td>HTTP-native agent payments</td><td>Coinbase, Cloudflare, x402 Foundation</td></tr>
-<tr><td>MCP</td><td>Agent ↔ tool interface standard (server-side)</td><td>Anthropic, OpenAI, Google, Microsoft</td></tr>
-<tr><td>WebMCP</td><td>Browser-native agent ↔ tool API (client-side)</td><td>Google, Microsoft, W3C WebML CG</td></tr>
-<tr><td>Base L2</td><td>Payment settlement layer</td><td>Coinbase</td></tr>
-<tr><td>ERC-721</td><td>Agent identity NFTs</td><td>Ethereum</td></tr>
-<tr><td>USDC</td><td>Payment token</td><td>Circle</td></tr>
-</table>
+<table class="doc-table"><tr><th>Protocol</th><th>Role</th><th>Maintainers</th></tr>
+<tr><td>ERC-8004</td><td>Agent identity + reputation</td><td>Ethereum, Coinbase, Google</td></tr>
+<tr><td>x402</td><td>HTTP-native payments</td><td>Coinbase, Cloudflare</td></tr>
+<tr><td>MCP</td><td>Agent ↔ tool interface</td><td>Anthropic, OpenAI, Google</td></tr>
+<tr><td>WebMCP</td><td>Browser-native tools</td><td>Google, Microsoft, W3C</td></tr>
+<tr><td>Base L2</td><td>Settlement layer</td><td>Coinbase</td></tr>
+<tr><td>USDC</td><td>Payment token</td><td>Circle</td></tr></table>
 
-<!-- DEPLOYMENT -->
 <h2 id="deployment">Deployment</h2>
 <p>Production-ready with Docker, monitoring, and CI/CD.</p>
-
-<div class="code"><span class="code-label">docker compose — production</span><pre><span class="cmt"># Start the full stack</span>
+<div class="code"><span class="code-label">docker</span><pre><span class="cmt"># Full stack</span>
 docker compose -f docker-compose.prod.yml up -d
+<span class="cmt"># gateway, postgres, redis, prometheus, grafana</span></pre></div>
+<table class="doc-table"><tr><th>Component</th><th>Details</th></tr>
+<tr><td>Runtime</td><td>Bun + Elysia, multi-stage Docker</td></tr>
+<tr><td>Database</td><td>PostgreSQL + Prisma</td></tr>
+<tr><td>Cache</td><td>Redis</td></tr>
+<tr><td>Monitoring</td><td>Prometheus + Grafana</td></tr>
+<tr><td>CI/CD</td><td>GitHub Actions</td></tr>
+<tr><td>Security</td><td>HSTS, CSP, KMS encryption</td></tr></table>
+<div class="code"><span class="code-label">health</span><pre><span class="fn">GET /healthz</span>  <span class="cmt">→ shallow</span>
+<span class="fn">GET /ready</span>    <span class="cmt">→ readiness (503 if not ready)</span>
+<span class="fn">GET /health</span>   <span class="cmt">→ deep (latency, memory, uptime)</span></pre></div>
 
-<span class="cmt"># Services: gateway, postgres, redis, prometheus, grafana</span>
-<span class="cmt"># Gateway: 512M memory, non-root user, health check every 15s</span>
-<span class="cmt"># Grafana dashboard: 8 panels (request rate, error rate, p99 latency, memory)</span></pre></div>
+<h2 id="legal">Legal</h2>
+<p>By using Fabric's API, SDK, Trust Index, or any other part of the Service, you agree to the following. Full legal documents are linked below — this section summarises the key points relevant to developers and integrators.</p>
 
-<table class="doc-table">
-<tr><th>Component</th><th>Details</th></tr>
-<tr><td>Runtime</td><td>Bun + Elysia in multi-stage Docker (non-root user 1001)</td></tr>
-<tr><td>Database</td><td>PostgreSQL with Prisma ORM (9 models)</td></tr>
-<tr><td>Cache</td><td>Redis (trust scores, rate limits, overage tracking)</td></tr>
-<tr><td>Monitoring</td><td>Prometheus scraping /metrics + 8-panel Grafana dashboard</td></tr>
-<tr><td>Error tracking</td><td>Sentry integration (onError hook)</td></tr>
-<tr><td>CI/CD</td><td>GitHub Actions: lint → test → build → Docker push → deploy</td></tr>
-<tr><td>Load testing</td><td>Custom script: 5 weighted scenarios, p99 &lt; 2000ms pass criteria</td></tr>
-<tr><td>Security</td><td>HSTS, CSP, request IDs, 10MB payload limit, KMS key encryption</td></tr>
-</table>
+<h3>Trust scores are informational, not guarantees</h3>
+<p>Fabric trust scores are algorithmically generated from public third-party data sources. They are point-in-time assessments and may not reflect the current state of any indexed service. Scores should not be your sole basis for any decision involving data security, financial transactions, or the selection of AI tools for business-critical applications. A "Trusted" score does not mean a service is safe — it means low risk was detected at the time of scoring.</p>
 
-<div class="code"><span class="code-label">health checks</span><pre><span class="fn">GET /healthz</span>  <span class="cmt">→ shallow (for load balancers)</span>
-<span class="fn">GET /ready</span>    <span class="cmt">→ readiness (DB healthy, Redis optional) — 503 if not ready</span>
-<span class="fn">GET /health</span>   <span class="cmt">→ deep (postgres latency, redis latency, memory, uptime)</span></pre></div>
+<h3>No endorsement of third-party services</h3>
+<p>Fabric does not operate, control, endorse, or guarantee any third-party service indexed in the Trust Index. We aggregate and analyse data to generate scores. We do not audit, certify, or recommend any provider. Inclusion in the index is automatic and does not imply any relationship between Fabric and the indexed service.</p>
+
+<h3>Data we collect</h3>
+<p>When you use the Fabric API, we collect your account information (email, API key), API usage data (endpoints called, timestamps, response codes), agent configuration (trust thresholds, budget limits, custom weights), and transaction records (provider selections, payment amounts, feedback submitted). We do not sell personal data. We do not share individual usage data with indexed providers. Aggregated, anonymised data may be used to improve scoring accuracy.</p>
+
+<h3>Blockchain &amp; payment risks</h3>
+<p>Fabric facilitates payments via the x402 protocol using USDC on blockchain networks. On-chain transactions are irreversible. Fabric is not a financial institution, money transmitter, or payment processor. Wallet management is provided as a convenience — you are responsible for securing your credentials and understanding the risks of on-chain transactions.</p>
+
+<h3>Limitation of liability</h3>
+<p>To the maximum extent permitted by law, Fabric shall not be liable for any indirect, incidental, special, consequential, or punitive damages arising from your use of the Service, reliance on trust scores, or interactions with third-party services discovered through Fabric. Total aggregate liability is capped at the greater of fees paid in the preceding 12 months or USD $100.</p>
+
+<h3>API usage</h3>
+<p>API access is subject to rate limits, usage quotas, and the terms of your subscription plan. API keys are confidential — you are responsible for all activity under your account. Do not reverse-engineer scoring algorithms, systematically scrape data beyond normal API usage, or misrepresent trust scores as endorsements or certifications.</p>
+
+<h3>Full legal documents</h3>
+<table class="doc-table"><tr><th>Document</th><th>Covers</th></tr>
+<tr><td><a href="terms.html">Terms of Service</a></td><td>Account usage, acceptable use, API terms, intellectual property, termination, liability, dispute resolution</td></tr>
+<tr><td><a href="privacy.html">Privacy Policy</a></td><td>Data collection, processing, retention, security, international transfers, your rights under GDPR and Australian Privacy Act</td></tr>
+<tr><td><a href="disclaimer.html">Disclaimer</a></td><td>Score accuracy limitations, third-party data reliance, blockchain risks, emerging technology caveats, no professional advice</td></tr></table>
+
+<div class="callout"><p><strong>Fabric Layer Technologies Ltd</strong> is incorporated in the British Virgin Islands. For legal enquiries, contact <a href="mailto:legal@fabriclayer.ai">legal@fabriclayer.ai</a>.</p></div>
 
 <div class="doc-footer">
-<p>© 2026 Fabric. Built by <a href="#">Motherbird</a>. All rights reserved.</p>
+<p>© 2026 Fabric. A <a href="https://motherbird.ai">Motherbird</a> product.</p>
+<p><a href="https://www.fabriclayer.ai">Home</a> · <a href="api.html">API</a> · <a href="https://trust.fabriclayer.dev">Trust Index</a></p>
 </div>
-
 </main>
 </div>
-<script>
-// Close site nav mobile menu
-function closeSiteMenu(){document.getElementById('siteMobileMenu').classList.remove('open');document.querySelector('.site-mobile-toggle').classList.remove('open')}
-// Close sidebar on nav item click (mobile)
-document.querySelectorAll('.nav-item').forEach(function(item){
-item.addEventListener('click',function(){
-var sb=document.querySelector('.sidebar');
-if(sb.classList.contains('open')){
-sb.classList.remove('open');
-var btn=document.querySelector('.menu-toggle svg');
-btn.innerHTML='<path d="M3 6h18M3 12h18M3 18h18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>';
-}
-});
-});
-
-// Scroll spy
-(function(){
-var navItems=document.querySelectorAll('.nav-item');
-var sections=[];
-navItems.forEach(function(item){
-var id=item.getAttribute('href').replace('#','');
-var el=document.getElementById(id);
-if(el) sections.push({id:id,el:el});
-});
-
-var observer=new IntersectionObserver(function(entries){
-entries.forEach(function(entry){
-if(entry.isIntersecting){
-navItems.forEach(function(n){n.classList.remove('active')});
-var match=document.querySelector('.nav-item[href="#'+entry.target.id+'"]');
-if(match){
-match.classList.add('active');
-// Scroll sidebar to keep active item visible
-var sidebar=document.querySelector('.sidebar');
-if(sidebar&&match.offsetTop>sidebar.clientHeight){
-sidebar.scrollTop=match.offsetTop-sidebar.clientHeight/2;
-}
-}
-}
-});
-},{rootMargin:'-20% 0px -60% 0px',threshold:0});
-
-sections.forEach(function(s){observer.observe(s.el)});
-})();
-</script>
-</body>
-
 
 <script>
-function toggleMobileMenu(){
-  document.getElementById('mobileMenu').classList.toggle('open');
-  document.querySelector('.mobile-nav-toggle').classList.toggle('open');
-}
-function closeMobile(){
-  document.getElementById('mobileMenu').classList.remove('open');
-  document.querySelector('.mobile-nav-toggle').classList.remove('open');
-}
-// Active sidebar tracking
+const burger=document.getElementById('burgerBtn');
+const mobileMenu=document.getElementById('mobileMenu');
+burger.addEventListener('click',()=>{burger.classList.toggle('open');mobileMenu.classList.toggle('open')});
+mobileMenu.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{burger.classList.remove('open');mobileMenu.classList.remove('open')}));
 (function(){
-  var navItems=document.querySelectorAll('.sidebar .nav-item');
-  var sections=[];
-  navItems.forEach(function(item){
-    var id=item.getAttribute('href');
-    if(id&&id.startsWith('#')){
-      var el=document.querySelector(id);
-      if(el)sections.push({el:el,nav:item});
-    }
-  });
-  var observer=new IntersectionObserver(function(entries){
-    entries.forEach(function(entry){
-      if(entry.isIntersecting){
-        navItems.forEach(function(n){n.classList.remove('active')});
-        var found=sections.find(function(s){return s.el===entry.target});
-        if(found)found.nav.classList.add('active');
-      }
-    });
-  },{rootMargin:'-20% 0% -70% 0%'});
-  sections.forEach(function(s){observer.observe(s.el)});
+  const navItems=document.querySelectorAll('.sidebar .nav-item');
+  const sections=[];
+  navItems.forEach(item=>{const id=item.getAttribute('href');if(id&&id.startsWith('#')){const el=document.querySelector(id);if(el)sections.push({el,nav:item})}});
+  let ticking=false;
+  const setActive=(nav)=>{const cur=document.querySelector('.sidebar .nav-item.active');if(cur===nav)return;navItems.forEach(n=>n.classList.remove('active'));nav.classList.add('active');const sidebar=document.querySelector('.sidebar');if(sidebar){const navTop=nav.offsetTop;const sideScroll=sidebar.scrollTop;const sideH=sidebar.clientHeight;if(navTop<sideScroll+60||navTop>sideScroll+sideH-60)sidebar.scrollTop=navTop-sideH/2}};
+  function onScroll(){
+    const scrollY=window.scrollY+100;
+    let current=sections[0];
+    for(let i=0;i<sections.length;i++){if(sections[i].el.offsetTop<=scrollY)current=sections[i]}
+    if(current)setActive(current.nav);
+    ticking=false;
+  }
+  window.addEventListener('scroll',()=>{if(!ticking){requestAnimationFrame(onScroll);ticking=true}},{passive:true});
+  onScroll();
 })();
 </script>
 </body>

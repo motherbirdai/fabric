@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fabric API — Trust infrastructure for AI agents</title>
+<meta name="description" content="Give your AI agents the ability to discover, verify, and pay for services autonomously. 9 MCP tools, 17 REST endpoints, TypeScript &amp; Python SDKs.">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,300;1,9..40,400&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{--black:#000;--blue:#068cff;--pink:#fe83e0;--white:#fff;--bg:#f7f7f7;--text:#0a0a0a;--text-2:#555;--text-3:#999;--border:#e5e5e5;--green:#0dc956;--orange:#f7931e;--red:#e82d35;--sans:'DM Sans',-apple-system,BlinkMacSystemFont,sans-serif;--mono:'DM Mono','SF Mono',monospace}
+*{margin:0;padding:0;box-sizing:border-box}html{scroll-behavior:smooth;overflow-y:scroll}
+h1,h2,h3,h4,.sec-title,.sec-desc,.hero-sub{text-wrap:pretty}
+h1,.sec-title{text-wrap:balance}
+body{background:var(--white);color:var(--text);font-family:var(--sans);font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+::selection{background:var(--blue);color:var(--white)}
+a{color:inherit;text-decoration:none;-webkit-tap-highlight-color:transparent}
+.btn-p:active,.btn-s:active,.plan-cta:active{transform:scale(.97)}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;background:var(--white);border-bottom:1px solid var(--border);padding:0 2rem;height:56px}
+.nav-inner{max-width:1400px;margin:0 auto;height:100%;display:flex;align-items:center;justify-content:space-between}
+.nav-left{display:flex;align-items:center;gap:1.25rem}
+.nav-logo{display:flex;align-items:center;gap:0.65rem;text-decoration:none;color:var(--black)}.nav-logo:hover{text-decoration:none}
+.nav-logo svg{height:19px;width:auto}
+.nav-logo-text{font-family:var(--mono);font-size:0.78rem;font-weight:400;letter-spacing:0.02em;color:var(--text-3);border-left:1px solid var(--border);padding-left:0.65rem;pointer-events:none;text-decoration:none}
+.nav-links{display:flex;align-items:center;gap:1.5rem}
+.nav-links a{font-family:var(--mono);font-size:0.78rem;font-weight:400;color:var(--text-2);text-decoration:none;transition:color .15s}
+.nav-links a:hover{color:var(--pink)}
+.nav-right{display:flex;align-items:center;gap:0.75rem}
+.burger{display:none;flex-direction:column;gap:4px;background:none;border:none;cursor:pointer;padding:6px;border-radius:6px;transition:background .15s}
+.burger:hover{background:rgba(0,0,0,.04)}
+.burger span{display:block;width:18px;height:1.5px;background:var(--text);border-radius:1px;transition:all .25s}
+.burger.open span:nth-child(1){transform:translateY(5.5px) rotate(45deg)}
+.burger.open span:nth-child(2){opacity:0}
+.burger.open span:nth-child(3){transform:translateY(-5.5px) rotate(-45deg)}
+.mobile-menu{position:fixed;top:56px;right:0;z-index:99;background:var(--white);border:1px solid var(--border);border-radius:0 0 0 12px;box-shadow:0 8px 30px rgba(0,0,0,.08);padding:0.5rem 0;display:none;min-width:180px}
+.mobile-menu.open{display:block}
+.mobile-menu a{display:block;font-family:var(--mono);font-size:0.78rem;color:var(--text-2);text-decoration:none;padding:0.55rem 1.25rem;transition:all .12s}
+.mobile-menu a:hover{background:rgba(0,0,0,.02);color:var(--pink)}
+
+/* HERO */
+.hero{display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:80px 20px 32px;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;top:-200px;left:50%;transform:translateX(-50%);width:500px;height:500px;background:radial-gradient(circle,rgba(6,140,255,.06) 0%,transparent 60%);pointer-events:none}
+h1{font-size:32px;font-weight:700;letter-spacing:-1.5px;line-height:1.15;margin-bottom:32px;animation:fadeUp .8s ease .2s both}
+.grad{background:linear-gradient(135deg,var(--blue) 0%,var(--pink) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;display:inline;-webkit-box-decoration-break:clone;box-decoration-break:clone}
+.hero-sub{font-size:15px;color:var(--text-2);max-width:460px;line-height:1.55;margin-bottom:48px;animation:fadeUp .8s ease .4s both}
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+@keyframes btnPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.04)}}
+.hero-icon{width:112px;height:112px;margin-bottom:32px;animation:heroSpin 25s linear infinite,colorCycle 8s ease-in-out infinite;cursor:pointer}
+.hero-icon polygon{opacity:0;animation:iconIn .5s ease forwards}
+.hero-icon polygon:nth-child(1){animation-delay:.1s}
+.hero-icon polygon:nth-child(2){animation-delay:.2s}
+.hero-icon polygon:nth-child(3){animation-delay:.3s}
+.hero-icon polygon:nth-child(4){animation-delay:.4s}
+.hero-icon polygon:nth-child(5){animation-delay:.5s}
+@keyframes iconIn{from{opacity:0}to{opacity:1}}
+@keyframes heroSpin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+@keyframes colorCycle{0%,100%{fill:#068cff}50%{fill:#fe83e0}}
+.hero-actions{animation:fadeUp .8s ease .5s both;display:flex;gap:12px;flex-wrap:wrap;justify-content:center}
+.btn-p{background:var(--black);color:var(--white);padding:14px 32px;border-radius:12px;font-size:15px;font-weight:600;transition:all .25s;display:inline-block}.btn-p:hover{background:#1a1a1a;transform:translateY(-1px);box-shadow:0 8px 24px rgba(0,0,0,.12)}
+.btn-s{background:var(--white);color:var(--text);padding:14px 32px;border-radius:12px;font-size:15px;font-weight:600;transition:all .25s;display:inline-block;border:1px solid var(--border)}.btn-s:hover{border-color:#ccc;background:var(--bg);transform:translateY(-1px)}
+.hero-actions .btn-p{animation:btnPulse 2.5s ease-in-out infinite}.hero-actions .btn-p:hover{animation-play-state:paused}
+
+/* CODE */
+.code-hero{max-width:680px;width:100%;margin-top:48px;animation:fadeUp .8s ease .7s both}
+.code{background:#0a0a0a;border-radius:12px;padding:20px 24px;overflow-x:auto;position:relative;text-align:left;-webkit-overflow-scrolling:touch}
+.code pre{font-family:var(--mono);font-size:13px;line-height:1.8;color:rgba(255,255,255,.65);margin:0;white-space:pre;overflow-x:auto}
+.code .kw{color:var(--blue)}.code .str{color:var(--pink)}.code .cmt{color:rgba(255,255,255,.22)}.code .fn{color:rgba(255,255,255,.92)}
+.code-label{position:absolute;top:10px;right:14px;font-family:var(--mono);font-size:0.55rem;color:rgba(255,255,255,.18);letter-spacing:.5px;text-transform:uppercase}
+
+/* STATS */
+.stats{background:var(--black);padding:18px 20px}
+.stats-inner{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:repeat(2,1fr);gap:16px;text-align:center}
+.sv{font-size:28px;font-weight:700;letter-spacing:-1.5px;margin-bottom:1px;color:var(--pink)}
+.sl{font-size:14px;color:rgba(255,255,255,.4)}
+
+/* SECTIONS */
+.sec{max-width:1200px;margin:0 auto;padding:48px 20px}
+.sec-label{font-family:var(--mono);font-size:11px;font-weight:500;color:var(--blue);text-transform:uppercase;letter-spacing:1px;margin-bottom:12px}
+.sec-title{font-size:28px;font-weight:700;letter-spacing:-1.5px;line-height:1.1;margin-bottom:16px}
+.sec-desc{font-size:15px;color:var(--text-2);max-width:560px;line-height:1.6}
+
+/* FEATURES */
+.features{display:grid;grid-template-columns:1fr;gap:16px;margin-top:40px}
+.feat{background:var(--bg);padding:28px 24px;border-radius:16px;display:flex;flex-direction:column;gap:12px;transition:all .3s;border:1px solid transparent}
+.feat:hover{border-color:var(--border);background:var(--white)}
+.feat-icon{width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;line-height:1}
+.feat-icon.blue{background:rgba(6,140,255,.08)}.feat-icon.pink{background:rgba(254,131,224,.08)}.feat-icon.green{background:rgba(13,201,86,.08)}.feat-icon.orange{background:rgba(247,147,30,.08)}
+.feat h3{font-size:17px;font-weight:700;letter-spacing:-.3px}
+.feat p{font-size:14px;color:var(--text-2);line-height:1.6}
+
+/* USE CASES */
+.cases-wrap{background:var(--black);color:var(--white)}
+.cases-wrap .sec-label{color:rgba(255,255,255,.3)}.cases-wrap .sec-title{color:var(--white)}.cases-wrap .sec-desc{color:rgba(255,255,255,.5)}
+.cases-grid{display:grid;grid-template-columns:1fr;gap:16px;margin-top:40px}
+.case{background:rgba(255,255,255,.05);padding:28px 24px;border-radius:16px;display:flex;flex-direction:column;gap:12px;transition:background .3s}
+.case:hover{background:rgba(255,255,255,.08)}
+.case-num{font-family:var(--mono);font-size:10px;font-weight:500;color:var(--pink);text-transform:uppercase;letter-spacing:1px}
+.case h3{font-size:17px;font-weight:700;color:var(--white);letter-spacing:-.3px}
+.case p{font-size:14px;color:rgba(255,255,255,.45);line-height:1.6}
+.case-tag{font-family:var(--mono);font-size:11px;color:rgba(255,255,255,.25);margin-top:auto;padding-top:8px}
+
+/* INTEGRATION */
+.integration-codes{display:grid;grid-template-columns:1fr;gap:16px;margin-top:40px}
+.code-tabs{display:flex;gap:0;margin-bottom:0}
+.code-tab{font-family:var(--mono);font-size:11px;font-weight:500;padding:8px 14px;cursor:pointer;color:rgba(255,255,255,.3);background:rgba(255,255,255,.03);border:none;border-bottom:2px solid transparent;transition:all .15s}
+.code-tab.active{color:var(--white);border-bottom-color:var(--blue)}
+.code-tab:hover:not(.active){color:rgba(255,255,255,.5)}
+.tab-panel{display:none}.tab-panel.active{display:block}
+
+/* PRICING */
+.pricing-wrap{background:var(--bg);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+.plans{display:grid;grid-template-columns:1fr;gap:16px;margin-top:40px}
+.plan{background:var(--white);border:1px solid var(--border);border-radius:16px;padding:28px 24px;display:flex;flex-direction:column;gap:16px;transition:all .3s;position:relative}
+.plan:hover{border-color:#ccc;box-shadow:0 4px 20px rgba(0,0,0,.06)}
+.plan.featured{border-color:var(--blue);box-shadow:0 4px 24px rgba(6,140,255,.08)}
+.plan-badge{position:absolute;top:-10px;right:16px;font-family:var(--mono);font-size:0.58rem;font-weight:500;background:var(--blue);color:var(--white);padding:3px 10px;border-radius:6px;letter-spacing:.5px;text-transform:uppercase}
+.plan-name{font-family:var(--mono);font-size:13px;font-weight:500;color:var(--text-2);text-transform:uppercase;letter-spacing:1px}
+.plan-price{display:flex;align-items:baseline;gap:4px}
+.plan-amount{font-size:36px;font-weight:700;letter-spacing:-2px}
+.plan-period{font-size:14px;color:var(--text-3)}
+.plan-features{display:flex;flex-direction:column;gap:8px}
+.plan-feat{font-size:14px;color:var(--text-2);display:flex;align-items:center;gap:8px}
+.plan-feat::before{content:'✓';font-size:12px;color:var(--green);font-weight:700}
+.plan-cta{display:block;text-align:center;padding:12px;border-radius:10px;font-size:14px;font-weight:600;transition:all .2s;margin-top:auto}
+.plan-cta.primary{background:var(--black);color:var(--white)}.plan-cta.primary:hover{background:#222}
+.plan-cta.secondary{background:var(--bg);color:var(--text);border:1px solid var(--border)}.plan-cta.secondary:hover{background:#eee}
+
+/* CTA */
+.cta{max-width:600px;margin:0 auto;padding:80px 20px;text-align:center;display:flex;flex-direction:column;align-items:center}
+.cta-icon{width:80px;height:80px;margin-bottom:28px;animation:heroSpin 25s linear infinite,colorCycle 8s ease-in-out infinite}
+.cta-icon polygon{opacity:0;animation:iconIn .5s ease forwards}
+.cta-icon polygon:nth-child(1){animation-delay:.1s}.cta-icon polygon:nth-child(2){animation-delay:.2s}.cta-icon polygon:nth-child(3){animation-delay:.3s}.cta-icon polygon:nth-child(4){animation-delay:.4s}.cta-icon polygon:nth-child(5){animation-delay:.5s}
+.cta .sec-title{margin-bottom:12px}.cta .sec-desc{margin:0 auto 36px;text-align:center;font-size:15px}
+
+/* FOOTER */
+footer{border-top:1px solid var(--border);padding:28px 20px}
+.foot-inner{max-width:1200px;margin:0 auto;display:flex;flex-direction:column;gap:12px;align-items:center;text-align:center}
+.foot-l{font-size:12px;color:var(--text-3)}.foot-l a{color:var(--text-2)}.foot-l a:hover{color:var(--text)}
+.foot-links{display:flex;gap:20px;list-style:none;justify-content:center;flex-wrap:wrap}.foot-links a{font-size:12px;color:var(--text-3)}.foot-links a:hover{color:var(--text)}.foot-sep{width:1px;background:var(--border);align-self:stretch}
+
+/* MOBILE */
+@media(max-width:768px){
+.nav-links{display:none!important}.burger{display:flex}nav{padding:0 1rem;height:48px}.mobile-menu{top:48px}
+.hero{padding:64px 16px 24px}.hero::before{width:300px;height:300px}
+h1{font-size:28px;letter-spacing:-1px;margin-bottom:24px}
+h1 .br-desk{display:none}
+.hero-sub{font-size:14px;max-width:340px;margin-bottom:32px;line-height:1.5}
+.hero-icon{width:80px;height:80px;margin-bottom:24px}
+.hero-actions{gap:10px;width:100%}.hero-actions a{flex:1;text-align:center;padding:12px 16px;font-size:14px;min-width:0}
+.code-hero{margin-top:32px}
+.code-hero .code{max-height:180px;overflow:hidden}
+.code-hero .code::after{content:'';position:absolute;bottom:0;left:0;right:0;height:48px;background:linear-gradient(transparent,#0a0a0a);pointer-events:none}
+.code{padding:16px;border-radius:10px}.code pre{font-size:11px;line-height:1.7}
+.code-label{top:8px;right:10px;font-size:0.5rem}
+.stats{padding:16px}.stats-inner{gap:8px}.sv{font-size:22px;letter-spacing:-1px}.sl{font-size:11px}
+.sec{padding:40px 16px}.sec-label{font-size:10px;margin-bottom:10px}.sec-title{font-size:24px;letter-spacing:-1px;margin-bottom:12px}.sec-desc{font-size:14px;line-height:1.5}
+.features{gap:12px;margin-top:28px}.feat{padding:20px 18px;border-radius:12px;gap:10px}
+.feat-icon{width:40px;height:40px;border-radius:10px;font-size:18px}
+.feat h3{font-size:15px}.feat p{font-size:13px}
+.cases-grid{gap:12px;margin-top:28px}.case{padding:20px 18px;border-radius:12px;gap:10px}
+.case h3{font-size:15px}.case p{font-size:12px}
+.code-tab{font-size:10px;padding:6px 10px}
+.integration-codes{gap:12px;margin-top:28px}
+.plans{gap:12px;margin-top:28px}
+.plan{padding:22px 18px;border-radius:12px;gap:14px}
+.plan-amount{font-size:32px}.plan-period{font-size:13px}
+.plan-name{font-size:12px}.plan-feat{font-size:13px}
+.plan-cta{padding:11px;font-size:13px;border-radius:8px}
+.plan-badge{font-size:0.52rem;padding:2px 8px;top:-9px;right:12px}
+.cta{padding:56px 16px}.cta-icon{width:64px;height:64px;margin-bottom:20px}
+.cta .sec-title{font-size:24px;letter-spacing:-1px;margin-bottom:10px}
+.cta .sec-desc{font-size:14px;margin-bottom:28px}
+footer{padding:20px 16px}.foot-links{gap:14px}.foot-links a{font-size:11px}.foot-l{font-size:11px}
+}
+
+/* SMALL PHONE */
+@media(max-width:374px){
+h1{font-size:24px}
+.hero-sub{font-size:13px;max-width:280px}
+.hero-icon{width:64px;height:64px;margin-bottom:20px}
+.hero-actions{flex-direction:column}.hero-actions a{width:100%}
+.sv{font-size:18px}.sl{font-size:10px}
+.stats-inner{gap:6px}
+.sec-title{font-size:22px}
+.plan-amount{font-size:28px}
+}
+
+/* TABLET */
+@media(min-width:600px){
+.hero{padding:100px 32px 48px}h1{font-size:44px;letter-spacing:-2px}.hero-sub{font-size:17px;max-width:500px}
+.hero-icon{width:148px;height:148px;margin-bottom:44px}
+.features{grid-template-columns:repeat(2,1fr)}
+.cases-grid{grid-template-columns:repeat(2,1fr)}
+.integration-codes{grid-template-columns:repeat(2,1fr)}
+.plans{grid-template-columns:repeat(2,1fr)}
+.sec{padding:64px 32px}.sec-title{font-size:36px;letter-spacing:-1.5px}.sec-desc{font-size:17px}
+.stats-inner{grid-template-columns:repeat(4,1fr);gap:32px}.sv{font-size:30px}
+.stats{padding:24px 32px}
+}
+
+/* DESKTOP */
+@media(min-width:901px){
+nav{padding:0 40px}
+.hero{min-height:100vh;padding:120px 40px 60px}.hero::before{width:800px;height:800px}
+h1{font-size:clamp(52px,7vw,76px);letter-spacing:-3px}.hero-sub{font-size:clamp(17px,2vw,20px);max-width:560px;margin-bottom:60px}
+.hero-icon{width:200px;height:200px;margin-bottom:60px}
+.sec{padding:80px 40px}.sec-label{font-size:13px;margin-bottom:16px}.sec-title{font-size:clamp(36px,4.5vw,52px);letter-spacing:-2px;margin-bottom:20px}.sec-desc{font-size:18px}
+.features{grid-template-columns:repeat(2,1fr)}
+.cases-grid{grid-template-columns:repeat(3,1fr)}
+.plans{grid-template-columns:repeat(4,1fr)}
+.stats{padding:30px 40px}.stats-inner{gap:40px}.sv{font-size:38px;letter-spacing:-2px}
+.cta{padding:100px 40px}.cta-icon{width:101px;height:101px;margin-bottom:32px}.cta .sec-title{margin-bottom:16px}.cta .sec-desc{margin-bottom:48px;font-size:18px}
+footer{padding:40px}.foot-inner{flex-direction:row;justify-content:space-between;text-align:left}.foot-l{font-size:13px}.foot-links a{font-size:13px}.foot-links{gap:24px}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav><div class="nav-inner">
+  <div class="nav-left">
+    <a href="https://www.fabriclayer.ai" class="nav-logo">
+      <svg viewBox="0 0 532.89 134.52" fill="currentColor"><g><polygon points="81.89 134.52 57.62 91.2 57.47 134.36 44.03 134.42 44.02 89.24 70.74 89.18 96.4 134.26 81.89 134.52"/><polygon points="11.23 30.83 22.93 22.12 67.73 42.65 42.7 7.77 53.47 0 80.03 36.5 58.51 52.19 11.23 30.83"/><polygon points="119.88 23.38 130.65 31.15 104.1 67.74 82.61 52.07 88.3 .43 100.17 8.99 94.53 57.97 119.88 23.38"/><polygon points="128.82 101.47 124.85 114.19 81.92 100.27 90.13 74.95 140.86 64.46 136.53 78.35 88.31 88.08 128.82 101.47"/><polygon points="11.54 99.78 45.11 63.3 4.15 76.4 0 63.79 42.95 49.87 51.16 75.15 16.22 113.51 11.54 99.78"/></g><g><path d="M184.55,115.05v-56.57h-19.23v-12.12h19.23v-15.05c0-4.18,1.25-7.52,3.76-10.03,2.51-2.51,5.85-3.76,10.03-3.76h17.7v12.12h-13.1c-2.7,0-4.04,1.39-4.04,4.18v12.54h19.79v12.12h-19.79v56.57h-14.35Z"/><path d="M249.34,117c-4.92,0-9.31-.84-13.17-2.51-3.86-1.67-6.92-4.13-9.2-7.38-2.28-3.25-3.41-7.2-3.41-11.84s1.14-8.66,3.41-11.77c2.28-3.11,5.39-5.46,9.34-7.04,3.95-1.58,8.43-2.37,13.45-2.37h20.9v-4.46c0-3.99-1.21-7.2-3.62-9.61-2.42-2.41-6.13-3.62-11.15-3.62s-8.69,1.16-11.29,3.48c-2.6,2.32-4.32,5.34-5.16,9.06l-13.38-4.32c1.11-3.71,2.9-7.08,5.36-10.1,2.46-3.02,5.73-5.46,9.82-7.32,4.09-1.86,9.01-2.79,14.77-2.79,8.92,0,15.93,2.28,21.04,6.83,5.11,4.55,7.66,11.01,7.66,19.37v28.29c0,2.79,1.3,4.18,3.9,4.18h5.85v11.98h-10.73c-3.25,0-5.9-.84-7.94-2.51-2.04-1.67-3.07-3.95-3.07-6.83v-.42h-2.09c-.74,1.39-1.86,3.02-3.34,4.88-1.49,1.86-3.67,3.46-6.55,4.81-2.88,1.35-6.69,2.02-11.43,2.02ZM251.43,105.16c5.76,0,10.4-1.65,13.93-4.95,3.53-3.3,5.29-7.82,5.29-13.58v-1.39h-20.06c-3.81,0-6.88.81-9.2,2.44-2.32,1.63-3.48,4.02-3.48,7.18s1.21,5.67,3.62,7.52c2.41,1.86,5.71,2.79,9.89,2.79Z"/><path d="M342.84,117c-6.69,0-11.82-1.21-15.4-3.62-3.58-2.41-6.25-5.11-8.01-8.08h-2.23v9.75h-14.07V17.52h14.35v38.18h2.23c1.11-1.86,2.6-3.64,4.46-5.36,1.86-1.72,4.32-3.14,7.38-4.25,3.07-1.11,6.83-1.67,11.29-1.67,5.76,0,11.05,1.39,15.88,4.18,4.83,2.79,8.68,6.83,11.56,12.12,2.88,5.29,4.32,11.61,4.32,18.95v2.09c0,7.43-1.46,13.77-4.39,19.02-2.93,5.25-6.78,9.27-11.56,12.05-4.79,2.79-10.06,4.18-15.81,4.18ZM338.66,104.46c6.22,0,11.36-2,15.4-5.99,4.04-3.99,6.06-9.71,6.06-17.14v-1.25c0-7.34-2-13-5.99-17-4-3.99-9.15-5.99-15.47-5.99s-11.22,2-15.26,5.99c-4.04,3.99-6.06,9.66-6.06,17v1.25c0,7.43,2.02,13.15,6.06,17.14,4.04,4,9.13,5.99,15.26,5.99Z"/><path d="M386.73,115.05V46.36h14.07v8.08h2.23c1.11-2.88,2.9-4.99,5.36-6.34,2.46-1.35,5.5-2.02,9.13-2.02h8.22v12.96h-8.78c-4.65,0-8.45,1.28-11.43,3.83-2.97,2.56-4.46,6.48-4.46,11.77v40.41h-14.35Z"/><path d="M444.83,37.02c-2.79,0-5.13-.91-7.04-2.72-1.91-1.81-2.86-4.16-2.86-7.04s.95-5.23,2.86-7.04c1.9-1.81,4.25-2.72,7.04-2.72s5.25.91,7.11,2.72c1.86,1.81,2.79,4.16,2.79,7.04s-.93,5.23-2.79,7.04c-1.86,1.81-4.23,2.72-7.11,2.72ZM437.59,115.05V46.36h14.35v68.69h-14.35Z"/><path d="M498.89,117c-6.6,0-12.56-1.39-17.9-4.18-5.34-2.79-9.57-6.83-12.68-12.12-3.11-5.29-4.67-11.66-4.67-19.09v-1.81c0-7.43,1.55-13.77,4.67-19.02,3.11-5.25,7.34-9.29,12.68-12.12,5.34-2.83,11.31-4.25,17.9-4.25s12.21,1.21,16.86,3.62c4.64,2.42,8.38,5.62,11.22,9.61,2.83,3.99,4.67,8.41,5.5,13.24l-13.93,2.93c-.47-3.07-1.44-5.85-2.93-8.36-1.49-2.51-3.58-4.5-6.27-5.99-2.7-1.48-6.08-2.23-10.17-2.23s-7.59.91-10.8,2.72c-3.2,1.81-5.74,4.41-7.59,7.8-1.86,3.39-2.79,7.5-2.79,12.33v1.25c0,4.83.93,8.97,2.79,12.4,1.86,3.44,4.39,6.04,7.59,7.8,3.2,1.77,6.8,2.65,10.8,2.65,6.04,0,10.64-1.55,13.79-4.67,3.16-3.11,5.16-7.08,5.99-11.91l13.93,3.2c-1.11,4.74-3.09,9.1-5.92,13.1-2.83,4-6.57,7.18-11.22,9.54-4.65,2.37-10.27,3.55-16.86,3.55Z"/></g></svg>
+    </a>
+    <span class="nav-logo-text">api</span>
+  </div>
+  <div class="nav-right">
+    <div class="nav-links">
+      <a href="https://www.fabriclayer.ai">Home</a>
+      <a href="https://trust.fabriclayer.ai">Trust Index</a>
+      <a href="docs.html">Docs</a>
+      <a href="blog.html">Blog</a>
+    
+    </div>
+    <button class="burger" id="burgerBtn" aria-label="Menu"><span></span><span></span><span></span></button>
+  </div>
+</div></nav>
+<div class="mobile-menu" id="mobileMenu">
+  <a href="https://www.fabriclayer.ai">Home</a>
+  <a href="https://trust.fabriclayer.ai">Trust Index</a>
+  <a href="docs.html">Docs</a>
+  <a href="blog.html">Blog</a>
+
+</div>
+
+<!-- HERO -->
+<section class="hero">
+<svg class="hero-icon" viewBox="0 0 250 250"><polygon points="136.46 192.26 112.19 148.94 112.04 192.1 98.6 192.16 98.59 146.98 125.31 146.92 150.97 192 136.46 192.26"/><polygon points="65.8 88.57 77.5 79.86 122.3 100.39 97.26 65.51 108.04 57.74 134.6 94.24 113.08 109.93 65.8 88.57"/><polygon points="174.45 81.12 185.22 88.89 158.67 125.48 137.18 109.81 142.86 58.17 154.74 66.73 149.1 115.71 174.45 81.12"/><polygon points="183.38 159.21 179.42 171.93 136.49 158.01 144.7 132.69 195.43 122.2 191.1 136.09 142.88 145.82 183.38 159.21"/><polygon points="66.11 157.52 99.68 121.04 58.72 134.14 54.57 121.53 97.52 107.61 105.73 132.89 70.79 171.25 66.11 157.52"/></svg>
+
+<h1>One API call.<br class="br-desk">Your agent <span class="grad">pays, verifies,<br class="br-desk">and routes</span> itself.</h1>
+<p class="hero-sub">Stop hand-wiring trust checks and payment flows. Fabric gives any AI agent autonomous discovery, built-in safety scores, budget controls, and instant USDC settlement.</p>
+<div class="hero-actions">
+  <a href="#" class="btn-p">Get your API key &rarr;</a>
+  <a href="#" class="btn-s">Read the docs &rarr;</a>
+</div>
+<div class="code-hero">
+  <div class="code"><span class="code-label">route in action</span><pre><span class="kw">const</span> <span class="fn">result</span> = <span class="kw">await</span> <span class="fn">fabric</span>.<span class="fn">route</span>({
+  <span class="fn">category</span>: <span class="str">"image-generation"</span>,
+  <span class="fn">prompt</span>: <span class="str">"A neon cityscape at dusk"</span>,
+  <span class="fn">priority</span>: <span class="str">"quality"</span>,
+})
+
+<span class="cmt">// Fabric discovers 47 providers → scores trust</span>
+<span class="cmt">// → selects best match → pays $0.055 USDC</span>
+<span class="cmt">// → returns result. One call. Zero config.</span>
+<span class="cmt">//</span>
+<span class="cmt">// result.provider   → "flux-pro"</span>
+<span class="cmt">// result.trust      → 4.65</span>
+<span class="cmt">// result.cost       → "$0.055"</span>
+<span class="cmt">// result.latency    → "1.2s"</span></pre></div>
+</div>
+</section>
+
+<!-- STATS -->
+<div class="stats"><div class="stats-inner">
+<div><div class="sv">9</div><div class="sl">MCP tools</div></div>
+<div><div class="sv">17</div><div class="sl">REST endpoints</div></div>
+<div><div class="sv">6</div><div class="sl">Trust signals</div></div>
+<div><div class="sv">$0.00025</div><div class="sl">Per-tx gas</div></div>
+</div></div>
+
+<!-- FEATURES -->
+<section class="sec">
+<div class="sec-label">Why Fabric</div>
+<div class="sec-title">Everything your agent needs<br class="br-desk">to operate autonomously</div>
+<div class="sec-desc">One SDK gives your agent trust scoring, provider discovery, budget controls, and USDC payments. No blockchain knowledge required.</div>
+
+<div class="features">
+<div class="feat">
+  <div class="feat-icon blue">🔍</div>
+  <h3>Discovery &amp; routing</h3>
+  <p>Query indexed providers by capability, trust score, price, and latency. Fabric picks the best match or fails over to the next trusted option automatically.</p>
+</div>
+<div class="feat">
+  <div class="feat-icon pink">🛡️</div>
+  <h3>Trust scoring</h3>
+  <p>Every provider scored across six signals: vulnerability safety, operational health, maintenance activity, adoption, transparency, and publisher trust. Updated continuously.</p>
+</div>
+<div class="feat">
+  <div class="feat-icon green">💳</div>
+  <h3>Instant USDC payments</h3>
+  <p>Agents pay for services in USDC on Base L2. No gas estimation, no seed phrases, no wallet management. Fabric handles it behind the scenes via x402.</p>
+</div>
+<div class="feat">
+  <div class="feat-icon orange">📊</div>
+  <h3>Budget controls</h3>
+  <p>Set daily, weekly, or monthly spending limits. Per-request cost caps. Overage protection at $0.001/request. Your agent spends within guardrails you define.</p>
+</div>
+</div>
+</section>
+
+<!-- USE CASES -->
+<div class="cases-wrap">
+<section class="sec">
+<div class="sec-label">Use cases</div>
+<div class="sec-title">What you can build</div>
+<div class="sec-desc">Fabric works anywhere an AI agent needs to discover, evaluate, or pay for a service.</div>
+
+<div class="cases-grid">
+<div class="case">
+  <div class="case-num">01</div>
+  <h3>Autonomous agent routing</h3>
+  <p>Your agent needs image generation, web search, or code execution. Call route() and Fabric discovers providers, scores trust, picks the best match, pays, and returns the result. One function call replaces an entire integration layer.</p>
+  <div class="case-tag">route · evaluate · pay</div>
+</div>
+<div class="case">
+  <div class="case-num">02</div>
+  <h3>Supply chain monitoring</h3>
+  <p>You depend on five AI services. Fabric's webhooks alert you when a dependency's trust score drops — new CVE, uptime degradation, abandoned repo. Know before your users do.</p>
+  <div class="case-tag">evaluate · webhooks · score-history</div>
+</div>
+<div class="case">
+  <div class="case-num">03</div>
+  <h3>Trust badges</h3>
+  <p>You're a provider. Claim your profile on the Trust Index, and embed your Fabric trust score on your docs or landing page. Verified, real-time social proof for any MCP service.</p>
+  <div class="case-tag">claim-profile · trust-index · embed</div>
+</div>
+<div class="case">
+  <div class="case-num">04</div>
+  <h3>Cost optimisation</h3>
+  <p>Multiple providers can fulfil the same request. Set a minimum trust threshold and Fabric routes to the cheapest provider above it. Cut API costs without compromising safety.</p>
+  <div class="case-tag">route · cost-weight · threshold</div>
+</div>
+<div class="case">
+  <div class="case-num">05</div>
+  <h3>Failover &amp; redundancy</h3>
+  <p>Primary provider goes down or scores drop below your threshold? Fabric automatically re-routes to the next best alternative. No downtime, no manual intervention, no trust compromise.</p>
+  <div class="case-tag">route · failover · health-check</div>
+</div>
+<div class="case">
+  <div class="case-num">06</div>
+  <h3>Agent-to-agent delegation</h3>
+  <p>Multi-agent workflows where Agent A delegates to Agent B. Fabric verifies identity and trust at every handoff — preventing compromised or impersonated agents from entering the chain.</p>
+  <div class="case-tag">evaluate · identity · multi-agent</div>
+</div>
+<div class="case">
+  <div class="case-num">07</div>
+  <h3>MCP server allow/blocklists</h3>
+  <p>Enforce organisation-wide policies on which MCP servers your team's agents can connect to. Fabric maintains the list, scores update in real time, and blocked tools never load.</p>
+  <div class="case-tag">evaluate · policy · org-rules</div>
+</div>
+<div class="case">
+  <div class="case-num">08</div>
+  <h3>Pre-install CI/CD gate</h3>
+  <p>Add a Fabric check to your build pipeline. Every new AI dependency gets scored before it merges. Fail the build if trust drops below your threshold — like Snyk, but for MCP.</p>
+  <div class="case-tag">evaluate · ci-cd · score-history</div>
+</div>
+<div class="case">
+  <div class="case-num">09</div>
+  <h3>Marketplace trust layer</h3>
+  <p>Building a plugin store, agent marketplace, or tool registry? Embed Fabric scores alongside every listing. Give your users trust data without building the scoring infrastructure yourself.</p>
+  <div class="case-tag">evaluate · embed · trust-index</div>
+</div>
+</div>
+</section>
+</div>
+
+<!-- INTEGRATION -->
+<section class="sec">
+<div class="sec-label">Integration</div>
+<div class="sec-title">Start sending requests in 5 minutes</div>
+<div class="sec-desc">Connect via MCP for agent-native integration, or use the REST API from any language. TypeScript and Python SDKs available.</div>
+
+<div class="integration-codes">
+
+<!-- MCP / SDK -->
+<div>
+<div style="font-family:var(--mono);font-size:11px;color:var(--text-3);text-transform:uppercase;letter-spacing:1px;margin-bottom:12px">MCP / SDK</div>
+<div class="code"><pre><span class="cmt">// Install</span>
+<span class="fn">npm</span> <span class="fn">install</span> <span class="str">@fabric-gateway/sdk</span>
+
+<span class="cmt">// claude_desktop_config.json</span>
+{
+  <span class="str">"mcpServers"</span>: {
+    <span class="str">"fabric"</span>: {
+      <span class="str">"command"</span>: <span class="str">"npx"</span>,
+      <span class="str">"args"</span>: [<span class="str">"@fabric-gateway/mcp"</span>],
+      <span class="str">"env"</span>: { <span class="str">"FABRIC_API_KEY"</span>: <span class="str">"fab_..."</span> }
+    }
+  }
+}</pre></div>
+</div>
+
+<!-- REST API with tabs -->
+<div>
+<div style="font-family:var(--mono);font-size:11px;color:var(--text-3);text-transform:uppercase;letter-spacing:1px;margin-bottom:12px">REST API</div>
+<div class="code">
+<div class="code-tabs">
+  <button class="code-tab active" data-tab="curl">cURL</button>
+  <button class="code-tab" data-tab="ts">TypeScript</button>
+  <button class="code-tab" data-tab="py">Python</button>
+</div>
+<div class="tab-panel active" id="tab-curl"><pre>
+<span class="fn">curl</span> <span class="str">https://api.fabriclayer.ai/v1/evaluate</span> \
+  -H <span class="str">"Authorization: Bearer fab_..."</span> \
+  -H <span class="str">"Content-Type: application/json"</span> \
+  -d <span class="str">'{"provider": "flux-pro"}'</span>
+
+<span class="cmt">// → { "trust_score": 4.65, "status": "trusted" }</span></pre></div>
+<div class="tab-panel" id="tab-ts"><pre>
+<span class="kw">import</span> { <span class="fn">Fabric</span> } <span class="kw">from</span> <span class="str">"@fabric-gateway/sdk"</span>
+
+<span class="kw">const</span> <span class="fn">fabric</span> = <span class="kw">new</span> <span class="fn">Fabric</span>(<span class="str">"fab_..."</span>)
+<span class="kw">const</span> <span class="fn">score</span> = <span class="kw">await</span> <span class="fn">fabric</span>.<span class="fn">evaluate</span>(<span class="str">"flux-pro"</span>)
+
+<span class="cmt">// → { trust_score: 4.65, status: "trusted" }</span></pre></div>
+<div class="tab-panel" id="tab-py"><pre>
+<span class="kw">from</span> <span class="fn">fabric_gateway</span> <span class="kw">import</span> <span class="fn">Fabric</span>
+
+<span class="fn">fabric</span> = <span class="fn">Fabric</span>(<span class="str">"fab_..."</span>)
+<span class="fn">score</span> = <span class="fn">fabric</span>.<span class="fn">evaluate</span>(<span class="str">"flux-pro"</span>)
+
+<span class="cmt"># → {"trust_score": 4.65, "status": "trusted"}</span></pre></div>
+</div>
+</div>
+
+</div>
+</section>
+
+<!-- PRICING -->
+<div class="pricing-wrap" id="pricing">
+<section class="sec">
+<div class="sec-label">Pricing</div>
+<div class="sec-title">Start free, scale as you grow</div>
+<div class="sec-desc">Flat monthly subscription plus 0.3–0.5% routing fee on x402 payments. $0.001/request overage on soft caps. No markup on gas.</div>
+
+<div class="plans">
+<div class="plan">
+  <div class="plan-name">Free</div>
+  <div class="plan-price"><span class="plan-amount">$0</span></div>
+  <div class="plan-features">
+    <div class="plan-feat">50 requests/day</div>
+    <div class="plan-feat">Score + status only</div>
+    <div class="plan-feat">No routing or payments</div>
+    <div class="plan-feat">Community support</div>
+  </div>
+  <a href="#" class="plan-cta secondary">Get started</a>
+</div>
+<div class="plan featured">
+  <div class="plan-badge">Popular</div>
+  <div class="plan-name">Builder</div>
+  <div class="plan-price"><span class="plan-amount">$9</span><span class="plan-period">/mo</span></div>
+  <div class="plan-features">
+    <div class="plan-feat">5,000 requests/day</div>
+    <div class="plan-feat">Full signal breakdown + history</div>
+    <div class="plan-feat">0.5% routing fee</div>
+    <div class="plan-feat">3 managed wallets</div>
+    <div class="plan-feat">Budget controls</div>
+  </div>
+  <a href="#" class="plan-cta primary">Start building</a>
+</div>
+<div class="plan">
+  <div class="plan-name">Pro</div>
+  <div class="plan-price"><span class="plan-amount">$39</span><span class="plan-period">/mo</span></div>
+  <div class="plan-features">
+    <div class="plan-feat">15,000 requests/day</div>
+    <div class="plan-feat">0.4% routing fee</div>
+    <div class="plan-feat">10 managed wallets</div>
+    <div class="plan-feat">Webhooks on score changes</div>
+    <div class="plan-feat">Batch queries + priority support</div>
+  </div>
+  <a href="#" class="plan-cta secondary">Upgrade to Pro</a>
+</div>
+<div class="plan">
+  <div class="plan-name">Team</div>
+  <div class="plan-price"><span class="plan-amount">$149</span><span class="plan-period">/mo</span></div>
+  <div class="plan-features">
+    <div class="plan-feat">50,000 requests/day</div>
+    <div class="plan-feat">0.3% routing fee</div>
+    <div class="plan-feat">50 managed wallets</div>
+    <div class="plan-feat">Custom scoring weights</div>
+    <div class="plan-feat">SLA guarantee + dedicated account manager</div>
+  </div>
+  <a href="#" class="plan-cta secondary">Contact us</a>
+</div>
+</div>
+</section>
+</div>
+
+<!-- CTA -->
+<section class="cta">
+<svg class="cta-icon" viewBox="0 0 250 250"><polygon points="136.46 192.26 112.19 148.94 112.04 192.1 98.6 192.16 98.59 146.98 125.31 146.92 150.97 192 136.46 192.26"/><polygon points="65.8 88.57 77.5 79.86 122.3 100.39 97.26 65.51 108.04 57.74 134.6 94.24 113.08 109.93 65.8 88.57"/><polygon points="174.45 81.12 185.22 88.89 158.67 125.48 137.18 109.81 142.86 58.17 154.74 66.73 149.1 115.71 174.45 81.12"/><polygon points="183.38 159.21 179.42 171.93 136.49 158.01 144.7 132.69 195.43 122.2 191.1 136.09 142.88 145.82 183.38 159.21"/><polygon points="66.11 157.52 99.68 121.04 58.72 134.14 54.57 121.53 97.52 107.61 105.73 132.89 70.79 171.25 66.11 157.52"/></svg>
+<div class="sec-title">Ship agents that can<br><span class="grad">pay for themselves.</span></div>
+<div class="sec-desc">Get your API key in 30 seconds. Start on the free plan — upgrade when your agents need to route and pay.</div>
+<a href="#" class="btn-p">Get your API key &rarr;</a>
+</section>
+
+<!-- FOOTER -->
+<footer><div class="foot-inner">
+<div class="foot-l">&copy; 2026 Fabric. A <a href="https://motherbird.ai">Motherbird</a> product.</div>
+<ul class="foot-links"><li><a href="https://trust.fabriclayer.ai/claim">Claim Profile</a></li><li><a href="https://github.com/motherbirdai/fabric">GitHub</a></li><li><a href="#">Twitter / X</a></li><li><a href="#">Docs</a></li><li class="foot-sep"></li><li><a href="terms.html">Terms</a></li><li><a href="privacy.html">Privacy</a></li><li><a href="disclaimer.html">Disclaimer</a></li></ul>
+</div></footer>
+
+<script>
+const burger=document.getElementById('burgerBtn');
+const mobileMenu=document.getElementById('mobileMenu');
+burger.addEventListener('click',()=>{burger.classList.toggle('open');mobileMenu.classList.toggle('open')});
+mobileMenu.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{burger.classList.remove('open');mobileMenu.classList.remove('open')}));
+
+// Code tabs
+document.querySelectorAll('.code-tabs').forEach(tabs=>{
+  tabs.querySelectorAll('.code-tab').forEach(tab=>{
+    tab.addEventListener('click',()=>{
+      const parent=tab.closest('.code');
+      parent.querySelectorAll('.code-tab').forEach(t=>t.classList.remove('active'));
+      parent.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+      tab.classList.add('active');
+      parent.querySelector('#tab-'+tab.dataset.tab).classList.add('active');
+    });
+  });
+});
+</script>
+</body>
+</html>

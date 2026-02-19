@@ -1,0 +1,905 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Trust Index — Fabric</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --black: #000000;
+  --white: #ffffff;
+  --gray-50: #fafafa;
+  --gray-100: #f0f0ee;
+  --gray-200: #e2e2df;
+  --gray-300: #c8c8c4;
+  --gray-400: #a0a09c;
+  --gray-500: #787874;
+  --gray-600: #58584f;
+  --gray-700: #3a3a34;
+  --gray-800: #1a1a16;
+  --blue: #0052FF;
+  --blue-light: #3b7aff;
+  --blue-dim: rgba(0,82,255,0.08);
+  --blue-glow: rgba(0,82,255,0.15);
+  --pink: #FF2D87;
+  --green: #00C853;
+  --green-dim: rgba(0,200,83,0.08);
+  --amber: #FF9100;
+  --amber-dim: rgba(255,145,0,0.08);
+  --red: #FF1744;
+  --red-dim: rgba(255,23,68,0.08);
+  --mono: 'DM Mono', monospace;
+  --sans: 'DM Sans', -apple-system, sans-serif;
+}
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { font-family: var(--sans); background: var(--gray-50); color: var(--gray-800); -webkit-font-smoothing: antialiased; min-height: 100vh; }
+
+/* ── NAV ── */
+nav {
+  position: sticky; top: 0; z-index: 100;
+  background: var(--white);
+  border-bottom: 1px solid var(--gray-200); padding: 0 2rem; height: 56px;
+}
+.nav-inner {
+  max-width: 1400px; margin: 0 auto; height: 100%;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.nav-left { display: flex; align-items: center; gap: 1.25rem; }
+.nav-logo { display: flex; align-items: center; gap: 0.65rem; text-decoration: none; color: var(--black); } .nav-logo:hover { text-decoration: none; }
+.nav-logo svg { height: 19px; width: auto; }
+.nav-logo-text { pointer-events: none; text-decoration: none;
+  font-family: var(--mono); font-size: 0.78rem; font-weight: 400;
+  letter-spacing: 0.02em; color: var(--gray-400);
+  border-left: 1px solid var(--gray-200); padding-left: 0.65rem;
+}
+.nav-links {
+  display: flex; align-items: center; gap: 1.5rem;
+}
+.nav-links a {
+  font-family: var(--mono); font-size: 0.78rem; font-weight: 400;
+  color: var(--gray-500); text-decoration: none; transition: color 0.15s;
+}
+.nav-links a:hover { color: var(--pink); }
+.nav-links a.active { color: #ff8bff; }
+.burger {
+  display: none; flex-direction: column; gap: 4px; background: none;
+  border: none; cursor: pointer; padding: 6px; border-radius: 6px;
+  transition: background 0.15s;
+}
+.burger:hover { background: var(--gray-100); }
+.burger span {
+  display: block; width: 18px; height: 1.5px; background: var(--gray-700);
+  border-radius: 1px; transition: all 0.25s;
+}
+.burger.open span:nth-child(1) { transform: translateY(5.5px) rotate(45deg); }
+.burger.open span:nth-child(2) { opacity: 0; }
+.burger.open span:nth-child(3) { transform: translateY(-5.5px) rotate(-45deg); }
+.mobile-menu {
+  position: fixed; top: 56px; right: 0; z-index: 99;
+  background: var(--white); border: 1px solid var(--gray-200);
+  border-radius: 0 0 0 12px; box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+  padding: 0.5rem 0; display: none; min-width: 180px;
+}
+.mobile-menu.open { display: block; }
+.mobile-menu a {
+  display: block; font-family: var(--mono); font-size: 0.78rem;
+  color: var(--gray-600); text-decoration: none; padding: 0.55rem 1.25rem;
+  transition: all 0.12s;
+}
+.mobile-menu a:hover { background: var(--gray-50); color: var(--pink); }
+.mobile-menu a.active { color: #ff8bff; }
+.nav-right { display: flex; align-items: center; gap: 0.75rem; }
+
+
+/* ── TOOLBAR ── */
+.toolbar {
+  position: sticky; top: 56px; z-index: 90;
+  background: var(--white);
+  border-bottom: 1px solid var(--gray-200);
+  padding: 0.6rem 2rem;
+}
+.toolbar-row {
+  max-width: 1400px; margin: 0 auto;
+  display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;
+}
+.search-box {
+  display: flex; align-items: center; gap: 0.5rem;
+  padding: 0.5rem 0.85rem; background: var(--white);
+  border: 1px solid var(--gray-200); border-radius: 10px;
+  min-width: 200px; flex: 1; transition: border-color 0.2s, box-shadow 0.2s;
+}
+.search-box:focus-within { border-color: var(--blue); box-shadow: 0 0 0 3px var(--blue-dim); }
+.search-box svg { flex-shrink: 0; color: var(--gray-400); }
+.search-box input {
+  border: none; outline: none; background: none;
+  font-family: var(--sans); font-size: 0.82rem; color: var(--gray-800);
+  width: 100%;
+}
+.search-box input::placeholder { color: var(--gray-400); }
+.search-clear {
+  display: none; align-items: center; justify-content: center;
+  background: none; border: none; cursor: pointer; padding: 2px;
+  color: var(--gray-400); border-radius: 4px; transition: color 0.15s;
+  flex-shrink: 0;
+}
+.search-clear:hover { color: var(--gray-700); }
+.search-clear.visible { display: flex; }
+/* ── CUSTOM DROPDOWNS ── */
+.custom-select {
+  position: relative; display: inline-block;
+}
+.select-trigger {
+  font-family: var(--mono); font-size: 0.68rem; color: var(--gray-600);
+  background: var(--white); border: 1px solid var(--gray-200); border-radius: 8px;
+  padding: 0.35rem 1.6rem 0.35rem 0.6rem; cursor: pointer; outline: none;
+  display: flex; align-items: center; gap: 0.35rem;
+  user-select: none; white-space: nowrap; transition: all 0.15s;
+}
+.select-trigger:hover { border-color: var(--gray-300); }
+.select-trigger.open { border-color: var(--gray-400); box-shadow: 0 0 0 3px rgba(0,0,0,0.04); }
+.select-trigger::after {
+  content: ''; width: 0; height: 0; border-left: 3.5px solid transparent;
+  border-right: 3.5px solid transparent; border-top: 4px solid var(--gray-400);
+  margin-left: auto; transition: transform 0.2s;
+}
+.select-trigger.open::after { transform: rotate(180deg); }
+.select-menu {
+  position: absolute; top: calc(100% + 6px); left: 0; z-index: 200;
+  background: var(--white); border: 1px solid var(--gray-200); border-radius: 10px;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.1), 0 2px 8px rgba(0,0,0,0.04);
+  padding: 4px; min-width: 160px; display: none;
+  animation: menuIn 0.15s ease;
+}
+@keyframes menuIn { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: translateY(0); } }
+.select-menu.open { display: block; }
+.select-menu.align-right { left: auto; right: 0; }
+.select-option {
+  font-family: var(--mono); font-size: 0.65rem; color: var(--gray-600);
+  padding: 0.4rem 0.6rem; border-radius: 6px; cursor: pointer;
+  display: flex; align-items: center; gap: 0.4rem;
+  transition: all 0.1s; white-space: nowrap;
+}
+.select-option:hover { background: var(--gray-50); color: var(--black); }
+.select-option.active { background: var(--gray-100); color: var(--black); font-weight: 500; }
+.select-option.active::before {
+  content: ''; width: 4px; height: 4px; border-radius: 50%;
+  background: var(--black); flex-shrink: 0;
+}
+
+
+/* ── STATUS PILLS (second row) ── */
+.status-filters { display: flex; gap: 0.35rem; margin-left: auto; }
+.status-pill {
+  font-family: var(--mono); font-size: 0.58rem; padding: 0.2rem 0.45rem;
+  border-radius: 100px; cursor: pointer; transition: all 0.15s;
+  display: flex; align-items: center; gap: 0.25rem; border: 1px solid transparent;
+  user-select: none;
+}
+.status-pill::before { content: ''; width: 5px; height: 5px; border-radius: 50%; }
+.status-pill.trusted { background: rgba(13,201,86,0.08); color: #0dc956; }
+.status-pill.trusted::before { background: #0dc956; }
+.status-pill.trusted.active { border-color: #0dc956; }
+.status-pill.caution { background: rgba(247,147,30,0.08); color: #f7931e; }
+.status-pill.caution::before { background: #f7931e; }
+.status-pill.caution.active { border-color: #f7931e; }
+.status-pill.blocked { background: rgba(208,58,61,0.08); color: #d03a3d; }
+.status-pill.blocked::before { background: #d03a3d; }
+.status-pill.blocked.active { border-color: #d03a3d; }
+
+/* ── GRID ── */
+.grid-container { max-width: 1400px; margin: 0 auto; padding: 1.25rem 2rem 4rem; }
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 0.75rem;
+}
+
+/* ── CARD ── */
+.card {
+  background: var(--white); border: 1px solid var(--gray-200); border-radius: 14px;
+  padding: 1.25rem; cursor: pointer;
+  transition: border-color 0.2s, box-shadow 0.2s, transform 0.15s;
+  display: flex; flex-direction: column; gap: 0.6rem;
+  position: relative;
+}
+.card:hover {
+  border-color: var(--gray-300);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+  transform: translateY(-1px);
+}
+.card-top { display: flex; align-items: flex-start; gap: 0.65rem; }
+.card-icon {
+  width: 40px; height: 40px; border-radius: 10px;
+  background: var(--gray-100); border: 1px solid var(--gray-200);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1rem; flex-shrink: 0; font-weight: 600;
+  color: var(--gray-500); font-family: var(--sans); text-transform: uppercase;
+}
+.card-title-block { flex: 1; min-width: 0; }
+.card-name {
+  font-size: 0.92rem; font-weight: 600; color: var(--black);
+  letter-spacing: -0.01em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.card-publisher {
+  font-family: var(--mono); font-size: 0.62rem; color: var(--gray-400);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.card-tag {
+  font-family: var(--mono); font-size: 0.58rem; padding: 0.18rem 0.45rem;
+  border-radius: 100px; text-transform: uppercase; letter-spacing: 0.04em;
+  font-weight: 500; white-space: nowrap; display: inline-block; margin-top: 0.3rem; align-self: flex-start;
+  background: transparent; color: var(--gray-300); border: 1px solid var(--gray-100);
+}
+.card-desc {
+  font-size: 0.78rem; line-height: 1.5; color: var(--gray-600);
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* ── SCORE ROW ── */
+.card-score-row {
+  display: flex; align-items: center; gap: 0.5rem;
+  padding-top: 0.5rem; border-top: 1px solid var(--gray-100); margin-top: auto;
+}
+.rating-boxes { display: flex; gap: 3px; }
+.rating-box {
+  width: 18px; height: 18px; position: relative; flex-shrink: 0;
+}
+.rating-box svg { width: 18px; height: 18px; display: block; }
+.rating-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+.rating-bg svg path { fill: #e6e6e6; }
+.rating-fill {
+  position: absolute; top: 0; left: 0; height: 100%; overflow: hidden;
+  width: 0; transition: width 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.rating-fill svg path { fill: var(--gray-200); }
+.rating-fill.trusted svg path { fill: #0dc956; }
+.rating-fill.caution svg path { fill: #f7931e; }
+.rating-fill.blocked svg path { fill: #d03a3d; }
+.score-num {
+  font-family: var(--mono); font-size: 0.82rem; font-weight: 600;
+  letter-spacing: -0.02em;
+}
+.score-num.trusted { color: #0dc956; }
+.score-num.caution { color: #f7931e; }
+.score-num.blocked { color: #d03a3d; }
+.card-updated {
+  font-family: var(--mono); font-size: 0.58rem; color: var(--gray-400);
+  margin-left: auto; white-space: nowrap;
+}
+
+/* ── LOAD MORE ── */
+.load-sentinel { height: 1px; }
+.loading-indicator {
+  text-align: center; padding: 2rem;
+  font-family: var(--mono); font-size: 0.72rem; color: var(--gray-400);
+}
+.loading-indicator.hidden { display: none; }
+.spinner {
+  display: inline-block; width: 18px; height: 18px;
+  border: 2px solid var(--gray-200); border-top-color: var(--blue);
+  border-radius: 50%; animation: spin 0.7s linear infinite;
+  vertical-align: middle; margin-right: 0.5rem;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.end-message {
+  text-align: center; padding: 2rem;
+  font-family: var(--mono); font-size: 0.72rem; color: var(--gray-400);
+  display: none;
+}
+
+/* ── FOOTER ── */
+.page-footer {
+  max-width: 1400px; margin: 0 auto; padding: 1.5rem 2rem;
+  border-top: 1px solid var(--gray-200);
+  display: flex; align-items: center; justify-content: space-between;
+}
+.footer-left {
+  display: flex; align-items: center; gap: 0.6rem;
+  font-family: var(--mono); font-size: 0.68rem; color: var(--gray-400);
+}
+.footer-links { display: flex; gap: 1.25rem; }
+.footer-links a {
+  font-family: var(--mono); font-size: 0.68rem; color: var(--gray-400);
+  text-decoration: none; transition: color 0.15s;
+}
+.footer-links a:hover { color: var(--blue); }
+
+/* ── EMPTY STATE ── */
+.empty-state {
+  text-align: center; padding: 4rem 2rem; display: none;
+}
+.empty-state svg { color: var(--gray-300); margin-bottom: 1rem; }
+.empty-state h3 {
+  font-size: 1rem; font-weight: 600; color: var(--gray-600); margin-bottom: 0.35rem;
+}
+.empty-state p {
+  font-family: var(--mono); font-size: 0.72rem; color: var(--gray-400);
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 1100px) {
+  .card-grid { grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); }
+}
+@media (max-width: 768px) {
+  .nav-links { display: none; }
+  .burger { display: flex; }
+  nav { padding: 0 1rem; }
+  .toolbar { padding: 0.75rem 1rem; }
+  .grid-container { padding: 1rem 1rem 4rem; }
+  .search-box { min-width: 180px; flex: 1; }
+  .card-grid { grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 0.5rem; }
+}
+@media (max-width: 480px) {
+  .card-grid { grid-template-columns: 1fr 1fr; }
+  .card { padding: 0.85rem; }
+  .card-desc { -webkit-line-clamp: 1; font-size: 0.72rem; }
+}
+/* ── DISCLAIMER MODAL ── */
+.modal-overlay{position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.55);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;transition:opacity .3s}
+.modal-overlay.show{opacity:1}
+.modal-overlay.hide{display:none}
+.modal{background:var(--white);border-radius:16px;max-width:520px;width:100%;max-height:85vh;display:flex;flex-direction:column;box-shadow:0 24px 80px rgba(0,0,0,.2);transform:translateY(12px);transition:transform .3s}
+.modal-overlay.show .modal{transform:translateY(0)}
+.modal-head{padding:28px 28px 0;display:flex;align-items:center;gap:12px}
+.modal-icon{width:40px;height:40px;border-radius:10px;background:var(--amber-dim);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.modal-icon svg{width:20px;height:20px;color:var(--amber)}
+.modal-head h2{font-size:18px;font-weight:700;letter-spacing:-.5px;line-height:1.2}
+.modal-body{padding:20px 28px;overflow-y:auto;flex:1}
+.modal-body p{font-size:13.5px;color:var(--gray-600);line-height:1.65;margin-bottom:12px}
+.modal-body p:last-child{margin-bottom:0}
+.modal-body strong{color:var(--gray-800);font-weight:600}
+.modal-terms{background:var(--gray-50);border:1px solid var(--gray-200);border-radius:10px;padding:16px;margin:16px 0 0;max-height:200px;overflow-y:auto}
+.modal-terms ol{padding-left:20px;display:flex;flex-direction:column;gap:8px}
+.modal-terms li{font-size:12.5px;color:var(--gray-600);line-height:1.6}
+.modal-foot{padding:20px 28px 28px;display:flex;flex-direction:column;gap:10px}
+.modal-check{display:flex;align-items:flex-start;gap:10px;cursor:pointer;-webkit-user-select:none;user-select:none}
+.modal-check input{margin-top:3px;accent-color:var(--blue);width:16px;height:16px;flex-shrink:0}
+.modal-check span{font-size:13px;color:var(--gray-600);line-height:1.5}
+.modal-btn{width:100%;padding:13px;border:none;border-radius:10px;font-family:var(--sans);font-size:14px;font-weight:600;cursor:pointer;transition:all .2s}
+.modal-btn.primary{background:var(--gray-800);color:var(--white)}
+.modal-btn.primary:hover:not(:disabled){background:var(--black)}
+.modal-btn.primary:disabled{opacity:.35;cursor:not-allowed}
+.modal-btn.secondary{background:none;color:var(--gray-500);font-weight:500}
+.modal-btn.secondary:hover{color:var(--gray-800)}
+@media(max-width:768px){.modal{max-width:100%;border-radius:12px}.modal-head{padding:20px 20px 0}.modal-body{padding:16px 20px}.modal-foot{padding:16px 20px 20px}.modal-terms{max-height:160px}}
+</style>
+</head>
+<body>
+
+<!-- DISCLAIMER MODAL -->
+<div class="modal-overlay hide" id="disclaimerModal">
+<div class="modal">
+  <div class="modal-head">
+    <div class="modal-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div>
+    <h2>Before you use the Trust Index</h2>
+  </div>
+  <div class="modal-body">
+    <p>The Fabric Trust Index provides <strong>automated, informational trust scores</strong> for AI services, models, and MCP tools. Please read and accept the following before continuing:</p>
+    <div class="modal-terms">
+    <ol>
+      <li><strong>Scores are informational, not guarantees.</strong> A high trust score does not guarantee that a service is safe, secure, or free from vulnerabilities. Fabric scores reflect a point-in-time assessment derived from publicly available data and are subject to change without notice.</li>
+      <li><strong>Fabric does not endorse third-party services.</strong> Listing or scoring a service on the Trust Index does not constitute an endorsement, recommendation, or certification by Fabric or Motherbird Pty Ltd. We have no commercial relationship with scored providers unless explicitly stated.</li>
+      <li><strong>You assume all risk.</strong> Any decision to install, integrate, or interact with a service listed on the Trust Index is made at your own risk. Fabric shall not be liable for any loss, damage, data breach, or security incident resulting from your use of or reliance on any third-party service, regardless of its trust score.</li>
+      <li><strong>Scores can be wrong.</strong> Automated scoring has inherent limitations. Malicious actors may evade detection. Data sources may be incomplete, delayed, or inaccurate. A trusted score today does not guarantee safety tomorrow.</li>
+      <li><strong>Not professional advice.</strong> Trust scores do not constitute security audits, legal advice, or professional recommendations. For critical infrastructure decisions, you should conduct your own independent due diligence.</li>
+      <li><strong>Limitation of liability.</strong> To the maximum extent permitted by law, Fabric and Motherbird Pty Ltd shall not be liable for any direct, indirect, incidental, special, consequential, or punitive damages arising from your use of or reliance on the Trust Index.</li>
+    </ol>
+    </div>
+  </div>
+  <div class="modal-foot">
+    <label class="modal-check">
+      <input type="checkbox" id="disclaimerCheck">
+      <span>I have read and understand that trust scores are informational only and do not guarantee the safety of any service.</span>
+    </label>
+    <button class="modal-btn primary" id="disclaimerAccept" disabled>Accept &amp; continue</button>
+    <button class="modal-btn secondary" id="disclaimerDecline">Leave Trust Index</button>
+  </div>
+</div>
+</div>
+
+<!-- ═══ NAV ═══ -->
+<nav>
+  <div class="nav-inner">
+  <div class="nav-left">
+    <a href="https://www.fabriclayer.ai" class="nav-logo">
+      <svg fill="currentColor" viewBox="0 0 532.89 134.52">
+  <g>
+    <polygon points="81.89 134.52 57.62 91.2 57.47 134.36 44.03 134.42 44.02 89.24 70.74 89.18 96.4 134.26 81.89 134.52"/>
+    <polygon points="11.23 30.83 22.93 22.12 67.73 42.65 42.7 7.77 53.47 0 80.03 36.5 58.51 52.19 11.23 30.83"/>
+    <polygon points="119.88 23.38 130.65 31.15 104.1 67.74 82.61 52.07 88.3 .43 100.17 8.99 94.53 57.97 119.88 23.38"/>
+    <polygon points="128.82 101.47 124.85 114.19 81.92 100.27 90.13 74.95 140.86 64.46 136.53 78.35 88.31 88.08 128.82 101.47"/>
+    <polygon points="11.54 99.78 45.11 63.3 4.15 76.4 0 63.79 42.95 49.87 51.16 75.15 16.22 113.51 11.54 99.78"/>
+  </g>
+  <g>
+    <path d="M184.55,115.05v-56.57h-19.23v-12.12h19.23v-15.05c0-4.18,1.25-7.52,3.76-10.03,2.51-2.51,5.85-3.76,10.03-3.76h17.7v12.12h-13.1c-2.7,0-4.04,1.39-4.04,4.18v12.54h19.79v12.12h-19.79v56.57h-14.35Z"/>
+    <path d="M249.34,117c-4.92,0-9.31-.84-13.17-2.51-3.86-1.67-6.92-4.13-9.2-7.38-2.28-3.25-3.41-7.2-3.41-11.84s1.14-8.66,3.41-11.77c2.28-3.11,5.39-5.46,9.34-7.04,3.95-1.58,8.43-2.37,13.45-2.37h20.9v-4.46c0-3.99-1.21-7.2-3.62-9.61-2.42-2.41-6.13-3.62-11.15-3.62s-8.69,1.16-11.29,3.48c-2.6,2.32-4.32,5.34-5.16,9.06l-13.38-4.32c1.11-3.71,2.9-7.08,5.36-10.1,2.46-3.02,5.73-5.46,9.82-7.32,4.09-1.86,9.01-2.79,14.77-2.79,8.92,0,15.93,2.28,21.04,6.83,5.11,4.55,7.66,11.01,7.66,19.37v28.29c0,2.79,1.3,4.18,3.9,4.18h5.85v11.98h-10.73c-3.25,0-5.9-.84-7.94-2.51-2.04-1.67-3.07-3.95-3.07-6.83v-.42h-2.09c-.74,1.39-1.86,3.02-3.34,4.88-1.49,1.86-3.67,3.46-6.55,4.81-2.88,1.35-6.69,2.02-11.43,2.02ZM251.43,105.16c5.76,0,10.4-1.65,13.93-4.95,3.53-3.3,5.29-7.82,5.29-13.58v-1.39h-20.06c-3.81,0-6.88.81-9.2,2.44-2.32,1.63-3.48,4.02-3.48,7.18s1.21,5.67,3.62,7.52c2.41,1.86,5.71,2.79,9.89,2.79Z"/>
+    <path d="M342.84,117c-6.69,0-11.82-1.21-15.4-3.62-3.58-2.41-6.25-5.11-8.01-8.08h-2.23v9.75h-14.07V17.52h14.35v38.18h2.23c1.11-1.86,2.6-3.64,4.46-5.36,1.86-1.72,4.32-3.14,7.38-4.25,3.07-1.11,6.83-1.67,11.29-1.67,5.76,0,11.05,1.39,15.88,4.18,4.83,2.79,8.68,6.83,11.56,12.12,2.88,5.29,4.32,11.61,4.32,18.95v2.09c0,7.43-1.46,13.77-4.39,19.02-2.93,5.25-6.78,9.27-11.56,12.05-4.79,2.79-10.06,4.18-15.81,4.18ZM338.66,104.46c6.22,0,11.36-2,15.4-5.99,4.04-3.99,6.06-9.71,6.06-17.14v-1.25c0-7.34-2-13-5.99-17-4-3.99-9.15-5.99-15.47-5.99s-11.22,2-15.26,5.99c-4.04,3.99-6.06,9.66-6.06,17v1.25c0,7.43,2.02,13.15,6.06,17.14,4.04,4,9.13,5.99,15.26,5.99Z"/>
+    <path d="M386.73,115.05V46.36h14.07v8.08h2.23c1.11-2.88,2.9-4.99,5.36-6.34,2.46-1.35,5.5-2.02,9.13-2.02h8.22v12.96h-8.78c-4.65,0-8.45,1.28-11.43,3.83-2.97,2.56-4.46,6.48-4.46,11.77v40.41h-14.35Z"/>
+    <path d="M444.83,37.02c-2.79,0-5.13-.91-7.04-2.72-1.91-1.81-2.86-4.16-2.86-7.04s.95-5.23,2.86-7.04c1.9-1.81,4.25-2.72,7.04-2.72s5.25.91,7.11,2.72c1.86,1.81,2.79,4.16,2.79,7.04s-.93,5.23-2.79,7.04c-1.86,1.81-4.23,2.72-7.11,2.72ZM437.59,115.05V46.36h14.35v68.69h-14.35Z"/>
+    <path d="M498.89,117c-6.6,0-12.56-1.39-17.9-4.18-5.34-2.79-9.57-6.83-12.68-12.12-3.11-5.29-4.67-11.66-4.67-19.09v-1.81c0-7.43,1.55-13.77,4.67-19.02,3.11-5.25,7.34-9.29,12.68-12.12,5.34-2.83,11.31-4.25,17.9-4.25s12.21,1.21,16.86,3.62c4.64,2.42,8.38,5.62,11.22,9.61,2.83,3.99,4.67,8.41,5.5,13.24l-13.93,2.93c-.47-3.07-1.44-5.85-2.93-8.36-1.49-2.51-3.58-4.5-6.27-5.99-2.7-1.48-6.08-2.23-10.17-2.23s-7.59.91-10.8,2.72c-3.2,1.81-5.74,4.41-7.59,7.8-1.86,3.39-2.79,7.5-2.79,12.33v1.25c0,4.83.93,8.97,2.79,12.4,1.86,3.44,4.39,6.04,7.59,7.8,3.2,1.77,6.8,2.65,10.8,2.65,6.04,0,10.64-1.55,13.79-4.67,3.16-3.11,5.16-7.08,5.99-11.91l13.93,3.2c-1.11,4.74-3.09,9.1-5.92,13.1-2.83,4-6.57,7.18-11.22,9.54-4.65,2.37-10.27,3.55-16.86,3.55Z"/>
+  </g>
+</svg>
+      </a>
+      <span class="nav-logo-text">trust index</span>
+  </div>
+  <div class="nav-right">
+    <div class="nav-links">
+      <a href="https://www.fabriclayer.ai">Home</a>
+      <a href="api.html">API</a>
+      <a href="docs.html">Docs</a>
+      <a href="blog.html">Blog</a>
+    
+    </div>
+    <button class="burger" id="burgerBtn" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+  </div>
+</nav>
+<div class="mobile-menu" id="mobileMenu">
+  <a href="https://www.fabriclayer.ai">Home</a>
+  <a href="api.html">API</a>
+  <a href="docs.html">Docs</a>
+  <a href="blog.html">Blog</a>
+
+</div>
+
+
+
+<!-- ═══ TOOLBAR ═══ -->
+<div class="toolbar">
+  <div class="toolbar-row">
+    <div class="search-box">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+      <input type="text" id="searchInput" placeholder="Search services, models, agents...">
+      <button class="search-clear" id="searchClear" aria-label="Clear search">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18"/><path d="M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <div class="status-filters">
+      <div class="status-pill trusted active" data-status="trusted">Trusted</div>
+      <div class="status-pill caution active" data-status="caution">Caution</div>
+      <div class="status-pill blocked active" data-status="blocked">Blocked</div>
+      <div class="custom-select" id="categorySelect" style="margin-left:0.5rem">
+        <div class="select-trigger" data-value="all">All Categories</div>
+        <div class="select-menu">
+          <div class="select-option active" data-value="all">All Categories</div>
+          <div class="select-option" data-value="image-generation">Image Gen</div>
+          <div class="select-option" data-value="llm">LLMs</div>
+          <div class="select-option" data-value="web-search">Search</div>
+          <div class="select-option" data-value="code">Code</div>
+          <div class="select-option" data-value="speech">Speech</div>
+          <div class="select-option" data-value="data-api">Data APIs</div>
+          <div class="select-option" data-value="agent">Agents</div>
+          <div class="select-option" data-value="embedding">Embeddings</div>
+          <div class="select-option" data-value="vision">Vision</div>
+          <div class="select-option" data-value="infra">Infra</div>
+        </div>
+      </div>
+    </div>
+    <div class="custom-select" id="sortSelect">
+      <div class="select-trigger" data-value="score-desc">Highest trust</div>
+      <div class="select-menu align-right">
+        <div class="select-option active" data-value="score-desc">Highest trust</div>
+        <div class="select-option" data-value="score-asc">Lowest trust</div>
+        <div class="select-option" data-value="name-asc">A → Z</div>
+        <div class="select-option" data-value="name-desc">Z → A</div>
+        <div class="select-option" data-value="updated">Recently updated</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ GRID ═══ -->
+<div class="grid-container">
+  <div class="card-grid" id="cardGrid"></div>
+  <div class="empty-state" id="emptyState">
+    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/><path d="M8 11h6"/></svg>
+    <h3>No services found</h3>
+    <p>Try adjusting your search or filters</p>
+  </div>
+  <div class="loading-indicator" id="loadingIndicator"><span class="spinner"></span>Loading more services...</div>
+  <div class="end-message" id="endMessage">You've seen all matching services</div>
+  <div class="load-sentinel" id="loadSentinel"></div>
+</div>
+
+<!-- ═══ FOOTER ═══ -->
+<div class="page-footer">
+  <div class="footer-left">
+    © 2026 Fabric Technology Ltd. Built by Motherbird
+  </div>
+  <div class="footer-links">
+    <a href="#">Docs</a>
+    <a href="#">GitHub</a>
+    <a href="#">Twitter</a>
+    <a href="#">API</a>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════
+// MOCK DATA — 80 services across categories
+// ═══════════════════════════════════════════════
+const SERVICES = [
+  {n:"flux-pro",pub:"Black Forest Labs",cat:"image-generation",tag:"tag-gen",desc:"State-of-the-art text-to-image model with exceptional prompt adherence and photorealistic output quality.",s:[4.8,4.5,3.4,4.2,3.7,4.3],icon:"◆",ic:"blue"},
+  {n:"stable-diffusion-xl",pub:"Stability AI",cat:"image-generation",tag:"tag-gen",desc:"Open-weight image generation model with extensive community ecosystem and fine-tuning support.",s:[4.6,4.2,4.1,4.8,4.9,4.0],icon:"◆",ic:"blue"},
+  {n:"dall-e-3",pub:"OpenAI",cat:"image-generation",tag:"tag-gen",desc:"Advanced text-to-image system with built-in safety features and natural language understanding.",s:[4.9,4.7,3.8,4.5,2.1,4.8],icon:"◆",ic:"blue"},
+  {n:"midjourney-api",pub:"Midjourney Inc",cat:"image-generation",tag:"tag-gen",desc:"Artistic image generation known for aesthetic quality and creative interpretation of prompts.",s:[4.7,4.3,3.2,4.9,1.5,4.5],icon:"◆",ic:"blue"},
+  {n:"ideogram-v2",pub:"Ideogram AI",cat:"image-generation",tag:"tag-gen",desc:"Text rendering specialist with strong typography capabilities in generated images.",s:[4.5,4.0,4.2,3.1,3.5,3.8],icon:"◆",ic:"blue"},
+  {n:"gpt-4o",pub:"OpenAI",cat:"llm",tag:"tag-llm",desc:"Multimodal large language model with vision, audio, and text capabilities in a single model.",s:[4.9,4.8,4.5,5.0,2.0,5.0],icon:"◇",ic:"blue"},
+  {n:"claude-4-sonnet",pub:"Anthropic",cat:"llm",tag:"tag-llm",desc:"Constitutional AI model optimized for helpfulness, harmlessness, and honesty with strong reasoning.",s:[4.9,4.7,4.8,4.8,3.2,4.9],icon:"◇",ic:"blue"},
+  {n:"gemini-2.0-flash",pub:"Google DeepMind",cat:"llm",tag:"tag-llm",desc:"Fast multimodal model with native tool use, code execution, and grounding capabilities.",s:[4.8,4.6,4.5,4.7,2.5,5.0],icon:"◇",ic:"blue"},
+  {n:"llama-3.3-70b",pub:"Meta AI",cat:"llm",tag:"tag-llm",desc:"Open-weight large language model with strong reasoning and multilingual support.",s:[4.7,4.1,4.2,4.9,5.0,4.8],icon:"◇",ic:"green"},
+  {n:"mistral-large",pub:"Mistral AI",cat:"llm",tag:"tag-llm",desc:"European frontier model with strong multilingual capabilities and function calling.",s:[4.6,4.3,4.4,4.2,4.8,4.2],icon:"◇",ic:"green"},
+  {n:"qwen-2.5-72b",pub:"Alibaba Cloud",cat:"llm",tag:"tag-llm",desc:"Multilingual model with strong coding and mathematical reasoning capabilities.",s:[4.4,3.9,4.6,4.0,4.7,3.8],icon:"◇",ic:""},
+  {n:"deepseek-v3",pub:"DeepSeek",cat:"llm",tag:"tag-llm",desc:"Efficient mixture-of-experts model with strong coding and reasoning at low cost.",s:[4.3,3.5,4.8,4.6,5.0,3.2],icon:"◇",ic:""},
+  {n:"command-r-plus",pub:"Cohere",cat:"llm",tag:"tag-llm",desc:"Enterprise-focused model optimized for RAG, tool use, and business applications.",s:[4.5,4.4,3.9,3.5,4.0,4.5],icon:"◇",ic:""},
+  {n:"brave-search",pub:"Brave Software",cat:"web-search",tag:"tag-search",desc:"Privacy-focused web search API with independent index and no tracking.",s:[4.8,4.9,4.2,4.0,4.5,4.7],icon:"⊕",ic:"green"},
+  {n:"tavily-ai",pub:"Tavily",cat:"web-search",tag:"tag-search",desc:"AI-optimized search API designed specifically for LLM and agent consumption.",s:[4.5,4.3,4.6,3.2,4.0,3.5],icon:"⊕",ic:"green"},
+  {n:"serper-api",pub:"Serper",cat:"web-search",tag:"tag-search",desc:"Google Search results API with structured output for programmatic consumption.",s:[4.2,4.5,3.8,3.8,3.0,3.2],icon:"⊕",ic:""},
+  {n:"exa-search",pub:"Exa AI",cat:"web-search",tag:"tag-search",desc:"Neural search engine that understands meaning, not just keywords.",s:[4.4,4.0,4.5,2.8,4.2,3.0],icon:"⊕",ic:""},
+  {n:"firecrawl",pub:"Mendable",cat:"web-search",tag:"tag-search",desc:"Web scraping and crawling API that converts any URL to clean markdown for LLMs.",s:[4.3,4.1,4.8,3.5,4.5,3.2],icon:"⊕",ic:"green"},
+  {n:"cursor-mcp",pub:"Anysphere",cat:"code",tag:"tag-code",desc:"Context protocol integration for the Cursor AI code editor with smart completions.",s:[4.6,4.2,4.8,4.7,3.8,4.0],icon:"⟨⟩",ic:"pink"},
+  {n:"github-copilot-ext",pub:"GitHub",cat:"code",tag:"tag-code",desc:"AI pair programmer extensions with code completion, chat, and workspace understanding.",s:[4.8,4.7,4.3,5.0,3.5,5.0],icon:"⟨⟩",ic:"pink"},
+  {n:"codeium-api",pub:"Exafunction",cat:"code",tag:"tag-code",desc:"Free AI code completion and chat with support for 70+ programming languages.",s:[4.3,4.0,4.5,4.2,4.0,3.5],icon:"⟨⟩",ic:""},
+  {n:"sourcegraph-cody",pub:"Sourcegraph",cat:"code",tag:"tag-code",desc:"AI coding assistant with codebase-aware context and multi-repo understanding.",s:[4.4,4.1,4.2,3.5,4.5,4.2],icon:"⟨⟩",ic:""},
+  {n:"tabnine-pro",pub:"Tabnine",cat:"code",tag:"tag-code",desc:"AI code assistant trained on permissively licensed code with privacy-first approach.",s:[4.2,3.8,3.5,3.0,3.8,3.8],icon:"⟨⟩",ic:""},
+  {n:"deepgram-nova",pub:"Deepgram",cat:"speech",tag:"tag-speech",desc:"Fast and accurate speech-to-text with real-time streaming and speaker diarization.",s:[4.7,4.8,4.3,4.0,4.2,4.5],icon:"♫",ic:"green"},
+  {n:"elevenlabs-v3",pub:"ElevenLabs",cat:"speech",tag:"tag-speech",desc:"Ultra-realistic text-to-speech with voice cloning and emotional expression.",s:[4.8,4.5,4.6,4.8,3.5,4.3],icon:"♫",ic:"green"},
+  {n:"whisper-large-v3",pub:"OpenAI",cat:"speech",tag:"tag-speech",desc:"Open-weight speech recognition model with multilingual transcription and translation.",s:[4.6,4.1,3.2,4.9,5.0,4.8],icon:"♫",ic:""},
+  {n:"assemblyai",pub:"AssemblyAI",cat:"speech",tag:"tag-speech",desc:"Speech AI platform with transcription, summarization, and content moderation.",s:[4.5,4.6,4.1,3.8,3.5,4.2],icon:"♫",ic:""},
+  {n:"coingecko-api",pub:"CoinGecko",cat:"data-api",tag:"tag-data",desc:"Comprehensive cryptocurrency data API with prices, volume, and market cap for 10,000+ coins.",s:[4.3,4.7,3.8,4.5,4.0,4.5],icon:"◈",ic:"amber"},
+  {n:"sendgrid",pub:"Twilio",cat:"data-api",tag:"tag-data",desc:"Cloud-based email delivery service with analytics, templates, and deliverability tools.",s:[4.5,4.8,3.5,4.8,3.8,5.0],icon:"◈",ic:"amber"},
+  {n:"stripe-api",pub:"Stripe",cat:"data-api",tag:"tag-data",desc:"Payment processing platform with subscription billing, invoicing, and financial reporting.",s:[4.9,4.9,4.5,5.0,4.2,5.0],icon:"◈",ic:"amber"},
+  {n:"twilio-api",pub:"Twilio",cat:"data-api",tag:"tag-data",desc:"Cloud communications platform for SMS, voice, video, and authentication.",s:[4.6,4.7,3.8,4.8,3.5,5.0],icon:"◈",ic:"amber"},
+  {n:"weather-api",pub:"WeatherAPI",cat:"data-api",tag:"tag-data",desc:"Real-time weather data, forecasts, astronomy, and historical weather for any location.",s:[4.0,4.5,3.2,3.8,3.5,3.5],icon:"◈",ic:""},
+  {n:"newsapi",pub:"NewsAPI.org",cat:"data-api",tag:"tag-data",desc:"Search worldwide news articles and headlines from 150,000+ sources.",s:[3.8,4.0,2.5,3.5,3.2,3.0],icon:"◈",ic:""},
+  {n:"openai-embeddings",pub:"OpenAI",cat:"embedding",tag:"tag-embed",desc:"Text embedding model for semantic search, clustering, and classification tasks.",s:[4.8,4.7,4.0,5.0,2.2,5.0],icon:"⊡",ic:"blue"},
+  {n:"cohere-embed-v4",pub:"Cohere",cat:"embedding",tag:"tag-embed",desc:"Multilingual embedding model with compression and search optimization features.",s:[4.6,4.3,4.5,3.8,4.0,4.5],icon:"⊡",ic:""},
+  {n:"voyage-3",pub:"Voyage AI",cat:"embedding",tag:"tag-embed",desc:"Domain-specialized embedding models for code, legal, finance, and multilingual text.",s:[4.5,4.2,4.6,2.5,3.8,3.2],icon:"⊡",ic:""},
+  {n:"jina-embeddings-v3",pub:"Jina AI",cat:"embedding",tag:"tag-embed",desc:"Open-source multilingual embeddings with late interaction for precise retrieval.",s:[4.3,3.8,4.7,3.5,5.0,3.5],icon:"⊡",ic:"green"},
+  {n:"gpt-4-vision",pub:"OpenAI",cat:"vision",tag:"tag-vision",desc:"Multimodal vision model for image understanding, OCR, and visual question answering.",s:[4.9,4.7,4.2,5.0,2.0,5.0],icon:"◉",ic:"pink"},
+  {n:"claude-vision",pub:"Anthropic",cat:"vision",tag:"tag-vision",desc:"Vision capabilities in Claude models for document analysis and image understanding.",s:[4.8,4.6,4.7,4.8,3.0,4.9],icon:"◉",ic:"pink"},
+  {n:"llava-next",pub:"ByteDance",cat:"vision",tag:"tag-vision",desc:"Open-source large multimodal model with strong visual reasoning capabilities.",s:[4.2,3.5,4.4,4.0,5.0,3.2],icon:"◉",ic:"green"},
+  {n:"moondream-v2",pub:"Vikhyat",cat:"vision",tag:"tag-vision",desc:"Tiny but capable vision-language model optimized for edge deployment.",s:[3.8,3.2,4.3,3.0,5.0,2.5],icon:"◉",ic:""},
+  {n:"crewai-mcp",pub:"CrewAI",cat:"agent",tag:"tag-agent",desc:"Multi-agent orchestration framework with role-based collaboration and task delegation.",s:[4.3,3.8,4.7,4.2,4.8,3.5],icon:"⚡",ic:"blue"},
+  {n:"langchain-tools",pub:"LangChain",cat:"agent",tag:"tag-agent",desc:"Agent framework with tool integration, memory management, and chain composition.",s:[4.1,3.6,4.5,4.9,5.0,4.0],icon:"⚡",ic:"green"},
+  {n:"autogen-studio",pub:"Microsoft",cat:"agent",tag:"tag-agent",desc:"Multi-agent conversation framework with code execution and human-in-the-loop support.",s:[4.2,3.5,4.3,4.0,4.8,5.0],icon:"⚡",ic:"blue"},
+  {n:"openai-assistants",pub:"OpenAI",cat:"agent",tag:"tag-agent",desc:"Managed agent API with tool use, file search, code interpreter, and persistent threads.",s:[4.7,4.6,4.2,4.8,2.5,5.0],icon:"⚡",ic:"blue"},
+  {n:"phidata",pub:"Phidata",cat:"agent",tag:"tag-agent",desc:"Framework for building AI assistants with memory, knowledge, and tools.",s:[4.0,3.5,4.6,3.2,4.8,2.8],icon:"⚡",ic:""},
+  {n:"replicate",pub:"Replicate Inc",cat:"infra",tag:"tag-infra",desc:"Run and fine-tune open-source ML models with a cloud API. Pay per second.",s:[4.5,4.4,4.3,4.5,4.0,4.5],icon:"△",ic:""},
+  {n:"huggingface-inference",pub:"Hugging Face",cat:"infra",tag:"tag-infra",desc:"Serverless inference API for 200k+ models with automatic scaling.",s:[4.3,4.0,4.5,5.0,5.0,4.8],icon:"△",ic:"green"},
+  {n:"modal-serverless",pub:"Modal Labs",cat:"infra",tag:"tag-infra",desc:"Serverless cloud for ML with GPU containers, job scheduling, and web endpoints.",s:[4.6,4.5,4.8,3.5,4.2,3.5],icon:"△",ic:""},
+  {n:"together-ai",pub:"Together AI",cat:"infra",tag:"tag-infra",desc:"Cloud platform for running and fine-tuning open-source models at scale.",s:[4.4,4.3,4.5,3.8,4.0,3.8],icon:"△",ic:""},
+  {n:"runpod",pub:"RunPod Inc",cat:"infra",tag:"tag-infra",desc:"GPU cloud computing for AI inference and training with serverless endpoints.",s:[4.2,4.0,4.1,3.5,3.5,3.2],icon:"△",ic:""},
+  {n:"groq-api",pub:"Groq Inc",cat:"infra",tag:"tag-infra",desc:"Ultra-fast LLM inference on custom LPU hardware with sub-100ms latency.",s:[4.5,4.9,4.3,4.0,3.2,3.8],icon:"△",ic:""},
+  {n:"cerebras-inference",pub:"Cerebras",cat:"infra",tag:"tag-infra",desc:"Wafer-scale inference engine for LLMs with industry-leading throughput.",s:[4.4,4.8,4.0,2.8,3.0,3.5],icon:"△",ic:""},
+  {n:"recraft-v3",pub:"Recraft AI",cat:"image-generation",tag:"tag-gen",desc:"Design-focused image generation with vector output and brand consistency.",s:[4.3,3.8,4.5,2.5,3.8,3.0],icon:"◆",ic:""},
+  {n:"playground-v3",pub:"Playground AI",cat:"image-generation",tag:"tag-gen",desc:"Creative image generation model optimized for artistic and design applications.",s:[4.1,3.5,3.8,3.0,3.5,3.2],icon:"◆",ic:""},
+  {n:"perplexity-api",pub:"Perplexity AI",cat:"web-search",tag:"tag-search",desc:"Answer engine API that combines search with AI-powered synthesis and citations.",s:[4.6,4.4,4.7,4.2,2.8,4.0],icon:"⊕",ic:"blue"},
+  {n:"jina-reader",pub:"Jina AI",cat:"web-search",tag:"tag-search",desc:"Convert any URL to LLM-ready markdown with a simple prefix API.",s:[4.2,3.9,4.8,3.0,5.0,3.5],icon:"⊕",ic:"green"},
+  {n:"suno-v4",pub:"Suno AI",cat:"speech",tag:"tag-speech",desc:"AI music generation with vocals, instruments, and full song composition.",s:[4.4,4.0,4.5,4.5,2.5,3.5],icon:"♫",ic:"pink"},
+  {n:"cartesia-sonic",pub:"Cartesia",cat:"speech",tag:"tag-speech",desc:"Real-time text-to-speech with sub-100ms latency and emotional control.",s:[4.5,4.6,4.7,2.2,3.8,2.8],icon:"♫",ic:""},
+  {n:"e2b-sandbox",pub:"E2B Dev",cat:"code",tag:"tag-code",desc:"Secure cloud sandboxes for AI-generated code execution with full OS access.",s:[4.5,4.3,4.8,3.2,4.8,3.0],icon:"⟨⟩",ic:"green"},
+  {n:"snyk-api",pub:"Snyk",cat:"code",tag:"tag-code",desc:"Developer security platform for finding and fixing vulnerabilities in dependencies.",s:[4.8,4.6,4.0,4.2,3.5,4.8],icon:"⟨⟩",ic:""},
+  {n:"wolfram-alpha-api",pub:"Wolfram Research",cat:"data-api",tag:"tag-data",desc:"Computational knowledge engine for math, science, and real-world data queries.",s:[4.7,4.5,2.8,4.0,3.0,5.0],icon:"◈",ic:"amber"},
+  {n:"polygon-io",pub:"Polygon.io",cat:"data-api",tag:"tag-data",desc:"Real-time and historical market data for stocks, options, crypto, and forex.",s:[4.5,4.7,4.0,3.8,3.5,4.2],icon:"◈",ic:"amber"},
+  {n:"clearbit-api",pub:"HubSpot",cat:"data-api",tag:"tag-data",desc:"Business intelligence data API for company and contact enrichment.",s:[4.2,4.4,3.0,3.5,3.0,4.5],icon:"◈",ic:""},
+  {n:"malicious-scraper-x",pub:"anon_user_847",cat:"data-api",tag:"tag-data",desc:"Web scraping tool with credential harvesting capabilities flagged by security researchers.",s:[0.5,1.2,0.8,0.3,0.2,0.1],icon:"◈",ic:""},
+  {n:"fake-gpt-wrapper",pub:"unknown_dev",cat:"llm",tag:"tag-llm",desc:"Unofficial GPT wrapper service with no authentication and data logging concerns.",s:[1.0,0.8,0.5,0.5,0.0,0.2],icon:"◇",ic:""},
+  {n:"prompt-inject-tool",pub:"deleted_account",cat:"agent",tag:"tag-agent",desc:"MCP skill flagged by ClawHavoc for prompt injection and credential exfiltration attempts.",s:[0.3,0.5,0.2,0.2,0.0,0.0],icon:"⚡",ic:""},
+  {n:"crypto-drain-agent",pub:"anon_1337",cat:"agent",tag:"tag-agent",desc:"Agent service flagged for unauthorized wallet access and fund redirection patterns.",s:[0.2,0.3,0.1,0.1,0.0,0.0],icon:"⚡",ic:""},
+  {n:"qdrant-cloud",pub:"Qdrant",cat:"infra",tag:"tag-infra",desc:"High-performance vector database for similarity search and AI applications.",s:[4.5,4.4,4.6,3.8,4.8,3.5],icon:"△",ic:"green"},
+  {n:"pinecone",pub:"Pinecone",cat:"infra",tag:"tag-infra",desc:"Managed vector database for high-scale machine learning applications.",s:[4.4,4.5,3.8,4.2,3.2,4.2],icon:"△",ic:""},
+  {n:"weaviate-cloud",pub:"Weaviate",cat:"infra",tag:"tag-infra",desc:"Open-source vector database with built-in vectorization and hybrid search.",s:[4.3,4.1,4.7,3.5,5.0,3.5],icon:"△",ic:"green"},
+  {n:"bark-tts",pub:"Suno AI",cat:"speech",tag:"tag-speech",desc:"Open-source text-to-audio model supporting speech, music, and sound effects.",s:[3.8,2.8,2.5,3.5,5.0,3.5],icon:"♫",ic:"green"},
+  {n:"resend",pub:"Resend Inc",cat:"data-api",tag:"tag-data",desc:"Email API built for developers with React Email templates and deliverability.",s:[4.4,4.5,4.8,3.0,4.5,3.2],icon:"◈",ic:"green"},
+  {n:"neon-db",pub:"Neon Inc",cat:"infra",tag:"tag-infra",desc:"Serverless Postgres with branching, autoscaling, and bottomless storage.",s:[4.5,4.3,4.8,3.8,4.5,3.5],icon:"△",ic:"green"},
+  {n:"upstash",pub:"Upstash",cat:"infra",tag:"tag-infra",desc:"Serverless Redis and Kafka with per-request pricing and global replication.",s:[4.3,4.5,4.5,3.5,4.2,3.2],icon:"△",ic:""},
+  {n:"stability-video",pub:"Stability AI",cat:"image-generation",tag:"tag-gen",desc:"Video generation model for creating short clips from text or image prompts.",s:[4.0,3.2,3.8,3.5,4.5,4.0],icon:"◆",ic:""},
+  {n:"sam-2",pub:"Meta AI",cat:"vision",tag:"tag-vision",desc:"Segment Anything Model 2 for zero-shot image and video segmentation.",s:[4.5,3.8,3.5,4.5,5.0,4.8],icon:"◉",ic:"green"},
+  {n:"octoai",pub:"OctoML",cat:"infra",tag:"tag-infra",desc:"Efficient AI inference platform with model optimization and serverless deployment.",s:[4.2,4.3,4.0,2.8,3.5,3.2],icon:"△",ic:""},
+  {n:"fixie-ai",pub:"Fixie AI",cat:"agent",tag:"tag-agent",desc:"Platform for building natural language agents with custom tools and knowledge.",s:[3.5,3.0,3.2,2.0,3.8,2.5],icon:"⚡",ic:""},
+];
+
+// ═══ SCORE COMPUTATION ═══
+const WEIGHTS = [0.25, 0.20, 0.20, 0.15, 0.10, 0.10];
+function computeScore(signals) {
+  return signals.reduce((sum, s, i) => sum + s * WEIGHTS[i], 0);
+}
+function scoreStatus(score) {
+  if (score >= 4.50) return 'trusted';
+  if (score >= 3.50) return 'caution';
+  return 'blocked';
+}
+function barClass(val) {
+  if (val >= 4.0) return 'high';
+  if (val >= 2.5) return 'med';
+  return 'low';
+}
+
+// Enrich data
+SERVICES.forEach(svc => {
+  svc.score = Math.round(computeScore(svc.s) * 100) / 100;
+  svc.status = scoreStatus(svc.score);
+  svc.updated = ['2h','4h','6h','1d','2d','3d','5d'][Math.floor(Math.random()*7)];
+});
+// Default sort: highest trust
+SERVICES.sort((a, b) => b.score - a.score);
+
+// ═══ STATE ═══
+let currentCat = 'all';
+let currentStatuses = new Set(['trusted','caution','blocked']);
+let currentSearch = '';
+let currentSort = 'score-desc';
+let filtered = [...SERVICES];
+let displayed = 0;
+const PAGE_SIZE = 20;
+
+// ═══ FILTER + SORT ═══
+function applyFilters() {
+  let f = SERVICES.filter(svc => {
+    if (currentCat !== 'all' && svc.cat !== currentCat) return false;
+    if (!currentStatuses.has(svc.status)) return false;
+    if (currentSearch) {
+      const q = currentSearch.toLowerCase();
+      if (!svc.n.includes(q) && !svc.pub.toLowerCase().includes(q) && !svc.desc.toLowerCase().includes(q) && !svc.cat.includes(q)) return false;
+    }
+    return true;
+  });
+
+  // Sort
+  switch (currentSort) {
+    case 'score-desc': f.sort((a,b) => b.score - a.score); break;
+    case 'score-asc': f.sort((a,b) => a.score - b.score); break;
+    case 'name-asc': f.sort((a,b) => a.n.localeCompare(b.n)); break;
+    case 'name-desc': f.sort((a,b) => b.n.localeCompare(a.n)); break;
+    case 'updated': f.sort((a,b) => b.score - a.score); break; // mock
+  }
+
+  filtered = f;
+  displayed = 0;
+  document.getElementById('cardGrid').innerHTML = '';
+
+  document.getElementById('endMessage').style.display = 'none';
+
+  if (f.length === 0) {
+    document.getElementById('emptyState').style.display = 'block';
+    document.getElementById('loadingIndicator').classList.add('hidden');
+  } else {
+    document.getElementById('emptyState').style.display = 'none';
+    loadMore();
+    setTimeout(observeNewCards, 350);
+  }
+}
+
+// ═══ RENDER CARDS ═══
+const RATING_SVG = `<svg viewBox="0 0 123.32 123.32"><path d="M0,14.57v94.17c0,8.05,6.52,14.57,14.57,14.57h94.17c8.05,0,14.57-6.52,14.57-14.57V14.57c0-8.05-6.52-14.57-14.57-14.57H14.57C6.52,0,0,6.52,0,14.57ZM72.96,19.4l7.51,5.41-3.57,30.98,16.03-21.88,6.81,4.91-16.79,23.14-13.59-9.91,3.6-32.65ZM31.62,33.12l28.33,12.98-15.83-22.06,6.82-4.91,16.79,23.08-13.61,9.92-29.9-13.51,7.4-5.5ZM24.42,82.22l21.23-23.06-25.9,8.28-2.63-7.97,27.17-8.81,5.18,15.99-22.09,24.25-2.96-8.68ZM68.91,104.19l-15.35-27.39-.1,27.29-8.49.04v-28.57s16.89-.04,16.89-.04l16.22,28.51-9.17.16ZM103.46,68.68l-30.49,6.14,25.61,8.48-2.51,8.04-27.14-8.8,5.19-16.02,32.08-6.63-2.74,8.79Z"/></svg>`;
+
+function renderCard(svc) {
+  const status = svc.status;
+  const score = svc.score;
+  const full = Math.floor(score);
+  const frac = score - full;
+  let boxes = '';
+  for (let i = 1; i <= 5; i++) {
+    let fillPct = 0;
+    if (i <= full) fillPct = 100;
+    else if (i === full + 1) fillPct = Math.round(frac * 100);
+    boxes += `<div class="rating-box"><div class="rating-bg">${RATING_SVG}</div>${fillPct > 0 ? `<div class="rating-fill ${status}" data-fill="${fillPct}">${RATING_SVG}</div>` : ''}</div>`;
+  }
+
+  return `<div class="card" onclick="window.location.href='trust-score-page.html?p=${svc.n}'">
+    <div class="card-top">
+      <div class="card-icon">${svc.n.charAt(0)}</div>
+      <div class="card-title-block">
+        <div class="card-name">${svc.n}</div>
+        <div class="card-publisher">${svc.pub}</div>
+      </div>
+    </div>
+    <span class="card-tag ${svc.tag}">${svc.cat.replace(/-/g,' ')}</span>
+    <div class="card-desc">${svc.desc}</div>
+    <div class="card-score-row">
+      <div class="rating-boxes">${boxes}</div>
+      <span class="score-num ${status}">${svc.score.toFixed(2)}</span>
+      <span class="card-updated">${svc.updated} ago</span>
+    </div>
+  </div>`;
+}
+
+function loadMore() {
+  if (displayed >= filtered.length) {
+    document.getElementById('loadingIndicator').classList.add('hidden');
+    document.getElementById('endMessage').style.display = 'block';
+    return;
+  }
+  document.getElementById('loadingIndicator').classList.remove('hidden');
+
+  // Simulate network delay
+  setTimeout(() => {
+    const batch = filtered.slice(displayed, displayed + PAGE_SIZE);
+    const grid = document.getElementById('cardGrid');
+    batch.forEach(svc => {
+      grid.insertAdjacentHTML('beforeend', renderCard(svc));
+    });
+    displayed += batch.length;
+
+    if (displayed >= filtered.length) {
+      document.getElementById('loadingIndicator').classList.add('hidden');
+      document.getElementById('endMessage').style.display = 'block';
+    } else {
+      document.getElementById('loadingIndicator').classList.add('hidden');
+    }
+  }, 300);
+}
+
+// ═══ INFINITE SCROLL ═══
+const observer = new IntersectionObserver((entries) => {
+  if (entries[0].isIntersecting && displayed < filtered.length) {
+    loadMore();
+  }
+}, { rootMargin: '400px' });
+observer.observe(document.getElementById('loadSentinel'));
+
+// ═══ EVENT LISTENERS ═══
+
+// Status pills
+document.querySelectorAll('.status-pill').forEach(pill => {
+  pill.addEventListener('click', () => {
+    pill.classList.toggle('active');
+    const st = pill.dataset.status;
+    if (pill.classList.contains('active')) currentStatuses.add(st);
+    else currentStatuses.delete(st);
+    applyFilters();
+  });
+});
+
+// Search
+const searchInput = document.getElementById('searchInput');
+const searchClear = document.getElementById('searchClear');
+let searchTimeout;
+searchInput.addEventListener('input', (e) => {
+  clearTimeout(searchTimeout);
+  const val = e.target.value.trim();
+  searchClear.classList.toggle('visible', val.length > 0);
+  searchTimeout = setTimeout(() => {
+    currentSearch = val;
+    applyFilters();
+  }, 200);
+});
+searchClear.addEventListener('click', () => {
+  searchInput.value = '';
+  searchClear.classList.remove('visible');
+  currentSearch = '';
+  applyFilters();
+  searchInput.focus();
+});
+
+// Burger menu
+const burger = document.getElementById('burgerBtn');
+const menu = document.getElementById('mobileMenu');
+burger.addEventListener('click', () => {
+  burger.classList.toggle('open');
+  menu.classList.toggle('open');
+});
+document.addEventListener('click', (e) => {
+  if (!burger.contains(e.target) && !menu.contains(e.target)) {
+    burger.classList.remove('open');
+    menu.classList.remove('open');
+  }
+});
+
+// Custom dropdown logic
+document.querySelectorAll('.custom-select').forEach(select => {
+  const trigger = select.querySelector('.select-trigger');
+  const menu = select.querySelector('.select-menu');
+  const options = select.querySelectorAll('.select-option');
+
+  trigger.addEventListener('click', (e) => {
+    e.stopPropagation();
+    // Close all other menus
+    document.querySelectorAll('.custom-select').forEach(s => {
+      if (s !== select) {
+        s.querySelector('.select-trigger').classList.remove('open');
+        s.querySelector('.select-menu').classList.remove('open');
+      }
+    });
+    trigger.classList.toggle('open');
+    menu.classList.toggle('open');
+  });
+
+  options.forEach(opt => {
+    opt.addEventListener('click', () => {
+      options.forEach(o => o.classList.remove('active'));
+      opt.classList.add('active');
+      trigger.textContent = opt.textContent;
+      trigger.dataset.value = opt.dataset.value;
+      trigger.classList.remove('open');
+      menu.classList.remove('open');
+
+      if (select.id === 'categorySelect') {
+        currentCat = opt.dataset.value;
+        applyFilters();
+      } else if (select.id === 'sortSelect') {
+        currentSort = opt.dataset.value;
+        applyFilters();
+      }
+    });
+  });
+});
+
+// Close dropdowns on outside click
+document.addEventListener('click', () => {
+  document.querySelectorAll('.custom-select').forEach(s => {
+    s.querySelector('.select-trigger').classList.remove('open');
+    s.querySelector('.select-menu').classList.remove('open');
+  });
+});
+
+// Keyboard shortcut
+document.addEventListener('keydown', (e) => {
+  if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+    e.preventDefault();
+    document.getElementById('searchInput').focus();
+  }
+});
+
+// Animate rating fills on scroll
+const fillObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const fills = entry.target.querySelectorAll('.rating-fill[data-fill]');
+      fills.forEach((el, i) => {
+        setTimeout(() => {
+          el.style.width = el.dataset.fill + '%';
+        }, i * 80);
+      });
+      fillObserver.unobserve(entry.target);
+    }
+  });
+}, { rootMargin: '50px', threshold: 0.1 });
+
+function observeNewCards() {
+  document.querySelectorAll('.card:not([data-observed])').forEach(card => {
+    card.setAttribute('data-observed', '1');
+    fillObserver.observe(card);
+  });
+}
+
+const _origLoadMore = loadMore;
+loadMore = function() {
+  _origLoadMore();
+  setTimeout(observeNewCards, 350);
+};
+
+// ═══ DISCLAIMER MODAL ═══
+(function(){
+  const modal=document.getElementById('disclaimerModal');
+  const check=document.getElementById('disclaimerCheck');
+  const accept=document.getElementById('disclaimerAccept');
+  const decline=document.getElementById('disclaimerDecline');
+  const accepted=localStorage.getItem('fabric_disclaimer_accepted');
+  if(accepted){modal.classList.add('hide');return}
+  modal.classList.remove('hide');
+  requestAnimationFrame(()=>requestAnimationFrame(()=>modal.classList.add('show')));
+  document.body.style.overflow='hidden';
+  check.addEventListener('change',()=>{accept.disabled=!check.checked});
+  accept.addEventListener('click',()=>{
+    localStorage.setItem('fabric_disclaimer_accepted',Date.now());
+    modal.classList.remove('show');
+    document.body.style.overflow='';
+    setTimeout(()=>modal.classList.add('hide'),300);
+  });
+  decline.addEventListener('click',()=>{
+    window.location.href='https://www.fabriclayer.ai';
+  });
+})();
+
+// ═══ INIT ═══
+applyFilters();
+</script>
+</body>
+</html>

@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MCP supply chain attacks: a timeline of what's happened so far — Fabric</title>
+<meta name="description" content="From postmark-mcp email exfiltration to ClawHub malware — a consolidated timeline of every major MCP security breach and what they reveal.">
+<meta property="og:title" content="MCP supply chain attacks: a timeline of what's happened so far">
+<meta property="og:description" content="A consolidated timeline of every major MCP security breach and what they reveal about the new threat surface.">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,300;1,9..40,400&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{--black:#000;--blue:#068cff;--pink:#fe83e0;--white:#fff;--bg:#f7f7f7;--text:#0a0a0a;--text-2:#555;--text-3:#999;--border:#e5e5e5;--green:#0dc956;--orange:#f7931e;--red:#e82d35;--sans:'DM Sans',-apple-system,BlinkMacSystemFont,sans-serif;--mono:'DM Mono','SF Mono',monospace}
+*{margin:0;padding:0;box-sizing:border-box}html{scroll-behavior:smooth;overflow-y:scroll}
+body{background:var(--white);color:var(--text);font-family:var(--sans);font-size:16px;line-height:1.7;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+::selection{background:var(--blue);color:var(--white)}
+a{color:var(--blue);text-decoration:none;-webkit-tap-highlight-color:transparent}a:hover{text-decoration:underline}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;background:var(--white);border-bottom:1px solid var(--border);padding:0 2rem;height:56px}
+.nav-inner{max-width:1400px;margin:0 auto;height:100%;display:flex;align-items:center;justify-content:space-between}
+.nav-left{display:flex;align-items:center;gap:1.25rem}
+.nav-logo{display:flex;align-items:center;gap:0.65rem;text-decoration:none;color:var(--black)}.nav-logo:hover{text-decoration:none}
+.nav-logo svg{height:19px;width:auto}
+.nav-logo-text{font-family:var(--mono);font-size:0.78rem;font-weight:400;letter-spacing:0.02em;color:var(--text-3);border-left:1px solid var(--border);padding-left:0.65rem;pointer-events:none}
+.nav-links{display:flex;align-items:center;gap:1.5rem}
+.nav-links a{font-family:var(--mono);font-size:0.78rem;font-weight:400;color:var(--text-2);text-decoration:none;transition:color .15s}
+.nav-links a:hover{color:var(--pink);text-decoration:none}
+.nav-right{display:flex;align-items:center;gap:0.75rem}
+.burger{display:none;flex-direction:column;gap:4px;background:none;border:none;cursor:pointer;padding:6px;border-radius:6px;transition:background .15s}
+.burger:hover{background:rgba(0,0,0,.04)}
+.burger span{display:block;width:18px;height:1.5px;background:var(--text);border-radius:1px;transition:all .25s}
+.burger.open span:nth-child(1){transform:translateY(5.5px) rotate(45deg)}
+.burger.open span:nth-child(2){opacity:0}
+.burger.open span:nth-child(3){transform:translateY(-5.5px) rotate(-45deg)}
+.mobile-menu{position:fixed;top:56px;right:0;z-index:99;background:var(--white);border:1px solid var(--border);border-radius:0 0 0 12px;box-shadow:0 8px 30px rgba(0,0,0,.08);padding:0.5rem 0;display:none;min-width:180px}
+.mobile-menu.open{display:block}
+.mobile-menu a{display:block;font-family:var(--mono);font-size:0.78rem;color:var(--text-2);text-decoration:none;padding:0.55rem 1.25rem;transition:all .12s}
+.mobile-menu a:hover{background:rgba(0,0,0,.02);color:var(--pink);text-decoration:none}
+.article{max-width:720px;margin:0 auto;padding:100px 20px 80px}
+.article-meta{font-family:var(--mono);font-size:12px;color:var(--text-3);text-transform:uppercase;letter-spacing:1px;margin-bottom:16px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.article-tag{padding:3px 10px;border-radius:6px;font-weight:500;letter-spacing:.5px}
+.article-tag.research{background:rgba(13,201,86,.08);color:var(--green)}
+.article h1{font-size:36px;font-weight:700;letter-spacing:-2px;line-height:1.1;margin-bottom:20px;text-wrap:balance}
+.article .lead{font-size:18px;color:var(--text-2);line-height:1.6;margin-bottom:40px;text-wrap:pretty}
+.article h2{font-size:24px;font-weight:700;letter-spacing:-1px;line-height:1.2;margin:48px 0 16px}
+.article h3{font-size:18px;font-weight:700;letter-spacing:-.3px;margin:32px 0 12px}
+.article p{font-size:16px;color:var(--text);margin-bottom:16px;line-height:1.7}
+.callout{border-left:3px solid var(--red);background:rgba(232,45,53,.04);padding:16px 20px;border-radius:0 10px 10px 0;margin:24px 0}
+.callout.blue{border-left-color:var(--blue);background:rgba(6,140,255,.04)}
+.callout p{margin:0;font-size:14px;line-height:1.6}
+.callout strong{display:block;margin-bottom:4px;font-size:14px}
+.incident{background:var(--bg);border-radius:12px;padding:24px;margin:20px 0}
+.incident-head{display:flex;align-items:center;gap:12px;margin-bottom:12px;flex-wrap:wrap}
+.incident-date{font-family:var(--mono);font-size:11px;color:var(--text-3);text-transform:uppercase;letter-spacing:.5px}
+.incident-sev{font-family:var(--mono);font-size:10px;font-weight:600;padding:2px 8px;border-radius:4px;text-transform:uppercase;letter-spacing:.5px}
+.incident-sev.crit{background:rgba(232,45,53,.12);color:var(--red)}
+.incident-sev.high{background:rgba(247,147,30,.12);color:var(--orange)}
+.incident-name{font-size:17px;font-weight:700;letter-spacing:-.3px;margin-bottom:8px}
+.incident p{font-size:14px;color:var(--text-2);line-height:1.6;margin-bottom:8px}
+.incident p:last-child{margin-bottom:0}
+.incident-impact{font-family:var(--mono);font-size:12px;color:var(--text-3);margin-top:10px}
+.article-cta{background:var(--black);border-radius:16px;padding:48px 40px;text-align:center;margin-top:64px}
+.article-cta h3{font-size:24px;font-weight:700;color:var(--white);letter-spacing:-1px;margin-bottom:12px}
+.article-cta p{font-size:15px;color:rgba(255,255,255,.45);max-width:440px;margin:0 auto 28px;line-height:1.6}
+.btn-p{background:var(--white);color:var(--black);padding:14px 32px;border-radius:12px;font-size:15px;font-weight:600;transition:all .25s;display:inline-block;text-decoration:none}
+.btn-p:hover{background:var(--bg);transform:translateY(-1px);box-shadow:0 8px 24px rgba(0,0,0,.3);text-decoration:none}
+footer{border-top:1px solid var(--border);padding:28px 20px}
+.foot-inner{max-width:1200px;margin:0 auto;display:flex;flex-direction:column;gap:12px;align-items:center;text-align:center}
+.foot-l{font-size:12px;color:var(--text-3)}.foot-l a{color:var(--text-2);text-decoration:none}.foot-l a:hover{color:var(--text)}
+.foot-links{display:flex;gap:20px;list-style:none;justify-content:center;flex-wrap:wrap}.foot-links a{font-size:12px;color:var(--text-3);text-decoration:none}.foot-links a:hover{color:var(--text)}.foot-sep{width:1px;background:var(--border);align-self:stretch}
+@media(max-width:768px){
+.nav-links{display:none!important}.burger{display:flex}nav{padding:0 1rem;height:48px}.mobile-menu{top:48px}
+.article{padding:72px 16px 60px}.article h1{font-size:28px;letter-spacing:-1.5px}.article .lead{font-size:16px}.article h2{font-size:22px;margin:40px 0 12px}
+.incident{padding:16px}.article-cta{padding:36px 24px}.article-cta h3{font-size:20px}footer{padding:20px 16px}
+}
+@media(min-width:901px){
+nav{padding:0 40px}.article{padding:120px 20px 100px}.article h1{font-size:44px;letter-spacing:-2.5px}.article .lead{font-size:19px}
+.article h2{font-size:28px;letter-spacing:-1.5px;margin:56px 0 20px}.article-cta{padding:56px 48px}
+footer{padding:40px}.foot-inner{flex-direction:row;justify-content:space-between;text-align:left}
+}
+</style>
+</head>
+<body>
+<nav><div class="nav-inner">
+  <div class="nav-left">
+    <a href="https://www.fabriclayer.ai" class="nav-logo"><svg viewBox="0 0 532.89 134.52" fill="currentColor"><g><polygon points="81.89 134.52 57.62 91.2 57.47 134.36 44.03 134.42 44.02 89.24 70.74 89.18 96.4 134.26 81.89 134.52"/><polygon points="11.23 30.83 22.93 22.12 67.73 42.65 42.7 7.77 53.47 0 80.03 36.5 58.51 52.19 11.23 30.83"/><polygon points="119.88 23.38 130.65 31.15 104.1 67.74 82.61 52.07 88.3 .43 100.17 8.99 94.53 57.97 119.88 23.38"/><polygon points="128.82 101.47 124.85 114.19 81.92 100.27 90.13 74.95 140.86 64.46 136.53 78.35 88.31 88.08 128.82 101.47"/><polygon points="11.54 99.78 45.11 63.3 4.15 76.4 0 63.79 42.95 49.87 51.16 75.15 16.22 113.51 11.54 99.78"/></g><g><path d="M184.55,115.05v-56.57h-19.23v-12.12h19.23v-15.05c0-4.18,1.25-7.52,3.76-10.03,2.51-2.51,5.85-3.76,10.03-3.76h17.7v12.12h-13.1c-2.7,0-4.04,1.39-4.04,4.18v12.54h19.79v12.12h-19.79v56.57h-14.35Z"/><path d="M249.34,117c-4.92,0-9.31-.84-13.17-2.51-3.86-1.67-6.92-4.13-9.2-7.38-2.28-3.25-3.41-7.2-3.41-11.84s1.14-8.66,3.41-11.77c2.28-3.11,5.39-5.46,9.34-7.04,3.95-1.58,8.43-2.37,13.45-2.37h20.9v-4.46c0-3.99-1.21-7.2-3.62-9.61-2.42-2.41-6.13-3.62-11.15-3.62s-8.69,1.16-11.29,3.48c-2.6,2.32-4.32,5.34-5.16,9.06l-13.38-4.32c1.11-3.71,2.9-7.08,5.36-10.1,2.46-3.02,5.73-5.46,9.82-7.32,4.09-1.86,9.01-2.79,14.77-2.79,8.92,0,15.93,2.28,21.04,6.83,5.11,4.55,7.66,11.01,7.66,19.37v28.29c0,2.79,1.3,4.18,3.9,4.18h5.85v11.98h-10.73c-3.25,0-5.9-.84-7.94-2.51-2.04-1.67-3.07-3.95-3.07-6.83v-.42h-2.09c-.74,1.39-1.86,3.02-3.34,4.88-1.49,1.86-3.67,3.46-6.55,4.81-2.88,1.35-6.69,2.02-11.43,2.02ZM251.43,105.16c5.76,0,10.4-1.65,13.93-4.95,3.53-3.3,5.29-7.82,5.29-13.58v-1.39h-20.06c-3.81,0-6.88.81-9.2,2.44-2.32,1.63-3.48,4.02-3.48,7.18s1.21,5.67,3.62,7.52c2.41,1.86,5.71,2.79,9.89,2.79Z"/><path d="M342.84,117c-6.69,0-11.82-1.21-15.4-3.62-3.58-2.41-6.25-5.11-8.01-8.08h-2.23v9.75h-14.07V17.52h14.35v38.18h2.23c1.11-1.86,2.6-3.64,4.46-5.36,1.86-1.72,4.32-3.14,7.38-4.25,3.07-1.11,6.83-1.67,11.29-1.67,5.76,0,11.05,1.39,15.88,4.18,4.83,2.79,8.68,6.83,11.56,12.12,2.88,5.29,4.32,11.61,4.32,18.95v2.09c0,7.43-1.46,13.77-4.39,19.02-2.93,5.25-6.78,9.27-11.56,12.05-4.79,2.79-10.06,4.18-15.81,4.18ZM338.66,104.46c6.22,0,11.36-2,15.4-5.99,4.04-3.99,6.06-9.71,6.06-17.14v-1.25c0-7.34-2-13-5.99-17-4-3.99-9.15-5.99-15.47-5.99s-11.22,2-15.26,5.99c-4.04,3.99-6.06,9.66-6.06,17v1.25c0,7.43,2.02,13.15,6.06,17.14,4.04,4,9.13,5.99,15.26,5.99Z"/><path d="M386.73,115.05V46.36h14.07v8.08h2.23c1.11-2.88,2.9-4.99,5.36-6.34,2.46-1.35,5.5-2.02,9.13-2.02h8.22v12.96h-8.78c-4.65,0-8.45,1.28-11.43,3.83-2.97,2.56-4.46,6.48-4.46,11.77v40.41h-14.35Z"/><path d="M444.83,37.02c-2.79,0-5.13-.91-7.04-2.72-1.91-1.81-2.86-4.16-2.86-7.04s.95-5.23,2.86-7.04c1.9-1.81,4.25-2.72,7.04-2.72s5.25.91,7.11,2.72c1.86,1.81,2.79,4.16,2.79,7.04s-.93,5.23-2.79,7.04c-1.86,1.81-4.23,2.72-7.11,2.72ZM437.59,115.05V46.36h14.35v68.69h-14.35Z"/><path d="M498.89,117c-6.6,0-12.56-1.39-17.9-4.18-5.34-2.79-9.57-6.83-12.68-12.12-3.11-5.29-4.67-11.66-4.67-19.09v-1.81c0-7.43,1.55-13.77,4.67-19.02,3.11-5.25,7.34-9.29,12.68-12.12,5.34-2.83,11.31-4.25,17.9-4.25s12.21,1.21,16.86,3.62c4.64,2.42,8.38,5.62,11.22,9.61,2.83,3.99,4.67,8.41,5.5,13.24l-13.93,2.93c-.47-3.07-1.44-5.85-2.93-8.36-1.49-2.51-3.58-4.5-6.27-5.99-2.7-1.48-6.08-2.23-10.17-2.23s-7.59.91-10.8,2.72c-3.2,1.81-5.74,4.41-7.59,7.8-1.86,3.39-2.79,7.5-2.79,12.33v1.25c0,4.83.93,8.97,2.79,12.4,1.86,3.44,4.39,6.04,7.59,7.8,3.2,1.77,6.8,2.65,10.8,2.65,6.04,0,10.64-1.55,13.79-4.67,3.16-3.11,5.16-7.08,5.99-11.91l13.93,3.2c-1.11,4.74-3.09,9.1-5.92,13.1-2.83,4-6.57,7.18-11.22,9.54-4.65,2.37-10.27,3.55-16.86,3.55Z"/></g></svg></a>
+    <span class="nav-logo-text">blog</span>
+  </div>
+  <div class="nav-right">
+    <div class="nav-links"><a href="https://www.fabriclayer.ai">Home</a><a href="https://trust.fabriclayer.dev">Trust Index</a><a href="docs.html">Docs</a><a href="blog.html">Blog</a></div>
+    <button class="burger" id="burgerBtn" aria-label="Menu"><span></span><span></span><span></span></button>
+  </div>
+</div></nav>
+<div class="mobile-menu" id="mobileMenu"><a href="https://www.fabriclayer.ai">Home</a><a href="https://trust.fabriclayer.dev">Trust Index</a><a href="docs.html">Docs</a><a href="blog.html">Blog</a></div>
+
+<article class="article">
+<div class="article-meta">
+  <span class="article-tag research">Research</span>
+  <span>February 2026</span>
+  <span>·</span>
+  <span>7 min read</span>
+</div>
+
+<h1>MCP supply chain attacks: a timeline of what's happened so far</h1>
+
+<p class="lead">The Model Context Protocol promised to be the USB-C of AI agents — a universal bridge connecting LLMs to tools, APIs, and data. In less than a year, it's also become the fastest-growing attack surface in the AI ecosystem. Here's every major incident, what was compromised, and what they reveal about the new threat model.</p>
+
+<h2>Why MCP is different</h2>
+
+<p>Traditional npm supply chain attacks are bad. A malicious package can steal environment variables, exfiltrate data, or install backdoors. But MCP servers are worse for a specific reason: they operate with high trust and broad permissions inside agent toolchains. An MCP server isn't just code your application runs — it's code your AI agent trusts to act on its behalf, often with access to email, files, databases, and payment systems.</p>
+
+<p>As one researcher put it: this is npm supply chain attacks all over again, except the package can think and has root access to your life.</p>
+
+<h2>The timeline</h2>
+
+<div class="incident">
+  <div class="incident-head">
+    <span class="incident-date">May 2025</span>
+    <span class="incident-sev crit">Critical</span>
+  </div>
+  <div class="incident-name">Anthropic MCP Inspector — Remote Code Execution</div>
+  <p>Researchers discovered that Anthropic's own MCP Inspector developer tool allowed unauthenticated remote code execution via its inspector-proxy architecture. An attacker could get arbitrary commands executed on a developer's machine just by having them inspect a malicious MCP server. The inspector ran with user privileges and lacked authentication while listening on localhost — effectively turning a debugging tool into a remote shell.</p>
+  <div class="incident-impact">Impact: Full filesystem access, API keys, environment secrets on developer workstations</div>
+</div>
+
+<div class="incident">
+  <div class="incident-head">
+    <span class="incident-date">June 2025</span>
+    <span class="incident-sev crit">Critical</span>
+  </div>
+  <div class="incident-name">mcp-remote OAuth Proxy — CVE-2025-6514</div>
+  <p>JFrog disclosed a critical OS command-injection vulnerability in mcp-remote, one of the most popular OAuth proxies for connecting local MCP clients to remote servers. A malicious server could respond with an authorization_endpoint containing shell command injection, leading to arbitrary code execution on the client machine. Referenced in Cloudflare, HuggingFace, and Auth0 documentation, this proxy had massive reach.</p>
+  <div class="incident-impact">Impact: Credential theft, source file modification, backdoor installation across enterprise dev environments</div>
+</div>
+
+<div class="incident">
+  <div class="incident-head">
+    <span class="incident-date">Mid-2025</span>
+    <span class="incident-sev high">High</span>
+  </div>
+  <div class="incident-name">Invariant Labs — WhatsApp MCP Tool Poisoning</div>
+  <p>Invariant Labs demonstrated that a malicious MCP server could silently exfiltrate a user's entire WhatsApp history by combining tool poisoning with a legitimate whatsapp-mcp server in the same agent. A tool described as "random fact of the day" morphed into a sleeper backdoor that rewrote how WhatsApp messages were sent, forwarding hundreds of past messages to an attacker-controlled number.</p>
+  <div class="incident-impact">Impact: Personal chats, business communications, customer data exfiltrated via disguised outbound messages</div>
+</div>
+
+<div class="incident">
+  <div class="incident-head">
+    <span class="incident-date">Mid-2025</span>
+    <span class="incident-sev crit">Critical</span>
+  </div>
+  <div class="incident-name">GitHub MCP Server — Prompt Injection → Private Repo Exfiltration</div>
+  <p>Invariant Labs uncovered a prompt injection attack against the official GitHub MCP server. A malicious public GitHub issue could hijack an AI assistant and make it pull data from private repos, then leak that data back to a public repo. With a single over-privileged Personal Access Token, the compromised agent exfiltrated private repository contents, project details, and even financial information into a public pull request.</p>
+  <div class="incident-impact">Impact: Private repository contents, internal project data, salary/financial information exposed publicly</div>
+</div>
+
+<div class="incident">
+  <div class="incident-head">
+    <span class="incident-date">Mid-2025</span>
+    <span class="incident-sev high">High</span>
+  </div>
+  <div class="incident-name">Supabase Cursor Agent — Support Ticket SQL Injection</div>
+  <p>Supabase's Cursor agent, running with privileged service-role access, processed support tickets that included user-supplied input as commands. Attackers embedded SQL instructions to read and exfiltrate sensitive integration tokens by leaking them into a public support thread. Three factors combined: privileged access, untrusted input, and an external communication channel.</p>
+  <div class="incident-impact">Impact: Integration tokens, database credentials, customer data exposed via public support threads</div>
+</div>
+
+<div class="incident">
+  <div class="incident-head">
+    <span class="incident-date">September 2025</span>
+    <span class="incident-sev crit">Critical</span>
+  </div>
+  <div class="incident-name">postmark-mcp — First Confirmed Malicious MCP Server</div>
+  <p>Koi Security discovered the first publicly documented malicious MCP server on npm. A developer copied the legitimate Postmark Labs MCP server code and published it under the same name. For 15 versions it was clean — building trust and downloads. In version 1.0.16, a single line was added: a BCC on every email sent through the tool, silently forwarding password resets, security alerts, invoices, and account confirmations to the attacker.</p>
+  <div class="incident-impact">Impact: 1,643 downloads. Password recovery tokens, API keys, financial details, account confirmations compromised</div>
+</div>
+
+<div class="incident">
+  <div class="incident-head">
+    <span class="incident-date">September 2025</span>
+    <span class="incident-sev crit">Critical</span>
+  </div>
+  <div class="incident-name">mcp-runcommand-server — Hidden Reverse Shell</div>
+  <p>One week after postmark-mcp, Koi Security found a second malicious MCP server. The @lanyer640/mcp-runcommand-server package was legitimate for nearly a month before being weaponised. It used layered backdoors: a preinstall script that called home, plus a runtime backdoor that spawned a persistent TCP connection giving the attacker continuous remote access. Install but never run? The preinstall catches you. Run the tool? Both backdoors activate.</p>
+  <div class="incident-impact">Impact: Hundreds of installs. Full remote shell access to every machine running the server</div>
+</div>
+
+<div class="incident">
+  <div class="incident-head">
+    <span class="incident-date">January 2026</span>
+    <span class="incident-sev crit">Critical</span>
+  </div>
+  <div class="incident-name">ClawHub / OpenClaw — 1,184 Malicious Skills</div>
+  <p>Cisco researchers discovered that the #1 ranked skill on ClawHub — "What Would Elon Do" — was active malware. It installed Atomic Stealer via prompt injection hidden in SKILL.md files, stealing SSH keys, crypto wallets, browser cookies, Telegram sessions, and .env files. One attacker uploaded 677 packages alone. ClawHub had no security scanning, no publisher verification, and allowed publishing from 1-week-old GitHub accounts.</p>
+  <div class="incident-impact">Impact: Thousands of developers compromised. SSH keys, crypto wallets, browser passwords, API keys stolen</div>
+</div>
+
+<h2>The pattern</h2>
+
+<p>Every incident shares the same structural problem: trust is granted before it's verified. MCP servers operate with broad permissions. Package registries don't audit what's published. And AI agents, by design, follow instructions from tools they've been connected to — including malicious ones.</p>
+
+<p>The attack surface is unique because it combines traditional supply chain vulnerabilities (typosquatting, dependency confusion, malicious updates) with LLM-specific vectors (prompt injection, tool poisoning, metadata manipulation). An attacker doesn't just need to get code onto your machine — they can embed instructions that trick the AI agent itself into performing the exfiltration.</p>
+
+<h2>What changes this</h2>
+
+<p>The MCP ecosystem needs the same thing every other software ecosystem eventually built: a trust layer between "discover" and "install." App stores have review processes. Package managers have vulnerability scanning. Container registries have image signing. MCP has none of these — yet.</p>
+
+<p>That's what Fabric is building. Every service scored across six independent signals before an agent touches it. Not a single gatekeeper making subjective calls — an automated, multi-signal system that's hard to game because you'd need to pass all six checks simultaneously.</p>
+
+<div class="callout blue">
+<strong>See how Fabric would have scored the ClawHub malware</strong>
+<p>We ran our full six-signal methodology against "What Would Elon Do" — the #1 skill that turned out to be Atomic Stealer. Result: 0.50/5.00. Blocked. Five of six signals independently flagged it. <a href="post-clawhub.html">Read the full case study →</a></p>
+</div>
+
+<div class="article-cta">
+  <h3>Don't let your agents trust blindly.</h3>
+  <p>Score every provider before your agent touches it. Free tier available.</p>
+  <a href="https://trust.fabriclayer.dev" class="btn-p">Search the Trust Index →</a>
+</div>
+</article>
+
+<footer><div class="foot-inner">
+<div class="foot-l">&copy; 2026 Fabric. A <a href="https://motherbird.ai">Motherbird</a> product.</div>
+<ul class="foot-links"><li><a href="https://trust.fabriclayer.ai/claim">Claim Profile</a></li><li><a href="https://github.com/motherbirdai/fabric">GitHub</a></li><li><a href="#">Twitter / X</a></li><li><a href="docs.html">Docs</a></li><li class="foot-sep"></li><li><a href="terms.html">Terms</a></li><li><a href="privacy.html">Privacy</a></li><li><a href="disclaimer.html">Disclaimer</a></li></ul>
+</div></footer>
+<script>const burger=document.getElementById('burgerBtn');const mobileMenu=document.getElementById('mobileMenu');burger.addEventListener('click',()=>{burger.classList.toggle('open');mobileMenu.classList.toggle('open')});mobileMenu.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{burger.classList.remove('open');mobileMenu.classList.remove('open')}));</script>
+</body>
+</html>

@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>How our trust scoring works — six signals, no black boxes — Fabric</title>
+<meta name="description" content="Every AI service indexed by Fabric gets a score from 0.00 to 5.00 across six independently weighted signals. Here's the full methodology.">
+<meta property="og:title" content="How our trust scoring works — six signals, no black boxes">
+<meta property="og:description" content="Every AI service gets a score from 0.00 to 5.00 across six signals. Here's the full methodology.">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,300;1,9..40,400&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{--black:#000;--blue:#068cff;--pink:#fe83e0;--white:#fff;--bg:#f7f7f7;--text:#0a0a0a;--text-2:#555;--text-3:#999;--border:#e5e5e5;--green:#0dc956;--orange:#f7931e;--red:#e82d35;--sans:'DM Sans',-apple-system,BlinkMacSystemFont,sans-serif;--mono:'DM Mono','SF Mono',monospace}
+*{margin:0;padding:0;box-sizing:border-box}html{scroll-behavior:smooth;overflow-y:scroll}
+body{background:var(--white);color:var(--text);font-family:var(--sans);font-size:16px;line-height:1.7;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+::selection{background:var(--blue);color:var(--white)}
+a{color:var(--blue);text-decoration:none;-webkit-tap-highlight-color:transparent}a:hover{text-decoration:underline}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;background:var(--white);border-bottom:1px solid var(--border);padding:0 2rem;height:56px}
+.nav-inner{max-width:1400px;margin:0 auto;height:100%;display:flex;align-items:center;justify-content:space-between}
+.nav-left{display:flex;align-items:center;gap:1.25rem}
+.nav-logo{display:flex;align-items:center;gap:0.65rem;text-decoration:none;color:var(--black)}.nav-logo:hover{text-decoration:none}
+.nav-logo svg{height:19px;width:auto}
+.nav-logo-text{font-family:var(--mono);font-size:0.78rem;font-weight:400;letter-spacing:0.02em;color:var(--text-3);border-left:1px solid var(--border);padding-left:0.65rem;pointer-events:none}
+.nav-links{display:flex;align-items:center;gap:1.5rem}
+.nav-links a{font-family:var(--mono);font-size:0.78rem;font-weight:400;color:var(--text-2);text-decoration:none;transition:color .15s}
+.nav-links a:hover{color:var(--pink);text-decoration:none}
+.nav-right{display:flex;align-items:center;gap:0.75rem}
+.burger{display:none;flex-direction:column;gap:4px;background:none;border:none;cursor:pointer;padding:6px;border-radius:6px;transition:background .15s}
+.burger:hover{background:rgba(0,0,0,.04)}
+.burger span{display:block;width:18px;height:1.5px;background:var(--text);border-radius:1px;transition:all .25s}
+.burger.open span:nth-child(1){transform:translateY(5.5px) rotate(45deg)}
+.burger.open span:nth-child(2){opacity:0}
+.burger.open span:nth-child(3){transform:translateY(-5.5px) rotate(-45deg)}
+.mobile-menu{position:fixed;top:56px;right:0;z-index:99;background:var(--white);border:1px solid var(--border);border-radius:0 0 0 12px;box-shadow:0 8px 30px rgba(0,0,0,.08);padding:0.5rem 0;display:none;min-width:180px}
+.mobile-menu.open{display:block}
+.mobile-menu a{display:block;font-family:var(--mono);font-size:0.78rem;color:var(--text-2);text-decoration:none;padding:0.55rem 1.25rem;transition:all .12s}
+.mobile-menu a:hover{background:rgba(0,0,0,.02);color:var(--pink);text-decoration:none}
+.article{max-width:720px;margin:0 auto;padding:100px 20px 80px}
+.article-meta{font-family:var(--mono);font-size:12px;color:var(--text-3);text-transform:uppercase;letter-spacing:1px;margin-bottom:16px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.article-tag{padding:3px 10px;border-radius:6px;font-weight:500;letter-spacing:.5px}
+.article-tag.product{background:rgba(6,140,255,.08);color:var(--blue)}
+.article h1{font-size:36px;font-weight:700;letter-spacing:-2px;line-height:1.1;margin-bottom:20px;text-wrap:balance}
+.article .lead{font-size:18px;color:var(--text-2);line-height:1.6;margin-bottom:40px;text-wrap:pretty}
+.article h2{font-size:24px;font-weight:700;letter-spacing:-1px;line-height:1.2;margin:48px 0 16px}
+.article h3{font-size:18px;font-weight:700;letter-spacing:-.3px;margin:32px 0 12px}
+.article p{font-size:16px;color:var(--text);margin-bottom:16px;line-height:1.7}
+.code{background:#0a0a0a;border-radius:10px;padding:18px;margin:16px 0 24px;overflow-x:auto;-webkit-overflow-scrolling:touch}
+.code pre{font-family:var(--mono);font-size:12px;line-height:1.7;color:rgba(255,255,255,.65);margin:0;white-space:pre;overflow-x:auto}
+.code .kw{color:var(--blue)}.code .str{color:var(--pink)}.code .cmt{color:rgba(255,255,255,.25)}.code .fn{color:rgba(255,255,255,.9)}.code .red{color:var(--red)}
+.callout{border-left:3px solid var(--blue);background:rgba(6,140,255,.04);padding:16px 20px;border-radius:0 10px 10px 0;margin:24px 0}
+.callout.red{border-left-color:var(--red);background:rgba(232,45,53,.04)}
+.callout p{margin:0;font-size:14px;line-height:1.6}
+.callout strong{display:block;margin-bottom:4px;font-size:14px}
+.signals{display:flex;flex-direction:column;gap:12px;margin:24px 0 32px}
+.signal{background:var(--bg);border-radius:12px;padding:20px;display:grid;grid-template-columns:1fr auto;gap:8px;align-items:start}
+.signal-head{display:flex;align-items:center;gap:10px}
+.signal-name{font-size:15px;font-weight:600}
+.signal-weight{font-family:var(--mono);font-size:11px;color:var(--text-3)}
+.signal-desc{font-size:13px;color:var(--text-2);line-height:1.55;grid-column:1/-1}
+.signal-contrib{font-family:var(--mono);font-size:14px;font-weight:600;color:var(--blue);justify-self:end}
+.tiers{display:flex;flex-direction:column;gap:8px;margin:24px 0 32px}
+.tier{border-radius:12px;padding:16px 20px;display:flex;align-items:center;gap:16px}
+.tier.green{background:rgba(13,201,86,.06);border:1px solid rgba(13,201,86,.15)}
+.tier.orange{background:rgba(247,147,30,.06);border:1px solid rgba(247,147,30,.15)}
+.tier.red{background:rgba(232,45,53,.06);border:1px solid rgba(232,45,53,.15)}
+.tier-score{font-family:var(--mono);font-size:14px;font-weight:700;min-width:90px}
+.tier-score.green{color:var(--green)}.tier-score.orange{color:var(--orange)}.tier-score.red{color:var(--red)}
+.tier-label{font-size:14px;font-weight:600;min-width:72px}
+.tier-desc{font-size:13px;color:var(--text-2);line-height:1.5}
+.article-cta{background:var(--black);border-radius:16px;padding:48px 40px;text-align:center;margin-top:64px}
+.article-cta h3{font-size:24px;font-weight:700;color:var(--white);letter-spacing:-1px;margin-bottom:12px}
+.article-cta p{font-size:15px;color:rgba(255,255,255,.45);max-width:440px;margin:0 auto 28px;line-height:1.6}
+.btn-p{background:var(--white);color:var(--black);padding:14px 32px;border-radius:12px;font-size:15px;font-weight:600;transition:all .25s;display:inline-block;text-decoration:none}
+.btn-p:hover{background:var(--bg);transform:translateY(-1px);box-shadow:0 8px 24px rgba(0,0,0,.3);text-decoration:none}
+footer{border-top:1px solid var(--border);padding:28px 20px}
+.foot-inner{max-width:1200px;margin:0 auto;display:flex;flex-direction:column;gap:12px;align-items:center;text-align:center}
+.foot-l{font-size:12px;color:var(--text-3)}.foot-l a{color:var(--text-2);text-decoration:none}.foot-l a:hover{color:var(--text)}
+.foot-links{display:flex;gap:20px;list-style:none;justify-content:center;flex-wrap:wrap}.foot-links a{font-size:12px;color:var(--text-3);text-decoration:none}.foot-links a:hover{color:var(--text)}.foot-sep{width:1px;background:var(--border);align-self:stretch}
+@media(max-width:768px){
+.nav-links{display:none!important}.burger{display:flex}nav{padding:0 1rem;height:48px}.mobile-menu{top:48px}
+.article{padding:72px 16px 60px}.article h1{font-size:28px;letter-spacing:-1.5px}.article .lead{font-size:16px}.article h2{font-size:22px;margin:40px 0 12px}
+.signals .signal{padding:16px}.tier{flex-direction:column;gap:8px;align-items:flex-start}
+.article-cta{padding:36px 24px}.article-cta h3{font-size:20px}footer{padding:20px 16px}
+}
+@media(min-width:901px){
+nav{padding:0 40px}.article{padding:120px 20px 100px}.article h1{font-size:44px;letter-spacing:-2.5px}.article .lead{font-size:19px}
+.article h2{font-size:28px;letter-spacing:-1.5px;margin:56px 0 20px}.article-cta{padding:56px 48px}
+footer{padding:40px}.foot-inner{flex-direction:row;justify-content:space-between;text-align:left}
+}
+</style>
+</head>
+<body>
+<nav><div class="nav-inner">
+  <div class="nav-left">
+    <a href="https://www.fabriclayer.ai" class="nav-logo"><svg viewBox="0 0 532.89 134.52" fill="currentColor"><g><polygon points="81.89 134.52 57.62 91.2 57.47 134.36 44.03 134.42 44.02 89.24 70.74 89.18 96.4 134.26 81.89 134.52"/><polygon points="11.23 30.83 22.93 22.12 67.73 42.65 42.7 7.77 53.47 0 80.03 36.5 58.51 52.19 11.23 30.83"/><polygon points="119.88 23.38 130.65 31.15 104.1 67.74 82.61 52.07 88.3 .43 100.17 8.99 94.53 57.97 119.88 23.38"/><polygon points="128.82 101.47 124.85 114.19 81.92 100.27 90.13 74.95 140.86 64.46 136.53 78.35 88.31 88.08 128.82 101.47"/><polygon points="11.54 99.78 45.11 63.3 4.15 76.4 0 63.79 42.95 49.87 51.16 75.15 16.22 113.51 11.54 99.78"/></g><g><path d="M184.55,115.05v-56.57h-19.23v-12.12h19.23v-15.05c0-4.18,1.25-7.52,3.76-10.03,2.51-2.51,5.85-3.76,10.03-3.76h17.7v12.12h-13.1c-2.7,0-4.04,1.39-4.04,4.18v12.54h19.79v12.12h-19.79v56.57h-14.35Z"/><path d="M249.34,117c-4.92,0-9.31-.84-13.17-2.51-3.86-1.67-6.92-4.13-9.2-7.38-2.28-3.25-3.41-7.2-3.41-11.84s1.14-8.66,3.41-11.77c2.28-3.11,5.39-5.46,9.34-7.04,3.95-1.58,8.43-2.37,13.45-2.37h20.9v-4.46c0-3.99-1.21-7.2-3.62-9.61-2.42-2.41-6.13-3.62-11.15-3.62s-8.69,1.16-11.29,3.48c-2.6,2.32-4.32,5.34-5.16,9.06l-13.38-4.32c1.11-3.71,2.9-7.08,5.36-10.1,2.46-3.02,5.73-5.46,9.82-7.32,4.09-1.86,9.01-2.79,14.77-2.79,8.92,0,15.93,2.28,21.04,6.83,5.11,4.55,7.66,11.01,7.66,19.37v28.29c0,2.79,1.3,4.18,3.9,4.18h5.85v11.98h-10.73c-3.25,0-5.9-.84-7.94-2.51-2.04-1.67-3.07-3.95-3.07-6.83v-.42h-2.09c-.74,1.39-1.86,3.02-3.34,4.88-1.49,1.86-3.67,3.46-6.55,4.81-2.88,1.35-6.69,2.02-11.43,2.02ZM251.43,105.16c5.76,0,10.4-1.65,13.93-4.95,3.53-3.3,5.29-7.82,5.29-13.58v-1.39h-20.06c-3.81,0-6.88.81-9.2,2.44-2.32,1.63-3.48,4.02-3.48,7.18s1.21,5.67,3.62,7.52c2.41,1.86,5.71,2.79,9.89,2.79Z"/><path d="M342.84,117c-6.69,0-11.82-1.21-15.4-3.62-3.58-2.41-6.25-5.11-8.01-8.08h-2.23v9.75h-14.07V17.52h14.35v38.18h2.23c1.11-1.86,2.6-3.64,4.46-5.36,1.86-1.72,4.32-3.14,7.38-4.25,3.07-1.11,6.83-1.67,11.29-1.67,5.76,0,11.05,1.39,15.88,4.18,4.83,2.79,8.68,6.83,11.56,12.12,2.88,5.29,4.32,11.61,4.32,18.95v2.09c0,7.43-1.46,13.77-4.39,19.02-2.93,5.25-6.78,9.27-11.56,12.05-4.79,2.79-10.06,4.18-15.81,4.18ZM338.66,104.46c6.22,0,11.36-2,15.4-5.99,4.04-3.99,6.06-9.71,6.06-17.14v-1.25c0-7.34-2-13-5.99-17-4-3.99-9.15-5.99-15.47-5.99s-11.22,2-15.26,5.99c-4.04,3.99-6.06,9.66-6.06,17v1.25c0,7.43,2.02,13.15,6.06,17.14,4.04,4,9.13,5.99,15.26,5.99Z"/><path d="M386.73,115.05V46.36h14.07v8.08h2.23c1.11-2.88,2.9-4.99,5.36-6.34,2.46-1.35,5.5-2.02,9.13-2.02h8.22v12.96h-8.78c-4.65,0-8.45,1.28-11.43,3.83-2.97,2.56-4.46,6.48-4.46,11.77v40.41h-14.35Z"/><path d="M444.83,37.02c-2.79,0-5.13-.91-7.04-2.72-1.91-1.81-2.86-4.16-2.86-7.04s.95-5.23,2.86-7.04c1.9-1.81,4.25-2.72,7.04-2.72s5.25.91,7.11,2.72c1.86,1.81,2.79,4.16,2.79,7.04s-.93,5.23-2.79,7.04c-1.86,1.81-4.23,2.72-7.11,2.72ZM437.59,115.05V46.36h14.35v68.69h-14.35Z"/><path d="M498.89,117c-6.6,0-12.56-1.39-17.9-4.18-5.34-2.79-9.57-6.83-12.68-12.12-3.11-5.29-4.67-11.66-4.67-19.09v-1.81c0-7.43,1.55-13.77,4.67-19.02,3.11-5.25,7.34-9.29,12.68-12.12,5.34-2.83,11.31-4.25,17.9-4.25s12.21,1.21,16.86,3.62c4.64,2.42,8.38,5.62,11.22,9.61,2.83,3.99,4.67,8.41,5.5,13.24l-13.93,2.93c-.47-3.07-1.44-5.85-2.93-8.36-1.49-2.51-3.58-4.5-6.27-5.99-2.7-1.48-6.08-2.23-10.17-2.23s-7.59.91-10.8,2.72c-3.2,1.81-5.74,4.41-7.59,7.8-1.86,3.39-2.79,7.5-2.79,12.33v1.25c0,4.83.93,8.97,2.79,12.4,1.86,3.44,4.39,6.04,7.59,7.8,3.2,1.77,6.8,2.65,10.8,2.65,6.04,0,10.64-1.55,13.79-4.67,3.16-3.11,5.16-7.08,5.99-11.91l13.93,3.2c-1.11,4.74-3.09,9.1-5.92,13.1-2.83,4-6.57,7.18-11.22,9.54-4.65,2.37-10.27,3.55-16.86,3.55Z"/></g></svg></a>
+    <span class="nav-logo-text">blog</span>
+  </div>
+  <div class="nav-right">
+    <div class="nav-links">
+      <a href="https://www.fabriclayer.ai">Home</a>
+      <a href="https://trust.fabriclayer.dev">Trust Index</a>
+      <a href="docs.html">Docs</a>
+      <a href="blog.html">Blog</a>
+    </div>
+    <button class="burger" id="burgerBtn" aria-label="Menu"><span></span><span></span><span></span></button>
+  </div>
+</div></nav>
+<div class="mobile-menu" id="mobileMenu">
+  <a href="https://www.fabriclayer.ai">Home</a>
+  <a href="https://trust.fabriclayer.dev">Trust Index</a>
+  <a href="docs.html">Docs</a>
+  <a href="blog.html">Blog</a>
+</div>
+
+<article class="article">
+<div class="article-meta">
+  <span class="article-tag product">Product</span>
+  <span>February 2026</span>
+  <span>·</span>
+  <span>6 min read</span>
+</div>
+
+<h1>How our trust scoring works — six signals, no black boxes</h1>
+
+<p class="lead">Every AI service indexed by Fabric receives a score from 0.00 to 5.00. The score is computed from six independently weighted signals, all derived from public data. No manual reviews. No paid placements. No provider involvement required. Here's exactly how it works.</p>
+
+<h2>The problem with single metrics</h2>
+
+<p>The MCP ecosystem is growing fast. Thousands of AI services, tools, and models are published every week across npm, PyPI, HuggingFace, and MCP registries like ClawHub. The question every agent developer faces: which ones can you trust?</p>
+
+<p>Download count is the most common proxy for trust. It's also the easiest to game. The ClawHub malware incident proved it — the #1 most-downloaded skill on the platform was actively stealing SSH keys, crypto wallets, and browser passwords. It had thousands of installs. It looked legitimate. And it was malware.</p>
+
+<p>GitHub stars, npm downloads, HuggingFace likes — individually, any of these can be inflated. You need multiple independent signals that are hard to fake simultaneously. That's the core design principle behind Fabric's scoring.</p>
+
+<h2>Six signals, weighted by risk</h2>
+
+<p>Each signal scores 0–5 independently, then is multiplied by its weight. The six weighted contributions sum to the final score. Security and operational signals carry 65% of the total because they directly affect safety. Adoption and reputation are supporting evidence, not primary drivers.</p>
+
+<div class="signals">
+<div class="signal">
+  <div class="signal-head"><span class="signal-name">1. Vulnerability &amp; Safety</span> <span class="signal-weight">×0.25</span></div>
+  <div class="signal-contrib">max 1.25</div>
+  <div class="signal-desc">The highest-weighted signal. Scans for known CVEs (severity-weighted), flagged dependencies, install scripts, typosquatting indicators, and malware signatures across the full dependency tree. Starts at 5.0, deducts per finding. Critical unpatched CVE = floor at 1.0. Active malware = zero.</div>
+</div>
+<div class="signal">
+  <div class="signal-head"><span class="signal-name">2. Operational Health</span> <span class="signal-weight">×0.20</span></div>
+  <div class="signal-contrib">max 1.00</div>
+  <div class="signal-desc">The only signal that requires Fabric's own infrastructure. We actively monitor services for uptime, latency, and behavioural consistency. 99.9%+ uptime and sub-500ms p50 = 5.0. Heaviest penalty is for behavioural inconsistency — different responses to identical inputs.</div>
+</div>
+<div class="signal">
+  <div class="signal-head"><span class="signal-name">3. Maintenance Activity</span> <span class="signal-weight">×0.20</span></div>
+  <div class="signal-contrib">max 1.00</div>
+  <div class="signal-desc">Is anyone home? Evaluates recency of last commit, 90-day commit frequency, issue response time, PR merge velocity, and release cadence. Active project with regular releases = 5.0. No commits in 12+ months = 1.0 or below.</div>
+</div>
+<div class="signal">
+  <div class="signal-head"><span class="signal-name">4. Adoption</span> <span class="signal-weight">×0.15</span></div>
+  <div class="signal-contrib">max 0.75</div>
+  <div class="signal-desc">Logarithmic scale against ecosystem peers. Combines download counts, stars, forks across registries. Normalised by category so niche tools aren't penalised. Download velocity matters more than absolute count. This is the one signal attackers can inflate — that's why it's weighted low.</div>
+</div>
+<div class="signal">
+  <div class="signal-head"><span class="signal-name">5. Transparency</span> <span class="signal-weight">×0.10</span></div>
+  <div class="signal-contrib">max 0.50</div>
+  <div class="signal-desc">Checklist-based: open source, recognised licence, README quality, SECURITY.md, published schemas, model cards, API docs, research links. Each element adds to the score. Closed-source with no documentation scores near zero.</div>
+</div>
+<div class="signal">
+  <div class="signal-head"><span class="signal-name">6. Publisher Trust</span> <span class="signal-weight">×0.10</span></div>
+  <div class="signal-contrib">max 0.50</div>
+  <div class="signal-desc">Account age, organisational backing, other maintained packages, cross-registry identity consistency, verified domain. New anonymous accounts start near 1.0. Established orgs with clean track records score above 4.0.</div>
+</div>
+</div>
+
+<h2>The formula</h2>
+
+<div class="code"><pre><span class="fn">trust_score</span> =
+  (<span class="str">vulnerability_safety</span> × <span class="fn">0.25</span>)
++ (<span class="str">operational_health</span>   × <span class="fn">0.20</span>)
++ (<span class="str">maintenance_activity</span> × <span class="fn">0.20</span>)
++ (<span class="str">adoption</span>             × <span class="fn">0.15</span>)
++ (<span class="str">transparency</span>         × <span class="fn">0.10</span>)
++ (<span class="str">publisher_trust</span>      × <span class="fn">0.10</span>)</pre></div>
+
+<h3>Worked example</h3>
+
+<div class="code"><pre><span class="cmt">// A well-maintained open source image generation API</span>
+<span class="fn">trust_score</span> = (<span class="fn">4.8</span> × 0.25) + (<span class="fn">4.5</span> × 0.20) + (<span class="fn">3.4</span> × 0.20) + (<span class="fn">2.1</span> × 0.15) + (<span class="fn">3.7</span> × 0.10) + (<span class="fn">4.3</span> × 0.10)
+            = 1.20 + 0.90 + 0.68 + 0.32 + 0.37 + 0.43
+            = <span class="fn">3.90</span> <span class="cmt">// ✅ Trusted</span></pre></div>
+
+<h2>Three tiers</h2>
+
+<p>Every score maps to one of three tiers that determine default agent behaviour:</p>
+
+<div class="tiers">
+<div class="tier green">
+  <span class="tier-score green">3.34 – 5.00</span>
+  <span class="tier-label">Trusted</span>
+  <span class="tier-desc">Low risk across all signals. Agents can auto-approve without human confirmation.</span>
+</div>
+<div class="tier orange">
+  <span class="tier-score orange">1.67 – 3.33</span>
+  <span class="tier-label">Caution</span>
+  <span class="tier-desc">Some signals flagged. Agents should request human confirmation before proceeding.</span>
+</div>
+<div class="tier red">
+  <span class="tier-score red">0.00 – 1.66</span>
+  <span class="tier-label">Blocked</span>
+  <span class="tier-desc">Significant risks detected. Agents deny by default. Manual override required.</span>
+</div>
+</div>
+
+<h2>Score modifiers</h2>
+
+<p>Two additional multipliers can reduce a score below what the signals alone would produce. Providers with fewer than 10 recorded transactions receive a "new provider" penalty of 0.8× on their final score. Providers inactive for 7+ days are flagged with an "inactive" multiplier of 0.7×. Both exist to prevent trust-before-evidence — you shouldn't get a high score just because nothing bad has happened yet.</p>
+
+<h2>Data freshness</h2>
+
+<p>The scoring engine runs continuously against 10,000+ indexed services. Full dataset refresh runs daily via batch. Event-driven re-checks fire on three conditions: a new version release, a new CVE disclosure affecting the service's ecosystem, or a user search that returns stale data.</p>
+
+<p>Vulnerability data refreshes most aggressively — hourly syncs against advisory databases, with immediate re-scoring when a relevant CVE is published. Transparency and publisher trust change slowly and only need daily checks. Operational Health runs on a 15-minute cycle for high-traffic services.</p>
+
+<h2>Custom weights</h2>
+
+<p>Pro and Team plans can override default weights. If your use case prioritises speed over security, or cost over quality, you can rebalance the formula without changing the underlying data.</p>
+
+<div class="code"><pre>{
+  <span class="fn">"trustWeights"</span>: {
+    <span class="fn">"vulnerabilitySafety"</span>: <span class="str">0.40</span>,   <span class="cmt">// security-first config</span>
+    <span class="fn">"operationalHealth"</span>:  <span class="str">0.25</span>,
+    <span class="fn">"maintenance"</span>:        <span class="str">0.15</span>,
+    <span class="fn">"adoption"</span>:           <span class="str">0.10</span>,
+    <span class="fn">"transparency"</span>:       <span class="str">0.05</span>,
+    <span class="fn">"publisherTrust"</span>:     <span class="str">0.05</span>
+  }
+}</pre></div>
+
+<h2>Why this works</h2>
+
+<p>Spoofing one signal is easy. Download counts can be inflated overnight. GitHub stars can be purchased. A README can be polished in an hour. But spoofing all six simultaneously — passing vulnerability scans, maintaining consistent uptime, building genuine commit history, publishing from a verified org, showing transparent documentation, and exhibiting normal network behaviour — is almost impossible.</p>
+
+<p>That's the design principle. Not any single signal. The combination.</p>
+
+<div class="callout">
+<strong>No manual reviews. No paid placements.</strong>
+<p>Trust scores are fully automated from public sources. Providers cannot pay for a higher score, request manual review, or influence their ranking. The only way to improve a score is to improve the underlying signals.</p>
+</div>
+
+<div class="article-cta">
+  <h3>Search the Trust Index</h3>
+  <p>Look up the trust score for any AI service, model, or MCP skill. Free. No account required.</p>
+  <a href="https://trust.fabriclayer.dev" class="btn-p">Search 10,000+ services →</a>
+</div>
+</article>
+
+<footer><div class="foot-inner">
+<div class="foot-l">&copy; 2026 Fabric. A <a href="https://motherbird.ai">Motherbird</a> product.</div>
+<ul class="foot-links"><li><a href="https://trust.fabriclayer.ai/claim">Claim Profile</a></li><li><a href="https://github.com/motherbirdai/fabric">GitHub</a></li><li><a href="#">Twitter / X</a></li><li><a href="docs.html">Docs</a></li><li class="foot-sep"></li><li><a href="terms.html">Terms</a></li><li><a href="privacy.html">Privacy</a></li><li><a href="disclaimer.html">Disclaimer</a></li></ul>
+</div></footer>
+<script>
+const burger=document.getElementById('burgerBtn');const mobileMenu=document.getElementById('mobileMenu');
+burger.addEventListener('click',()=>{burger.classList.toggle('open');mobileMenu.classList.toggle('open')});
+mobileMenu.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{burger.classList.remove('open');mobileMenu.classList.remove('open')}));
+</script>
+</body>
+</html>

@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Terms of Service — Fabric</title>
+<title>Disclaimer — Fabric</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,300;1,9..40,400&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
 :root{--black:#000;--blue:#068cff;--pink:#fe83e0;--white:#fff;--bg:#fafafa;--text:#0a0a0a;--text-2:#555;--text-3:#999;--border:#e5e5e5;--green:#0dc956;--orange:#f7931e;--sans:'DM Sans',-apple-system,BlinkMacSystemFont,sans-serif;--mono:'DM Mono','SF Mono',monospace}
@@ -11,7 +11,6 @@
 body{background:var(--white);color:var(--text);font-family:var(--sans);font-size:16px;line-height:1.7;-webkit-font-smoothing:antialiased}
 ::selection{background:var(--blue);color:var(--white)}
 a{color:var(--blue);text-decoration:none}a:hover{text-decoration:underline}
-
 nav{position:fixed;top:0;left:0;right:0;z-index:100;background:var(--white);border-bottom:1px solid var(--border);padding:0 2rem;height:56px}
 .nav-inner{max-width:1400px;margin:0 auto;height:100%;display:flex;align-items:center;justify-content:space-between}
 .nav-left{display:flex;align-items:center;gap:1.25rem}
@@ -34,7 +33,6 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;background:var(--white);bord
 .mobile-menu a{display:block;font-family:var(--mono);font-size:0.78rem;color:var(--text-2);text-decoration:none;padding:0.55rem 1.25rem;transition:all .12s}
 .mobile-menu a:hover{background:var(--bg);color:var(--pink);text-decoration:none}
 .mobile-menu .nav-cta{margin:0.5rem 1rem;text-align:center;border-radius:8px;padding:8px 18px}
-
 .legal{max-width:720px;margin:56px auto 0;padding:48px 20px 80px}
 .legal-label{font-family:var(--mono);font-size:0.62rem;font-weight:500;color:var(--blue);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px}
 .legal h1{font-size:32px;font-weight:700;letter-spacing:-1.5px;line-height:1.1;margin-bottom:8px}
@@ -46,23 +44,15 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;background:var(--white);bord
 .legal li{font-size:15px;margin-bottom:6px}
 .legal strong{font-weight:600}
 .legal a{color:var(--blue)}
-
+.highlight{background:rgba(254,131,224,.04);border-left:3px solid var(--pink);padding:16px 20px;border-radius:0 10px 10px 0;margin:20px 0 24px}
+.highlight p{margin:0;font-size:14.5px}
+.highlight strong{display:block;margin-bottom:4px}
 .legal-footer{border-top:1px solid var(--border);margin-top:56px;padding-top:24px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px}
 .legal-footer a{font-family:var(--mono);font-size:0.68rem;color:var(--text-3);text-decoration:none}
 .legal-footer a:hover{color:var(--text)}
 .legal-footer .copy{font-family:var(--mono);font-size:0.68rem;color:var(--text-3)}
-
-@media(max-width:768px){
-.nav-links{display:none!important}.burger{display:flex}nav{padding:0 1rem}
-.legal h1{font-size:26px}.legal{padding:36px 20px 60px}
-}
-@media(min-width:901px){
-.legal{padding:64px 20px 120px}
-.legal h1{font-size:38px;letter-spacing:-2px}
-.legal h2{font-size:24px;margin:48px 0 14px}
-.legal p{font-size:16px}
-.legal li{font-size:16px}
-}
+@media(max-width:768px){.nav-links{display:none!important}.burger{display:flex}nav{padding:0 1rem}.legal h1{font-size:26px}.legal{padding:36px 20px 60px}}
+@media(min-width:901px){.legal{padding:64px 20px 120px}.legal h1{font-size:38px;letter-spacing:-2px}.legal h2{font-size:24px;margin:48px 0 14px}.legal p{font-size:16px}.legal li{font-size:16px}}
 </style>
 </head>
 <body>
@@ -94,80 +84,68 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;background:var(--white);bord
 
 <div class="legal">
 <div class="legal-label">Legal</div>
-<h1>Terms of Service</h1>
+<h1>Disclaimer</h1>
 <p class="updated">Last updated: 19 February 2026</p>
 
-<h2>1. Agreement to Terms</h2>
-<p>By accessing or using any services provided by Fabric (operated by Fabric Layer Technologies Ltd, a company incorporated in the British Virgin Islands, "we", "us", "our"), including the Fabric Trust Index, API, SDK, dashboard, and documentation (collectively, the "Service"), you agree to be bound by these Terms of Service ("Terms"). If you do not agree, do not use the Service.</p>
-<p>We may update these Terms at any time. Continued use of the Service after changes constitutes acceptance. We will notify registered users of material changes via email or in-product notice.</p>
+<div class="highlight">
+<p><strong>Important.</strong> Please read this Disclaimer carefully before using the Fabric Trust Index, API, or any related services. By using Fabric, you acknowledge that you have read, understood, and agree to be bound by this Disclaimer in addition to our <a href="terms.html">Terms of Service</a>.</p>
+</div>
 
-<h2>2. Description of Service</h2>
-<p>Fabric provides a trust and reputation layer for AI agents and services. The Service includes trust scores and safety ratings for third-party AI tools and services, an API and SDK for programmatic access to trust data, a public Trust Index for browsing and searching indexed services, routing, payment, and budget management tools for AI agents, and documentation and developer resources.</p>
-<p>Fabric is an informational and infrastructure service. We aggregate, analyse, and present data from third-party sources to generate trust scores and safety assessments. We do not operate, control, endorse, or guarantee any third-party service indexed by Fabric.</p>
+<h2>1. Information Only — Not Advice</h2>
+<p>All content provided through the Fabric Service — including trust scores, safety ratings, provider profiles, category rankings, and any other data or analysis — is provided for <strong>general informational purposes only</strong>.</p>
+<p>Fabric does not provide and nothing in the Service should be construed as legal advice or legal opinion, financial or investment advice, security audits or security certifications, compliance assessments or regulatory guidance, endorsements or recommendations of any third-party service, or guarantees of safety, reliability, performance, or fitness for any particular purpose.</p>
 
-<h2>3. Third-Party Data & Information Accuracy</h2>
-<p><strong>Fabric's trust scores, safety ratings, and service information are derived from third-party sources including public registries, on-chain data, API metadata, community feedback, and automated monitoring systems.</strong></p>
-<p>We make no representation or warranty that any information provided through the Service is accurate, complete, current, reliable, or error-free. Trust scores are algorithmically generated and may not reflect the current state of any indexed service. Third-party services may change their practices, terms, security posture, or availability at any time without notice to us. Data sources we rely on may themselves contain inaccuracies, be incomplete, or become outdated. Our scoring methodology involves subjective weighting decisions and may not capture all relevant risk factors.</p>
-<p>You acknowledge that trust scores and safety ratings are informational tools only and should not be your sole basis for any decision, including decisions relating to data security, financial transactions, or the selection of AI tools and services for business-critical applications.</p>
+<h2>2. Third-Party Data Sources</h2>
+<p>Fabric aggregates data from a variety of third-party sources to generate trust scores and service assessments. These sources include publicly available information from service provider websites and documentation, on-chain data from blockchain registries (including ERC-8004 smart contracts on Base), API metadata and technical specifications published by service providers, community feedback and reviews submitted through the Fabric platform, automated monitoring systems that test service availability and response characteristics, and publicly filed regulatory and compliance documentation.</p>
+<p><strong>We do not control, verify, audit, or guarantee the accuracy of any third-party data source.</strong> Third-party data may be inaccurate, incomplete, outdated, misleading, or manipulated. Service providers may change their practices, terms, data handling, security measures, or operational status at any time without notice to Fabric. On-chain data, while immutable once recorded, may reflect inputs that were inaccurate at the time of submission.</p>
 
-<h2>4. No Professional Advice</h2>
-<p>Nothing in the Service constitutes legal, financial, security, compliance, or professional advice. Fabric does not provide recommendations or endorsements of any third-party service. Trust scores are not certifications, audits, or guarantees of safety, security, or fitness for purpose.</p>
-<p>You should conduct your own independent due diligence before relying on any AI tool or service, regardless of its Fabric trust score. We strongly recommend consulting qualified professionals for decisions involving data privacy, security compliance, financial risk, or regulatory obligations.</p>
+<h2>3. Trust Scores Are Algorithmic Estimates</h2>
+<p>Fabric trust scores are generated by proprietary algorithms that analyse multiple data signals and apply weighted scoring models. These scores are <strong>algorithmic estimates, not objective facts</strong>.</p>
+<p>You should be aware that scoring models involve subjective decisions about which signals to include and how to weight them. Different weighting methodologies could produce materially different scores for the same service. Scores are point-in-time assessments and may not reflect the current state of a service. A high trust score does not guarantee that a service is safe, secure, reliable, or suitable for your use case. A low trust score does not necessarily mean a service is unsafe or unreliable. New or recently launched services may have limited data, resulting in scores that do not accurately reflect their quality. Scores may be influenced by the volume and quality of available data, which varies by provider.</p>
 
-<h2>5. Limitation of Liability</h2>
-<p><strong>To the maximum extent permitted by applicable law, Fabric, Fabric Layer Technologies Ltd, and their directors, officers, employees, agents, and affiliates shall not be liable for any indirect, incidental, special, consequential, or punitive damages, including but not limited to:</strong></p>
+<h2>4. No Guarantee of Accuracy or Completeness</h2>
+<p><strong>Fabric makes no representation, warranty, or guarantee — express or implied — regarding the accuracy, completeness, reliability, timeliness, or suitability of any information provided through the Service.</strong></p>
+<p>Specific risks you should be aware of include data lag, where there may be delays between a change in a service's practices and the reflection of that change in Fabric's data. Coverage gaps mean that not all AI tools and services are indexed, and the absence of a service from the Trust Index should not be interpreted positively or negatively. Scoring limitations exist because no scoring methodology can capture every relevant risk factor, and edge cases, novel attack vectors, and emerging threats may not be reflected. Community feedback submitted through the platform may be subject to bias, manipulation, or inaccuracy.</p>
+
+<h2>5. Your Responsibility</h2>
+<p>You are solely responsible for any decisions you make based on information obtained through the Fabric Service. Before selecting, integrating, or relying on any AI tool or service — regardless of its Fabric trust score — you should conduct your own independent due diligence and risk assessment, review the service provider's terms of service, privacy policy, and security documentation directly, assess whether the service meets your specific regulatory, compliance, and security requirements, consult with qualified legal, security, or compliance professionals where appropriate, and test and validate the service in your own environment before deploying to production.</p>
+
+<h2>6. Financial & Business Losses</h2>
+<p><strong>Fabric expressly disclaims liability for any financial loss, business loss, loss of profits, loss of revenue, loss of data, loss of opportunity, or any other direct or indirect damages arising from:</strong></p>
 <ul>
-<li>Loss of profits, revenue, data, or business opportunities</li>
-<li>Financial losses arising from reliance on trust scores or service information</li>
-<li>Damages caused by third-party services indexed by Fabric</li>
-<li>Security breaches, data loss, or service failures of third-party tools</li>
-<li>Losses arising from inaccurate, incomplete, or outdated information</li>
-<li>Business interruption or costs of procuring substitute services</li>
+<li>Your reliance on trust scores, safety ratings, or any other information provided through the Service</li>
+<li>Your selection of, integration with, or use of any third-party service listed in the Trust Index</li>
+<li>Data breaches, security incidents, or service outages experienced by third-party providers</li>
+<li>Inaccurate, incomplete, or outdated information presented through the Service</li>
+<li>Changes in third-party service practices, pricing, terms, or availability</li>
+<li>Decisions to not use a particular service based on its Fabric trust score</li>
+<li>Disruptions or unavailability of the Fabric Service itself</li>
 </ul>
-<p><strong>This limitation applies regardless of the theory of liability (contract, tort, negligence, strict liability, or otherwise), even if we have been advised of the possibility of such damages.</strong></p>
-<p>In no event shall our total aggregate liability exceed the greater of (a) the amount you paid us for the Service in the 12 months preceding the claim, or (b) USD $100.</p>
-<p>Some jurisdictions do not allow the exclusion or limitation of certain damages. In such jurisdictions, our liability is limited to the fullest extent permitted by law.</p>
+<p>This disclaimer of liability applies regardless of the theory of liability, whether in contract, tort, negligence, strict liability, or otherwise, and whether or not Fabric has been advised of the possibility of such damages.</p>
 
-<h2>6. Assumption of Risk</h2>
-<p>By using the Service, you expressly acknowledge and accept that AI tools and services carry inherent risks including data privacy exposure, unpredictable outputs, and potential for misuse. Trust scores are point-in-time assessments and may not reflect current conditions. No scoring system can guarantee the safety or reliability of any service. The agent economy is an emerging and rapidly evolving space with limited regulatory precedent. On-chain data, while immutable, may reflect outdated or manipulated inputs.</p>
-<p>You assume full responsibility for your use of the Service and any actions you take based on information provided through the Service.</p>
+<h2>7. Blockchain & Payment Risks</h2>
+<p>Where the Service involves blockchain transactions, managed wallets, or x402 payments, additional risks apply. Blockchain transactions are irreversible once confirmed. Smart contracts may contain bugs or vulnerabilities despite testing. Cryptocurrency values and gas fees can fluctuate significantly. Regulatory treatment of digital assets varies by jurisdiction and may change. Fabric's managed wallets are custodial, and you rely on our infrastructure for access. Network congestion may cause delays or increased transaction costs.</p>
 
-<h2>7. Use of the Service</h2>
-<p>You agree to use the Service only for lawful purposes and in accordance with these Terms. You will not use the Service to engage in any activity that violates applicable laws or regulations, attempt to reverse-engineer our scoring algorithms or proprietary systems, scrape, harvest, or systematically extract data beyond normal API usage, misrepresent Fabric trust scores as endorsements, certifications, or guarantees, interfere with the operation or security of the Service, or use automated systems to access the Service in a manner that exceeds reasonable usage.</p>
-<p>We reserve the right to suspend or terminate access for violations of these Terms or any activity we reasonably determine to be harmful to the Service or its users.</p>
+<h2>8. Emerging Technology</h2>
+<p>The AI agent economy is a rapidly evolving and largely unregulated space. Standards, best practices, regulatory frameworks, and market dynamics are still developing. Information that is accurate today may become outdated or misleading as the ecosystem evolves. Fabric cannot anticipate or account for all future developments in the space.</p>
 
-<h2>8. API & SDK Usage</h2>
-<p>Use of the Fabric API and SDK is subject to applicable rate limits, usage quotas, and the terms of your subscription plan. API keys are confidential and you are responsible for all activity under your account. We may modify, throttle, or discontinue API access at any time with reasonable notice.</p>
+<h2>9. Third-Party Trademarks & Links</h2>
+<p>The Trust Index displays names, logos, and descriptions of third-party services. These belong to their respective owners and their inclusion does not imply any affiliation, endorsement, or partnership. Links to third-party websites are provided for convenience only. Fabric is not responsible for the content, accuracy, or practices of any third-party site.</p>
 
-<h2>9. Intellectual Property</h2>
-<p>The Service, including its design, code, scoring methodology, documentation, and branding, is owned by Fabric Layer Technologies Ltd and is protected by applicable intellectual property laws. You may not copy, modify, distribute, or create derivative works from any part of the Service without our prior written consent.</p>
-<p>Third-party service names, logos, and trademarks displayed in the Trust Index belong to their respective owners. Their inclusion does not imply any affiliation with or endorsement by those parties.</p>
+<h2>10. Service Availability</h2>
+<p>Fabric is provided on an "as is" and "as available" basis. We do not guarantee that the Service will be available at all times, uninterrupted, error-free, or free from security vulnerabilities. We may modify, suspend, or discontinue any part of the Service at any time without notice.</p>
 
-<h2>10. Privacy</h2>
-<p>Your use of the Service is also governed by our <a href="privacy.html">Privacy Policy</a>, which describes how we collect, use, and protect your information.</p>
+<h2>11. Applicable Law</h2>
+<p>This Disclaimer is governed by the laws of the British Virgin Islands. Nothing in this Disclaimer is intended to exclude, restrict, or modify any rights or remedies that cannot be excluded or limited under applicable law in your jurisdiction. Where our liability cannot be excluded, it is limited to the maximum extent permitted by law.</p>
 
-<h2>11. Disclaimer of Warranties</h2>
-<p><strong>The Service is provided "as is" and "as available" without warranties of any kind, whether express, implied, or statutory, including but not limited to implied warranties of merchantability, fitness for a particular purpose, accuracy, and non-infringement.</strong></p>
-<p>We do not warrant that the Service will be uninterrupted, error-free, secure, or free of viruses or other harmful components. We do not warrant that any trust score or safety rating will be accurate or that any indexed service will perform as described.</p>
-
-<h2>12. Indemnification</h2>
-<p>You agree to indemnify, defend, and hold harmless Fabric, Fabric Layer Technologies Ltd, and their officers, directors, employees, and agents from any claims, damages, losses, liabilities, and expenses (including reasonable legal fees) arising from your use of the Service, your violation of these Terms, or your violation of any third-party rights.</p>
-
-<h2>13. Governing Law</h2>
-<p>These Terms are governed by the laws of the British Virgin Islands. Any disputes shall be subject to the exclusive jurisdiction of the courts of the British Virgin Islands. If any provision of these Terms is found to be unenforceable, the remaining provisions shall continue in full force and effect.</p>
-
-<h2>14. Severability</h2>
-<p>Nothing in these Terms is intended to exclude, restrict, or modify any rights or remedies that cannot be excluded or limited under applicable law. Where any provision of these Terms is found to be unenforceable or void under applicable law, that provision shall be severed and the remaining provisions shall continue in full force and effect. To the extent that our liability cannot be excluded under applicable law, our total liability is limited (at our option) to re-supplying the Service or paying the cost of having the Service re-supplied.</p>
-
-<h2>15. Contact</h2>
-<p>For questions about these Terms, contact us at <strong>legal@fabriclayer.ai</strong>.</p>
+<h2>12. Contact</h2>
+<p>If you have questions about this Disclaimer or the information provided through the Service, contact us at <strong>legal@fabriclayer.ai</strong>.</p>
 
 <div class="legal-footer">
   <span class="copy">&copy; 2026 Fabric (Fabric Layer Technologies Ltd)</span>
   <div><a href="terms.html">Terms</a> &middot; <a href="privacy.html">Privacy</a> &middot; <a href="disclaimer.html">Disclaimer</a> &middot; <a href="https://www.fabriclayer.ai">Home</a></div>
 </div>
 </div>
-
 <script>
 const burger=document.getElementById('burgerBtn');const mobileMenu=document.getElementById('mobileMenu');
 burger.addEventListener('click',()=>{burger.classList.toggle('open');mobileMenu.classList.toggle('open')});
