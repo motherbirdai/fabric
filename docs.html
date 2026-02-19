@@ -89,6 +89,10 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;background:var(--white);bord
 .param-req{font-family:var(--mono);font-size:0.6rem;color:var(--pink);margin-left:8px}
 .param-desc{color:var(--text-2);margin-top:4px;font-size:13px}
 
+footer{border-top:1px solid var(--border);padding:28px 20px}
+.foot-inner{max-width:1200px;margin:0 auto;display:flex;flex-direction:column;gap:12px;align-items:center;text-align:center}
+.foot-l{font-size:12px;color:var(--text-3)}.foot-l a{color:var(--text-2);text-decoration:none}.foot-l a:hover{color:var(--text)}
+.foot-links{display:flex;gap:20px;list-style:none;justify-content:center;flex-wrap:wrap}.foot-links a{font-size:12px;color:var(--text-3);text-decoration:none}.foot-links a:hover{color:var(--text)}.foot-sep{width:1px;background:var(--border);align-self:stretch}
 .doc-footer{border-top:1px solid var(--border);padding:24px 0;margin-top:48px;font-family:var(--mono);font-size:0.65rem;color:var(--text-3);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
 .doc-footer a{color:var(--text-2);text-decoration:none}.doc-footer a:hover{color:var(--text)}
 
@@ -112,6 +116,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;background:var(--white);bord
 .param{padding:12px 16px;font-size:14px}.param-name{font-size:13.5px}.param-desc{font-size:13.5px}
 .doc-footer{padding:32px 0;margin-top:64px}
 .inline-code{font-size:0.82em;padding:2px 7px}
+footer{padding:40px}.foot-inner{flex-direction:row;justify-content:space-between;text-align:left}
 }
 </style>
 </head>
@@ -601,12 +606,13 @@ docker compose -f docker-compose.prod.yml up -d
 
 <div class="callout"><p><strong>Fabric Layer Technologies Ltd</strong> is incorporated in the British Virgin Islands. For legal enquiries, contact <a href="mailto:legal@fabriclayer.ai">legal@fabriclayer.ai</a>.</p></div>
 
-<div class="doc-footer">
-<p>© 2026 Fabric. A <a href="https://motherbird.ai">Motherbird</a> product.</p>
-<p><a href="https://www.fabriclayer.ai">Home</a> · <a href="api.html">API</a> · <a href="https://trust.fabriclayer.dev">Trust Index</a></p>
-</div>
 </main>
 </div>
+
+<footer><div class="foot-inner">
+<div class="foot-l">&copy; 2026 Fabric. A <a href="https://motherbird.ai">Motherbird</a> product.</div>
+<ul class="foot-links"><li><a href="https://trust.fabriclayer.ai/claim">Claim Profile</a></li><li><a href="https://github.com/motherbirdai/fabric">GitHub</a></li><li><a href="#">Twitter / X</a></li><li><a href="blog.html">Blog</a></li><li class="foot-sep"></li><li><a href="terms.html">Terms</a></li><li><a href="privacy.html">Privacy</a></li><li><a href="disclaimer.html">Disclaimer</a></li></ul>
+</div></footer>
 
 <script>
 const burger=document.getElementById('burgerBtn');
