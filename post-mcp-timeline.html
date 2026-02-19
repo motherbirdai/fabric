@@ -4,9 +4,17 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>MCP supply chain attacks: a timeline of what's happened so far — Fabric</title>
-<meta name="description" content="From postmark-mcp email exfiltration to ClawHub malware — a consolidated timeline of every major MCP security breach and what they reveal.">
-<meta property="og:title" content="MCP supply chain attacks: a timeline of what's happened so far">
-<meta property="og:description" content="A consolidated timeline of every major MCP security breach and what they reveal about the new threat surface.">
+<meta name="description" content="From postmark-mcp email exfiltration to ClawHub malware — a consolidated timeline of every major MCP security breach.">
+<link rel="canonical" href="https://fabriclayer.ai/blog/mcp-supply-chain-attacks-timeline">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://fabriclayer.ai/blog/mcp-supply-chain-attacks-timeline">
+<meta property="og:title" content="MCP supply chain attacks: a timeline of what's happened so far — Fabric">
+<meta property="og:description" content="From postmark-mcp email exfiltration to ClawHub malware — a consolidated timeline of every major MCP security breach.">
+<meta property="og:site_name" content="Fabric">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@fabriclayer">
+<meta name="twitter:title" content="MCP supply chain attacks: a timeline of what's happened so far — Fabric">
+<meta name="twitter:description" content="From postmark-mcp email exfiltration to ClawHub malware — a consolidated timeline of every major MCP security breach.">
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,300;1,9..40,400&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
 :root{--black:#000;--blue:#068cff;--pink:#fe83e0;--white:#fff;--bg:#f7f7f7;--text:#0a0a0a;--text-2:#555;--text-3:#999;--border:#e5e5e5;--green:#0dc956;--orange:#f7931e;--red:#e82d35;--sans:'DM Sans',-apple-system,BlinkMacSystemFont,sans-serif;--mono:'DM Mono','SF Mono',monospace}
@@ -35,6 +43,13 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;background:var(--white);bord
 .mobile-menu a{display:block;font-family:var(--mono);font-size:0.78rem;color:var(--text-2);text-decoration:none;padding:0.55rem 1.25rem;transition:all .12s}
 .mobile-menu a:hover{background:rgba(0,0,0,.02);color:var(--pink);text-decoration:none}
 .article{max-width:720px;margin:0 auto;padding:100px 20px 80px}
+.post-nav{display:flex;gap:16px;margin-top:64px;padding-top:32px;border-top:1px solid var(--border)}
+.post-nav a{flex:1;padding:16px;border:1px solid var(--border);border-radius:12px;text-decoration:none;transition:all .15s;display:flex;flex-direction:column;gap:4px}
+.post-nav a:hover{border-color:var(--blue);background:rgba(6,140,255,.03);text-decoration:none}
+.post-nav-label{font-family:var(--mono);font-size:11px;color:var(--text-3);text-transform:uppercase;letter-spacing:.5px}
+.post-nav-title{font-size:14px;font-weight:600;color:var(--text);line-height:1.4;letter-spacing:-.2px}
+.post-nav .next{text-align:right;margin-left:auto}
+.article-back{font-family:var(--mono);font-size:12px;color:var(--text-3);text-decoration:none;display:inline-flex;align-items:center;gap:6px;margin-bottom:20px;transition:color .15s}.article-back:hover{color:var(--text);text-decoration:none}.article-back svg{width:14px;height:14px}
 .article-meta{font-family:var(--mono);font-size:12px;color:var(--text-3);text-transform:uppercase;letter-spacing:1px;margin-bottom:16px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
 .article-tag{padding:3px 10px;border-radius:6px;font-weight:500;letter-spacing:.5px}
 .article-tag.research{background:rgba(13,201,86,.08);color:var(--green)}
@@ -92,6 +107,7 @@ footer{padding:40px}.foot-inner{flex-direction:row;justify-content:space-between
 <div class="mobile-menu" id="mobileMenu"><a href="https://www.fabriclayer.ai">Home</a><a href="https://trust.fabriclayer.ai">Trust Index</a><a href="docs.html">Docs</a><a href="blog.html">Blog</a></div>
 
 <article class="article">
+<a href="blog.html" class="article-back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>All posts</a>
 <div class="article-meta">
   <span class="article-tag research">Research</span>
   <span>February 2026</span>
@@ -205,7 +221,7 @@ footer{padding:40px}.foot-inner{flex-direction:row;justify-content:space-between
 
 <div class="callout blue">
 <strong>See how Fabric would have scored the ClawHub malware</strong>
-<p>We ran our full six-signal methodology against "What Would Elon Do" — the #1 skill that turned out to be Atomic Stealer. Result: 0.50/5.00. Blocked. Five of six signals independently flagged it. <a href="post-clawhub.html">Read the full case study →</a></p>
+<p>We ran our full six-signal methodology against "What Would Elon Do" — the #1 skill that turned out to be Atomic Stealer. Result: 0.50/5.00. Blocked. Five of six signals independently flagged it. <a href="/blog/clawhub-malware-case-study">Read the full case study →</a></p>
 </div>
 
 <div class="article-cta">
@@ -213,6 +229,7 @@ footer{padding:40px}.foot-inner{flex-direction:row;justify-content:space-between
   <p>Score every provider before your agent touches it. Free tier available.</p>
   <a href="https://trust.fabriclayer.ai" class="btn-p">Search the Trust Index →</a>
 </div>
+<div class="post-nav"><a href="/blog/how-trust-scoring-works"><span class="post-nav-label">← Previous</span><span class="post-nav-title">How our trust scoring works</span></a><a href="/blog/introducing-trust-index" class="next"><span class="post-nav-label">Next →</span><span class="post-nav-title">Introducing the Fabric Trust Index</span></a></div>
 </article>
 
 <footer><div class="foot-inner">
