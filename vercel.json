@@ -2,16 +2,10 @@
   "cleanUrls": true,
   "trailingSlash": false,
   "rewrites": [
-    { "source": "/blog/clawhub-malware-case-study", "destination": "/post-clawhub.html" },
-    { "source": "/blog/how-trust-scoring-works", "destination": "/post-trust-scoring.html" },
-    { "source": "/blog/mcp-supply-chain-attacks-timeline", "destination": "/post-mcp-timeline.html" },
-    { "source": "/blog/introducing-trust-index", "destination": "/post-trust-index.html" }
-  ],
-  "redirects": [
-    { "source": "/post-clawhub", "destination": "/blog/clawhub-malware-case-study", "permanent": true },
-    { "source": "/post-trust-scoring", "destination": "/blog/how-trust-scoring-works", "permanent": true },
-    { "source": "/post-mcp-timeline", "destination": "/blog/mcp-supply-chain-attacks-timeline", "permanent": true },
-    { "source": "/post-trust-index", "destination": "/blog/introducing-trust-index", "permanent": true }
+    { "source": "/blog/clawhub-malware-case-study", "destination": "/post-clawhub" },
+    { "source": "/blog/how-trust-scoring-works", "destination": "/post-trust-scoring" },
+    { "source": "/blog/mcp-supply-chain-attacks-timeline", "destination": "/post-mcp-timeline" },
+    { "source": "/blog/introducing-trust-index", "destination": "/post-trust-index" }
   ],
   "headers": [
     {
