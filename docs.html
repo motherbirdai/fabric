@@ -3,16 +3,16 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>Fabric Documentation — Scoring, API reference, integration</title>
-<meta name="description" content="Technical documentation for the Fabric trust layer — scoring methodology, API reference, MCP integration, and architecture.">
+<title>Fabric Documentation — Trust Index scoring methodology</title>
+<meta name="description" content="Technical documentation for the Fabric Trust Index — how trust scores work, the six scoring signals, thresholds, and data freshness.">
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
 <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
 <link rel="canonical" href="https://fabriclayer.ai/docs">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://fabriclayer.ai/docs">
-<meta property="og:title" content="Fabric Documentation — Scoring, API reference, integration">
-<meta property="og:description" content="Technical documentation for the Fabric trust layer — scoring methodology, API reference, MCP integration, and architecture.">
+<meta property="og:title" content="Fabric Documentation — Trust Index scoring methodology">
+<meta property="og:description" content="Technical documentation for the Fabric Trust Index — how trust scores work, the six scoring signals, thresholds, and data freshness.">
 <meta property="og:site_name" content="Fabric">
 <meta property="og:image" content="https://fabriclayer.ai/og-docs.png">
 <meta property="og:image:width" content="1200">
@@ -20,8 +20,8 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://fabriclayer.ai/og-docs.png">
 <meta name="twitter:site" content="@fabriclayer">
-<meta name="twitter:title" content="Fabric Documentation — Scoring, API reference, integration">
-<meta name="twitter:description" content="Technical documentation for the Fabric trust layer — scoring methodology, API reference, MCP integration, and architecture.">
+<meta name="twitter:title" content="Fabric Documentation — Trust Index scoring methodology">
+<meta name="twitter:description" content="Technical documentation for the Fabric Trust Index — how trust scores work, the six scoring signals, thresholds, and data freshness.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,300;1,9..40,400&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
@@ -94,7 +94,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;background:var(--white);bord
 .doc-table td{padding:10px 14px;border-bottom:1px solid var(--border);vertical-align:top;font-size:13.5px}
 .doc-table tr:last-child td{border-bottom:none}
 
-.tag{display:inline-block;font-family:var(--mono);font-size:0.6rem;padding:2px 7px;border-radius:4px;letter-spacing:.3px;font-weight:500}
+.tag{display:inline-block;font-family:var(--mono);font-size:0.6rem;padding:2px 7px;border-radius:4px;letter-spacing:.3px;font-weight:500;white-space:nowrap}
 .tag-b{color:var(--blue);background:rgba(6,140,255,.08)}
 .tag-p{color:var(--pink);background:rgba(254,131,224,.08)}
 .tag-g{color:var(--green);background:rgba(13,201,86,.08)}
@@ -165,7 +165,7 @@ a,button{-webkit-tap-highlight-color:transparent}
 nav{padding-left:max(1rem,env(safe-area-inset-left));padding-right:max(1rem,env(safe-area-inset-right))}
 @media(max-width:768px){footer{padding-bottom:max(20px,env(safe-area-inset-bottom))}}
 </style>
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","name":"Fabric Documentation","headline":"Fabric Documentation \u2014 Scoring, API reference, integration","description":"Technical documentation for the Fabric trust layer \u2014 scoring methodology, API reference, MCP integration, and architecture.","url":"https://fabriclayer.ai/docs","publisher":{"@type":"Organization","name":"Fabric","url":"https://fabriclayer.ai"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","name":"Fabric Documentation","headline":"Fabric Documentation \u2014 Trust Index scoring methodology","description":"Technical documentation for the Fabric Trust Index \u2014 how trust scores work, the six scoring signals, thresholds, and data freshness.","url":"https://fabriclayer.ai/docs","publisher":{"@type":"Organization","name":"Fabric","url":"https://fabriclayer.ai"}}</script>
 </head>
 <body>
 
@@ -181,7 +181,6 @@ nav{padding-left:max(1rem,env(safe-area-inset-left));padding-right:max(1rem,env(
     <div class="nav-links">
       <a href="https://www.fabriclayer.ai">Home</a>
       <a href="#">Trust Index</a>
-      <a href="#">API</a>
       <a href="/blog">Blog</a>
     
     </div>
@@ -192,7 +191,6 @@ nav{padding-left:max(1rem,env(safe-area-inset-left));padding-right:max(1rem,env(
 <div class="mobile-menu" id="mobileMenu">
   <a href="https://www.fabriclayer.ai">Home</a>
   <a href="#">Trust Index</a>
-  <a href="#">API</a>
   <a href="/blog">Blog</a>
 
 </div>
@@ -208,45 +206,16 @@ nav{padding-left:max(1rem,env(safe-area-inset-left));padding-right:max(1rem,env(
 <a href="#trust-formula" class="nav-item">Scoring formula</a>
 <a href="#trust-thresholds" class="nav-item">Score thresholds</a>
 <a href="#trust-refresh" class="nav-item">Data freshness</a></div>
-<div class="nav-group"><div class="nav-group-title">Getting Started</div>
-<a href="#quickstart" class="nav-item">Quickstart</a>
-<a href="#architecture" class="nav-item">Architecture</a></div>
-<div class="nav-group"><div class="nav-group-title">MCP Tools</div>
-<a href="#tool-discover" class="nav-item">discover</a>
-<a href="#tool-route" class="nav-item">route</a>
-<a href="#tool-evaluate" class="nav-item">evaluate</a>
-<a href="#tool-budget" class="nav-item">budget</a>
-<a href="#tool-feedback" class="nav-item">feedback</a>
-<a href="#tool-favorites" class="nav-item">favorites</a></div>
-<div class="nav-group"><div class="nav-group-title">Concepts</div>
-<a href="#payments" class="nav-item">Payments &amp; x402</a>
-<a href="#budgets" class="nav-item">Budget Controls</a>
-<a href="#identity" class="nav-item">Agent Identity</a></div>
-<div class="nav-group"><div class="nav-group-title">Smart Contracts</div>
-<a href="#contracts" class="nav-item">Overview</a>
-<a href="#contract-registry" class="nav-item">FabricRegistry</a>
-<a href="#contract-identity" class="nav-item">FabricIdentity</a></div>
-<div class="nav-group"><div class="nav-group-title">WebMCP</div>
-<a href="#webmcp" class="nav-item">Integration</a></div>
-<div class="nav-group"><div class="nav-group-title">Integration</div>
-<a href="#rest-api" class="nav-item">REST API</a>
-<a href="#sdks" class="nav-item">SDKs</a>
-<a href="#billing" class="nav-item">Billing</a>
-<a href="#rate-limits" class="nav-item">Rate Limits</a></div>
 <div class="nav-group"><div class="nav-group-title">Reference</div>
-<a href="#config" class="nav-item">Configuration</a>
-<a href="#pricing" class="nav-item">Pricing</a>
-<a href="#protocols" class="nav-item">Protocol Stack</a>
-<a href="#deployment" class="nav-item">Deployment</a>
 <a href="#legal" class="nav-item">Legal</a></div>
 </aside>
 
 <main class="content">
 <h1 id="overview">Fabric Documentation</h1>
-<p class="subtitle">Fabric is the trust layer for the agent economy — a production-ready gateway that lets AI agents discover services, verify reputation through live scoring, and pay autonomously via x402 with managed USDC wallets.</p>
+<p class="subtitle">The Fabric Trust Index is a public directory of trust scores for AI tools, models, MCP servers, and API services. Every indexed service receives a composite score from 0.00 to 5.00, computed from six independently weighted signals — all generated automatically from public data sources.</p>
 
 <h2 id="trust-overview">Trust Score</h2>
-<p>The Fabric Trust Score is the core of everything Fabric does. Before an agent discovers, routes to, or pays any service — it checks the score. The score determines whether a provider is trusted, flagged for caution, or blocked outright.</p>
+<p>The Fabric Trust Score is the core of the Trust Index. It determines whether a service is trusted, flagged for caution, or blocked outright.</p>
 <p>Every AI service indexed by Fabric receives a composite score from <strong>0.00 to 5.00</strong>, computed from six independently weighted signals. Each signal scores 0–5 individually, then is multiplied by its weight. The six weighted contributions sum to the final score.</p>
 <p>All scoring data is generated automatically from public sources. No manual reviews. No paid placements. No provider involvement required. A provider doesn't need to opt in — or even know they're being scored — for Fabric to evaluate them.</p>
 
@@ -307,7 +276,7 @@ nav{padding-left:max(1rem,env(safe-area-inset-left));padding-right:max(1rem,env(
             = <span class="fn">3.90</span> <span class="cmt">// ✅ Trusted</span></pre></div>
 
 <h4>Custom weights</h4>
-<p>Pro and Team plans can override default weights to match their priorities. If your use case values speed over security, or cost over quality — you can rebalance the formula without changing the underlying data.</p>
+<p>Different use cases may call for different priorities. If your workflow values security over speed, or cost over quality — the weights can be rebalanced without changing the underlying data.</p>
 <div class="code"><span class="code-label">config</span><pre>{
   <span class="fn">"trustWeights"</span>: {
     <span class="fn">"vulnerabilitySafety"</span>: <span class="str">0.40</span>,   <span class="cmt">// boost security</span>
@@ -320,16 +289,16 @@ nav{padding-left:max(1rem,env(safe-area-inset-left));padding-right:max(1rem,env(
 }</pre></div>
 
 <h2 id="trust-thresholds">Score thresholds</h2>
-<p>Every indexed service falls into one of three tiers based on its composite score. These labels are shown publicly on the Trust Index and are used by the API to power agent-side routing decisions.</p>
-<table class="doc-table"><tr><th>Score</th><th>Status</th><th>Agent behaviour</th></tr>
-<tr><td>3.34 – 5.00</td><td><span class="tag tag-g">Trusted</span></td><td>Low risk across all signals. Agents can auto-approve. Safe to use without human confirmation.</td></tr>
-<tr><td>1.67 – 3.33</td><td><span class="tag tag-o">Caution</span></td><td>Some signals flagged. Agents should request human confirmation before granting access.</td></tr>
-<tr><td>0.00 – 1.66</td><td><span class="tag tag-r">Blocked</span></td><td>Significant risks detected. Agents deny by default. Manual override required.</td></tr></table>
+<p>Every indexed service falls into one of three tiers based on its composite score. These labels are shown publicly on the Trust Index.</p>
+<table class="doc-table"><tr><th>Score</th><th>Status</th><th>Meaning</th></tr>
+<tr><td>3.34 – 5.00</td><td><span class="tag tag-g">Trusted</span></td><td>Low risk across all signals. Safe to use without additional verification.</td></tr>
+<tr><td>1.67 – 3.33</td><td><span class="tag tag-o">Caution</span></td><td>Some signals flagged. Human review recommended before granting access.</td></tr>
+<tr><td>0.00 – 1.66</td><td><span class="tag tag-r">Blocked</span></td><td>Significant risks detected. Not recommended for use. Manual override required.</td></tr></table>
 
 <h4>Score modifiers</h4>
 <p>Two additional multipliers can reduce a provider's score below what the six signals alone would produce:</p>
 <table class="doc-table"><tr><th>Condition</th><th>Effect</th></tr>
-<tr><td>Provider with fewer than 10 transactions</td><td>"New provider" penalty — 0.8× multiplier on final score</td></tr>
+<tr><td>Provider with limited data coverage</td><td>"New provider" penalty — 0.8× multiplier on final score</td></tr>
 <tr><td>Provider inactive for 7+ days</td><td>"Inactive" flag — 0.7× multiplier on final score</td></tr></table>
 
 <h2 id="trust-refresh">Data freshness</h2>
@@ -339,293 +308,8 @@ nav{padding-left:max(1rem,env(safe-area-inset-left));padding-right:max(1rem,env(
 
 <div class="callout"><p><strong>No manual reviews. No paid placements.</strong> Trust scores are fully automated. Providers cannot pay for a higher score, request manual review, or influence their ranking. The only way to improve a score is to improve the underlying signals — fix vulnerabilities, maintain the project, improve uptime, verify your identity.</p></div>
 
-<h2 id="quickstart">Quickstart</h2>
-<p>Get Fabric running with your agent in under 5 minutes.</p>
-<h3>1. Install the SDK</h3>
-<div class="code"><span class="code-label">bash</span><pre>npm install @usefabric/mcp</pre></div>
-<h3>2. Configure your server</h3>
-<div class="code"><span class="code-label">typescript</span><pre><span class="kw">import</span> { FabricServer } <span class="kw">from</span> <span class="str">'@usefabric/mcp'</span>
-
-<span class="kw">const</span> <span class="fn">fabric</span> = <span class="kw">new</span> <span class="fn">FabricServer</span>({
-  <span class="fn">apiKey</span>: process.env.<span class="fn">FABRIC_KEY</span>,
-  <span class="fn">budget</span>: <span class="str">'$5/day'</span>,           <span class="cmt">// daily spend limit</span>
-  <span class="fn">trustThreshold</span>: <span class="str">0.8</span>,       <span class="cmt">// min trust score (0–1)</span>
-  <span class="fn">chain</span>: <span class="str">'base'</span>,              <span class="cmt">// payment chain</span>
-  <span class="fn">fallbackEnabled</span>: <span class="str">true</span>,     <span class="cmt">// auto-retry on failure</span>
-})</pre></div>
-<h3>3. Add to your MCP config</h3>
-<div class="code"><span class="code-label">json</span><pre>{
-  <span class="fn">"mcpServers"</span>: {
-    <span class="fn">"fabric"</span>: {
-      <span class="fn">"command"</span>: <span class="str">"npx"</span>,
-      <span class="fn">"args"</span>: [<span class="str">"@usefabric/mcp"</span>],
-      <span class="fn">"env"</span>: { <span class="fn">"FABRIC_KEY"</span>: <span class="str">"your-api-key"</span> }
-    }
-  }
-}</pre></div>
-<h3>4. Use from your agent</h3>
-<p>Your agent now has access to six tools: <span class="inline-code">discover</span>, <span class="inline-code">route</span>, <span class="inline-code">evaluate</span>, <span class="inline-code">budget</span>, <span class="inline-code">feedback</span>, and <span class="inline-code">favorites</span>.</p>
-<div class="code"><span class="code-label">agent prompt</span><pre><span class="cmt">// Your agent can now say things like:</span>
-<span class="str">"Use Fabric to find an image generation service and generate a logo"</span>
-<span class="str">"Check my remaining budget on Fabric"</span>
-<span class="str">"Evaluate the trust score of provider 0x1234..."</span></pre></div>
-
-<h2 id="architecture">Architecture</h2>
-<p>Fabric sits between your AI agent and the broader agent economy. It reads on-chain data from ERC-8004 smart contracts on Base, computes trust scores with a live scoring engine, handles x402 payments via managed wallets, and enforces budget controls.</p>
-<div class="code"><span class="code-label">architecture</span><pre><span class="fn">Your Agent</span> <span class="cmt">(Claude, Cursor, LangChain, custom)</span>
-    <span class="cmt">│</span>
-    <span class="cmt">├── MCP protocol</span>  <span class="cmt">(6 tools)</span>
-    <span class="cmt">├── REST API</span>      <span class="cmt">(22 endpoints)</span>
-    <span class="cmt">└── SDKs</span>          <span class="cmt">(TypeScript + Python)</span>
-    <span class="cmt">│</span>
-    <span class="cmt">▼</span>
-<span class="fn">Fabric Gateway</span>
-    <span class="cmt">├──</span> <span class="kw">Auth</span>              <span class="cmt">→ API key + plan enforcement</span>
-    <span class="cmt">├──</span> <span class="kw">Rate Limiter</span>       <span class="cmt">→ sliding window (Redis)</span>
-    <span class="cmt">├──</span> <span class="str">Trust Scorer</span>       <span class="cmt">→ 6-signal weighted scoring</span>
-    <span class="cmt">├──</span> <span class="str">Provider Selector</span>  <span class="cmt">→ composite ranking + fallback</span>
-    <span class="cmt">├──</span> <span class="str">Route Executor</span>     <span class="cmt">→ x402 → direct → mock</span>
-    <span class="cmt">├──</span> <span class="fn">Budget Engine</span>      <span class="cmt">→ multi-level spend limits</span>
-    <span class="cmt">└──</span> <span class="fn">Billing</span>           <span class="cmt">→ Stripe subscriptions</span>
-    <span class="cmt">│</span>
-    <span class="cmt">▼</span>
-<span class="fn">Base L2</span>
-    <span class="cmt">├──</span> <span class="str">FabricRegistry.sol</span>  <span class="cmt">→ ERC-8004 registry</span>
-    <span class="cmt">├──</span> <span class="str">FabricIdentity.sol</span>  <span class="cmt">→ ERC-721 identity</span>
-    <span class="cmt">└──</span> <span class="str">USDC transfers</span>      <span class="cmt">→ x402 settlement</span></pre></div>
-<div class="callout pink"><p><strong>No crypto knowledge required.</strong> Fabric handles wallet creation, funding, and transaction signing. Your agent just calls <span class="inline-code">route()</span> and gets results.</p></div>
-
-<h2 id="tool-discover">Tool: discover</h2>
-<p>Find services by capability. Queries the ERC-8004 registry and returns a ranked list of providers with trust scores and pricing.</p>
-<div class="param"><span class="param-name">capability</span><span class="param-type">string</span><span class="param-req">required</span><div class="param-desc">What your agent needs — e.g. <span class="inline-code">"image-generation"</span>, <span class="inline-code">"data-lookup"</span></div></div>
-<div class="param"><span class="param-name">maxResults</span><span class="param-type">number</span><div class="param-desc">Maximum providers to return. Default: 10</div></div>
-<div class="param"><span class="param-name">minTrust</span><span class="param-type">number</span><div class="param-desc">Minimum trust score (0–1). Overrides server-level threshold.</div></div>
-<div class="param"><span class="param-name">maxPrice</span><span class="param-type">string</span><div class="param-desc">Maximum price per request, e.g. <span class="inline-code">"$0.05"</span></div></div>
-<div class="code"><span class="code-label">response</span><pre>{
-  <span class="fn">"providers"</span>: [{
-    <span class="fn">"agentId"</span>: <span class="str">"0x1a2b...3c4d"</span>,
-    <span class="fn">"name"</span>: <span class="str">"PixelForge"</span>,
-    <span class="fn">"trustScore"</span>: <span class="str">0.94</span>,
-    <span class="fn">"price"</span>: <span class="str">"$0.02"</span>,
-    <span class="fn">"uptime"</span>: <span class="str">0.998</span>
-  }],
-  <span class="fn">"totalFound"</span>: <span class="str">12</span>,
-  <span class="fn">"filtered"</span>: <span class="str">4</span>
-}</pre></div>
-
-<h2 id="tool-route">Tool: route</h2>
-<p>The primary tool most agents will use. Handles discover → score → pay → return in a single call.</p>
-<div class="param"><span class="param-name">capability</span><span class="param-type">string</span><span class="param-req">required</span><div class="param-desc">Service capability needed</div></div>
-<div class="param"><span class="param-name">input</span><span class="param-type">object</span><span class="param-req">required</span><div class="param-desc">Payload to send to the service provider</div></div>
-<div class="param"><span class="param-name">priority</span><span class="param-type">"quality" | "speed" | "cost"</span><div class="param-desc">How to weight scoring. Default: <span class="inline-code">"quality"</span></div></div>
-<div class="param"><span class="param-name">preferredProvider</span><span class="param-type">string</span><div class="param-desc">Agent ID to try first (from favorites)</div></div>
-<div class="code"><span class="code-label">example</span><pre>fabric.route({
-  <span class="fn">capability</span>: <span class="str">"image-generation"</span>,
-  <span class="fn">input</span>: { <span class="fn">prompt</span>: <span class="str">"A blue octopus reading a newspaper"</span> },
-  <span class="fn">priority</span>: <span class="str">"quality"</span>
-})
-
-<span class="cmt">// Returns</span>
-{
-  <span class="fn">"result"</span>: { <span class="fn">url</span>: <span class="str">"https://..."</span>, <span class="fn">format</span>: <span class="str">"png"</span> },
-  <span class="fn">"provider"</span>: <span class="str">"PixelForge"</span>,
-  <span class="fn">"cost"</span>: <span class="str">"$0.02"</span>,
-  <span class="fn">"latency"</span>: <span class="str">"240ms"</span>,
-  <span class="fn">"trustScore"</span>: <span class="str">0.94</span>
-}</pre></div>
-
-<h2 id="tool-evaluate">Tool: evaluate</h2>
-<p>Get a detailed trust profile for a specific agent with a multi-signal breakdown.</p>
-<div class="param"><span class="param-name">agentId</span><span class="param-type">string</span><span class="param-req">required</span><div class="param-desc">The ERC-8004 agent ID (NFT token ID or address)</div></div>
-
-<h2 id="tool-budget">Tool: budget</h2>
-<p>Check remaining budget, view spend history, and update limits.</p>
-<div class="param"><span class="param-name">action</span><span class="param-type">"check" | "history" | "update"</span><span class="param-req">required</span><div class="param-desc">What to do with the budget</div></div>
-<table class="doc-table"><tr><th>Action</th><th>Description</th><th>Returns</th></tr>
-<tr><td><span class="inline-code">check</span></td><td>Current balance and daily limit</td><td>Balance, spent, limit</td></tr>
-<tr><td><span class="inline-code">history</span></td><td>Transaction log</td><td>Recent transactions</td></tr>
-<tr><td><span class="inline-code">update</span></td><td>Change limits</td><td>Updated config</td></tr></table>
-
-<h2 id="tool-feedback">Tool: feedback</h2>
-<p>Post reputation feedback to the on-chain registry. Called automatically by <span class="inline-code">route</span>, or invoke manually.</p>
-<div class="param"><span class="param-name">agentId</span><span class="param-type">string</span><span class="param-req">required</span><div class="param-desc">Provider agent ID to rate</div></div>
-<div class="param"><span class="param-name">score</span><span class="param-type">number</span><span class="param-req">required</span><div class="param-desc">Quality score 0–100</div></div>
-<div class="param"><span class="param-name">tags</span><span class="param-type">string[]</span><div class="param-desc">Up to 2 labels, e.g. <span class="inline-code">["fast", "accurate"]</span></div></div>
-
-<h2 id="tool-favorites">Tool: favorites</h2>
-<p>Manage preferred providers. Favorites are tried first before discovering alternatives.</p>
-<div class="param"><span class="param-name">action</span><span class="param-type">"list" | "add" | "remove"</span><span class="param-req">required</span><div class="param-desc">Manage favorites list</div></div>
-<div class="param"><span class="param-name">agentId</span><span class="param-type">string</span><div class="param-desc">Required for add/remove</div></div>
-
-<h2 id="payments">Payments &amp; x402</h2>
-<p>Fabric uses the <a href="https://x402.org">x402 protocol</a> for agent-to-agent payments. When a provider returns HTTP 402, Fabric automatically signs the payment and retries.</p>
-<h3>Payment flow</h3>
-<ol>
-<li>Agent calls a provider's x402-enabled endpoint via Fabric</li>
-<li>Provider returns <span class="inline-code">402</span> with payment requirements</li>
-<li>Fabric checks budget limits</li>
-<li>Fabric signs USDC payment from the managed wallet</li>
-<li>Payment settles on Base</li>
-<li>Fabric retries with payment proof → provider returns result</li>
-</ol>
-<h3>Supported chains</h3>
-<table class="doc-table"><tr><th>Chain</th><th>Token</th><th>Avg. tx cost</th><th>Status</th></tr>
-<tr><td>Base</td><td>USDC</td><td>~$0.00025</td><td><span class="tag tag-g">Live</span></td></tr>
-<tr><td>Ethereum</td><td>USDC</td><td>~$0.50–2.00</td><td><span class="tag tag-o">Planned</span></td></tr>
-<tr><td>Solana</td><td>USDC</td><td>~$0.001</td><td><span class="tag tag-o">Planned</span></td></tr></table>
-
-<h2 id="budgets">Budget Controls</h2>
-<p>Spending limits enforced at multiple levels to prevent runaway costs.</p>
-<table class="doc-table"><tr><th>Level</th><th>Description</th><th>Default</th></tr>
-<tr><td>Per-request</td><td>Max per service call</td><td>$0.50</td></tr>
-<tr><td>Per-task</td><td>Max per multi-step task</td><td>$2.00</td></tr>
-<tr><td>Daily</td><td>Total per day</td><td>$5.00</td></tr>
-<tr><td>Monthly</td><td>Hard cap</td><td>$50.00</td></tr></table>
-
-<h2 id="identity">Agent Identity</h2>
-<p>Built on two smart contracts on Base L2 implementing the <a href="https://eips.ethereum.org/EIPS/eip-8004">ERC-8004</a> standard for on-chain agent identity and reputation.</p>
-<ul>
-<li><strong>FabricRegistry (ERC-8004)</strong> — provider ID, owner, endpoint, category, name, reputation, interactions</li>
-<li><strong>FabricIdentity (ERC-721)</strong> — NFT per agent linking to registry, one token per registryId</li>
-<li><strong>Reputation updates</strong> — batched by operator to amortise gas</li>
-</ul>
-
-<h2 id="contracts">Smart Contracts</h2>
-<p>Two Solidity contracts on Base L2. 40 test cases. Optimised for cheap reads and batched writes.</p>
-<h3 id="contract-registry">FabricRegistry.sol</h3>
-<div class="code"><span class="code-label">solidity</span><pre><span class="cmt">// Anyone can register</span>
-registry.<span class="fn">registerAgent</span>(
-  keccak256(<span class="str">"prov_flux_001"</span>),
-  <span class="str">"https://flux.ai/v1/generate"</span>,
-  <span class="str">"image-generation"</span>,
-  <span class="str">"Flux Pro"</span>
-);
-
-<span class="cmt">// Operator batches reputation updates</span>
-registry.<span class="fn">batchUpdateReputation</span>(agentIds, scores, interactions);</pre></div>
-<table class="doc-table"><tr><th>Function</th><th>Access</th><th>Description</th></tr>
-<tr><td><span class="inline-code">registerAgent</span></td><td>Anyone</td><td>Register provider</td></tr>
-<tr><td><span class="inline-code">updateAgent</span></td><td>Owner</td><td>Update endpoint/status</td></tr>
-<tr><td><span class="inline-code">batchUpdateReputation</span></td><td>Operator</td><td>Batch update scores</td></tr>
-<tr><td><span class="inline-code">getAgent</span></td><td>View</td><td>Get by bytes32 ID</td></tr>
-<tr><td><span class="inline-code">getAgentsByCategory</span></td><td>View</td><td>Paginated query</td></tr></table>
-<h3 id="contract-identity">FabricIdentity.sol</h3>
-<div class="code"><span class="code-label">solidity</span><pre><span class="kw">uint256</span> tokenId = identity.<span class="fn">mint</span>(
-  agentWallet,
-  <span class="str">"Flux Pro"</span>,
-  keccak256(<span class="str">"prov_flux_001"</span>)
-);</pre></div>
-
-<h2 id="webmcp">WebMCP Integration</h2>
-<p>Fabric integrates with the <a href="https://github.com/nicolo-ribaudo/webmcp">W3C WebMCP spec</a> — the browser-native API that lets websites expose tools to AI agents. Fabric adds trust verification, autonomous payments, and cross-origin discovery.</p>
-<div class="callout"><p><strong>WebMCP + Fabric = Complete Agent Stack.</strong> WebMCP provides the tool contract. Fabric provides the trust contract and the payment contract. Together they replace screenshot-based browser agents with structured, verified, paid tool calls.</p></div>
-<table class="doc-table"><tr><th>Feature</th><th>MCP</th><th>WebMCP</th><th>Fabric</th></tr>
-<tr><td>Runtime</td><td>Server-side</td><td>Browser-native</td><td>Both</td></tr>
-<tr><td>Trust</td><td>None</td><td>None</td><td>6-signal scoring</td></tr>
-<tr><td>Payments</td><td>None</td><td>None</td><td>x402 / USDC</td></tr>
-<tr><td>Discovery</td><td>Per-server</td><td>Per-page</td><td>Cross-origin</td></tr></table>
-
-<h2 id="rest-api">REST API</h2>
-<p>22 endpoints across 7 route groups. All require <span class="inline-code">x-api-key</span> header (except health).</p>
-<table class="doc-table"><tr><th>Group</th><th>Endpoints</th><th>Description</th></tr>
-<tr><td>Discovery</td><td><span class="inline-code">GET /v1/discover</span></td><td>Find providers by category</td></tr>
-<tr><td>Routing</td><td><span class="inline-code">POST /v1/route</span></td><td>Discover → score → pay → return</td></tr>
-<tr><td>Evaluation</td><td><span class="inline-code">POST /v1/evaluate</span></td><td>Trust score breakdown</td></tr>
-<tr><td>Budgets</td><td><span class="inline-code">GET/POST /v1/budget</span></td><td>View/set limits</td></tr>
-<tr><td>Feedback</td><td><span class="inline-code">POST /v1/feedback</span></td><td>Submit feedback</td></tr>
-<tr><td>Favorites</td><td><span class="inline-code">GET/POST/DELETE /v1/favorites</span></td><td>Manage providers</td></tr>
-<tr><td>Wallets</td><td><span class="inline-code">GET/POST /v1/wallets</span></td><td>USDC wallets</td></tr>
-<tr><td>Billing</td><td><span class="inline-code">GET/POST /v1/billing/*</span></td><td>Subscriptions, invoices</td></tr>
-<tr><td>Health</td><td><span class="inline-code">GET /healthz /ready /health</span></td><td>Health checks</td></tr>
-<tr><td>MCP</td><td><span class="inline-code">POST /mcp</span></td><td>JSON-RPC (6 tools)</td></tr></table>
-
-<h2 id="sdks">SDKs</h2>
-<p>First-class TypeScript and Python SDKs with full type safety.</p>
-<div class="code"><span class="code-label">typescript</span><pre><span class="kw">import</span> { FabricClient } <span class="kw">from</span> <span class="str">'@fabric/sdk'</span>
-<span class="kw">const</span> <span class="fn">fabric</span> = <span class="kw">new</span> <span class="fn">FabricClient</span>({ apiKey: <span class="str">'fab_...'</span> })
-
-<span class="kw">const</span> result = <span class="kw">await</span> fabric.<span class="fn">route</span>({
-  capability: <span class="str">'image-generation'</span>,
-  input: { prompt: <span class="str">'A sunset over the ocean'</span> },
-})</pre></div>
-<div class="code"><span class="code-label">python</span><pre><span class="kw">from</span> fabric_sdk <span class="kw">import</span> FabricClient
-fabric = FabricClient(api_key=<span class="str">"fab_..."</span>)
-
-result = fabric.<span class="fn">route_sync</span>(
-    capability=<span class="str">"translation"</span>,
-    input={<span class="str">"text"</span>: <span class="str">"Hello world"</span>, <span class="str">"target"</span>: <span class="str">"es"</span>}
-)</pre></div>
-
-<h2 id="billing">Billing</h2>
-<p>Stripe-powered subscriptions with metered overage.</p>
-<table class="doc-table"><tr><th>Endpoint</th><th>Description</th></tr>
-<tr><td><span class="inline-code">GET /v1/billing/subscription</span></td><td>Current plan info</td></tr>
-<tr><td><span class="inline-code">POST /v1/billing/checkout</span></td><td>Stripe Checkout session</td></tr>
-<tr><td><span class="inline-code">POST /v1/billing/portal</span></td><td>Billing portal</td></tr>
-<tr><td><span class="inline-code">POST /v1/billing/plan</span></td><td>Change plan</td></tr>
-<tr><td><span class="inline-code">POST /v1/billing/cancel</span></td><td>Cancel subscription</td></tr>
-<tr><td><span class="inline-code">GET /v1/billing/invoices</span></td><td>Invoice history</td></tr>
-<tr><td><span class="inline-code">GET /v1/billing/overage</span></td><td>Overage summary</td></tr></table>
-
-<h2 id="rate-limits">Rate Limits</h2>
-<p>Sliding window via Redis sorted sets. No boundary-burst issues.</p>
-<table class="doc-table"><tr><th>Context</th><th>Limit</th><th>Window</th></tr>
-<tr><td>Per API key</td><td>100 req</td><td>1 min</td></tr>
-<tr><td>Per IP (unauth)</td><td>20 req</td><td>1 min</td></tr></table>
-<p>Headers: <span class="inline-code">X-RateLimit-Limit</span>, <span class="inline-code">X-RateLimit-Remaining</span>, <span class="inline-code">X-RateLimit-Reset</span>, <span class="inline-code">Retry-After</span>.</p>
-
-<h2 id="config">Configuration</h2>
-<div class="code"><span class="code-label">full config</span><pre><span class="kw">new</span> <span class="fn">FabricServer</span>({
-  <span class="fn">apiKey</span>: <span class="str">"fab_..."</span>,
-  <span class="fn">trustThreshold</span>: <span class="str">0.8</span>,
-  <span class="fn">priority</span>: <span class="str">"quality"</span>,
-  <span class="fn">fallbackEnabled</span>: <span class="str">true</span>,
-  <span class="fn">maxFallbacks</span>: <span class="str">3</span>,
-  <span class="fn">chain</span>: <span class="str">"base"</span>,
-  <span class="fn">token</span>: <span class="str">"USDC"</span>,
-  <span class="fn">budget</span>: <span class="str">"$5/day"</span>,
-  <span class="fn">maxPerRequest</span>: <span class="str">"$0.50"</span>,
-  <span class="fn">maxPerTask</span>: <span class="str">"$2.00"</span>,
-  <span class="fn">autoFeedback</span>: <span class="str">true</span>,
-  <span class="fn">feedbackDelay</span>: <span class="str">5000</span>,
-})</pre></div>
-
-<h2 id="pricing">Pricing</h2>
-<p>Flat subscription plus routing fee on x402 transactions. No markup on gas.</p>
-<table class="doc-table"><tr><th>Plan</th><th>Price</th><th>Requests/day</th><th>Fee</th><th>Wallets</th></tr>
-<tr><td><span class="tag tag-g">Free</span></td><td>$0</td><td>50</td><td>—</td><td>0</td></tr>
-<tr><td><span class="tag tag-b">Builder</span></td><td>$9/mo</td><td>5,000</td><td>0.5%</td><td>3</td></tr>
-<tr><td><span class="tag tag-b">Pro</span></td><td>$39/mo</td><td>15,000</td><td>0.4%</td><td>10</td></tr>
-<tr><td><span class="tag tag-p">Team</span></td><td>$149/mo</td><td>50,000</td><td>0.3%</td><td>50</td></tr></table>
-<p>Overage: $0.001/request, billed monthly. Set a hard cap in your dashboard to prevent it.</p>
-
-<h2 id="protocols">Protocol Stack</h2>
-<table class="doc-table"><tr><th>Protocol</th><th>Role</th><th>Maintainers</th></tr>
-<tr><td>ERC-8004</td><td>Agent identity + reputation</td><td>Ethereum, Coinbase, Google</td></tr>
-<tr><td>x402</td><td>HTTP-native payments</td><td>Coinbase, Cloudflare</td></tr>
-<tr><td>MCP</td><td>Agent ↔ tool interface</td><td>Anthropic, OpenAI, Google</td></tr>
-<tr><td>WebMCP</td><td>Browser-native tools</td><td>Google, Microsoft, W3C</td></tr>
-<tr><td>Base L2</td><td>Settlement layer</td><td>Coinbase</td></tr>
-<tr><td>USDC</td><td>Payment token</td><td>Circle</td></tr></table>
-
-<h2 id="deployment">Deployment</h2>
-<p>Production-ready with Docker, monitoring, and CI/CD.</p>
-<div class="code"><span class="code-label">docker</span><pre><span class="cmt"># Full stack</span>
-docker compose -f docker-compose.prod.yml up -d
-<span class="cmt"># gateway, postgres, redis, prometheus, grafana</span></pre></div>
-<table class="doc-table"><tr><th>Component</th><th>Details</th></tr>
-<tr><td>Runtime</td><td>Bun + Elysia, multi-stage Docker</td></tr>
-<tr><td>Database</td><td>PostgreSQL + Prisma</td></tr>
-<tr><td>Cache</td><td>Redis</td></tr>
-<tr><td>Monitoring</td><td>Prometheus + Grafana</td></tr>
-<tr><td>CI/CD</td><td>GitHub Actions</td></tr>
-<tr><td>Security</td><td>HSTS, CSP, KMS encryption</td></tr></table>
-<div class="code"><span class="code-label">health</span><pre><span class="fn">GET /healthz</span>  <span class="cmt">→ shallow</span>
-<span class="fn">GET /ready</span>    <span class="cmt">→ readiness (503 if not ready)</span>
-<span class="fn">GET /health</span>   <span class="cmt">→ deep (latency, memory, uptime)</span></pre></div>
-
 <h2 id="legal">Legal</h2>
-<p>By using Fabric's API, SDK, Trust Index, or any other part of the Service, you agree to the following. Full legal documents are linked below — this section summarises the key points relevant to developers and integrators.</p>
+<p>By using Fabric's Trust Index or any other part of the Service, you agree to the following. Full legal documents are linked below — this section summarises the key points relevant to users.</p>
 
 <h3>Trust scores are informational, not guarantees</h3>
 <p>Fabric trust scores are algorithmically generated from public third-party data sources. They are point-in-time assessments and may not reflect the current state of any indexed service. Scores should not be your sole basis for any decision involving data security, financial transactions, or the selection of AI tools for business-critical applications. A "Trusted" score does not mean a service is safe — it means low risk was detected at the time of scoring.</p>
@@ -633,23 +317,14 @@ docker compose -f docker-compose.prod.yml up -d
 <h3>No endorsement of third-party services</h3>
 <p>Fabric does not operate, control, endorse, or guarantee any third-party service indexed in the Trust Index. We aggregate and analyse data to generate scores. We do not audit, certify, or recommend any provider. Inclusion in the index is automatic and does not imply any relationship between Fabric and the indexed service.</p>
 
-<h3>Data we collect</h3>
-<p>When you use the Fabric API, we collect your account information (email, API key), API usage data (endpoints called, timestamps, response codes), agent configuration (trust thresholds, budget limits, custom weights), and transaction records (provider selections, payment amounts, feedback submitted). We do not sell personal data. We do not share individual usage data with indexed providers. Aggregated, anonymised data may be used to improve scoring accuracy.</p>
-
-<h3>Blockchain &amp; payment risks</h3>
-<p>Fabric facilitates payments via the x402 protocol using USDC on blockchain networks. On-chain transactions are irreversible. Fabric is not a financial institution, money transmitter, or payment processor. Wallet management is provided as a convenience — you are responsible for securing your credentials and understanding the risks of on-chain transactions.</p>
-
 <h3>Limitation of liability</h3>
 <p>To the maximum extent permitted by law, Fabric shall not be liable for any indirect, incidental, special, consequential, or punitive damages arising from your use of the Service, reliance on trust scores, or interactions with third-party services discovered through Fabric. Total aggregate liability is capped at the greater of fees paid in the preceding 12 months or USD $100.</p>
 
-<h3>API usage</h3>
-<p>API access is subject to rate limits, usage quotas, and the terms of your subscription plan. API keys are confidential — you are responsible for all activity under your account. Do not reverse-engineer scoring algorithms, systematically scrape data beyond normal API usage, or misrepresent trust scores as endorsements or certifications.</p>
-
 <h3>Full legal documents</h3>
 <table class="doc-table"><tr><th>Document</th><th>Covers</th></tr>
-<tr><td><a href="/terms">Terms of Service</a></td><td>Account usage, acceptable use, API terms, intellectual property, termination, liability, dispute resolution</td></tr>
+<tr><td><a href="/terms">Terms of Service</a></td><td>Usage terms, acceptable use, intellectual property, termination, liability, dispute resolution</td></tr>
 <tr><td><a href="/privacy">Privacy Policy</a></td><td>Data collection, processing, retention, security, international transfers, your rights under GDPR and Australian Privacy Act</td></tr>
-<tr><td><a href="/disclaimer">Disclaimer</a></td><td>Score accuracy limitations, third-party data reliance, blockchain risks, emerging technology caveats, no professional advice</td></tr></table>
+<tr><td><a href="/disclaimer">Disclaimer</a></td><td>Score accuracy limitations, third-party data reliance, emerging technology caveats, no professional advice</td></tr></table>
 
 <div class="callout"><p><strong>Fabric Layer Technologies Ltd</strong> is incorporated in the British Virgin Islands. For legal enquiries, contact <a href="/cdn-cgi/l/email-protection#2e424b494f426e484f4c5c474d424f574b5c004f47"><span class="__cf_email__" data-cfemail="701c1517111c301611120219131c110915025e1119">[email&#160;protected]</span></a>.</p></div>
 
