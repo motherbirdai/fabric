@@ -64,7 +64,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;background:var(--white);bord
 .nav-group-title{font-family:var(--mono);font-size:0.6rem;font-weight:500;text-transform:uppercase;letter-spacing:1.2px;color:var(--text-3);padding:12px 24px 4px}
 .nav-item{display:block;padding:5px 24px 5px 28px;font-size:0.82rem;color:var(--text-2);text-decoration:none;transition:all .15s;border-left:2px solid transparent;margin-left:4px}
 .nav-item:hover{color:var(--text);text-decoration:none}
-.nav-item.active{color:var(--blue);border-left-color:var(--blue);font-weight:500}
+.nav-item.active{color:var(--blue);border-left-color:var(--blue);font-weight:500;background:rgba(6,140,255,.06);border-radius:0 6px 6px 0}
 
 .content{padding:32px 20px 80px;overflow-x:hidden;min-width:0;width:100%}
 .content h1,.content h2,.content h3,.content h4{scroll-margin-top:80px}
@@ -336,7 +336,7 @@ nav{padding-left:max(1rem,env(safe-area-inset-left));padding-right:max(1rem,env(
 <ul class="foot-links"><li>Claim Profile</li><li><a href="https://github.com/motherbirdai/fabric" target="_blank" rel="noopener">GitHub</a></li><li><a href="https://x.com/fabriclayer" target="_blank" rel="noopener">Twitter / X</a></li><li><a href="/docs">Docs</a></li><li class="foot-sep"></li><li><a href="/terms">Terms</a></li><li><a href="/privacy">Privacy</a></li><li><a href="/disclaimer">Disclaimer</a></li></ul>
 </div></footer>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+<script>
 const burger=document.getElementById('burgerBtn');
 const mobileMenu=document.getElementById('mobileMenu');
 burger.addEventListener('click',()=>{burger.classList.toggle('open');mobileMenu.classList.toggle('open')});
@@ -345,9 +345,18 @@ mobileMenu.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{burg
   const navItems=document.querySelectorAll('.sidebar .nav-item');
   const sections=[];
   navItems.forEach(item=>{const id=item.getAttribute('href');if(id&&id.startsWith('#')){const el=document.querySelector(id);if(el)sections.push({el,nav:item})}});
-  let ticking=false;
   const setActive=(nav)=>{const cur=document.querySelector('.sidebar .nav-item.active');if(cur===nav)return;navItems.forEach(n=>n.classList.remove('active'));nav.classList.add('active');const sidebar=document.querySelector('.sidebar');if(sidebar){const navTop=nav.offsetTop;const sideScroll=sidebar.scrollTop;const sideH=sidebar.clientHeight;if(navTop<sideScroll+60||navTop>sideScroll+sideH-60)sidebar.scrollTop=navTop-sideH/2}};
+  let ticking=false;
   function onScroll(){
     const scrollY=window.scrollY+100;
     let current=sections[0];
-    for(let i=0;i<sections.length;i++){if(sections[i].el.offsetTop<=scrollY)c
+    for(let i=0;i<sections.length;i++){if(sections[i].el.offsetTop<=scrollY)current=sections[i]}
+    if(current)setActive(current.nav);
+    ticking=false;
+  }
+  window.addEventListener('scroll',()=>{if(!ticking){ticking=true;requestAnimationFrame(onScroll)}});
+  onScroll();
+})();
+</script>
+</body>
+</html>
