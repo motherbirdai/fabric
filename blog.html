@@ -2,19 +2,26 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Blog — Fabric</title>
-<meta name="description" content="Case studies, security research, and product updates from the Fabric team.">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Fabric Blog — Security research, case studies, product updates</title>
+<meta name="description" content="Case studies, security research, and product updates from the Fabric team. The latest on AI trust scoring and MCP security.">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
 <link rel="canonical" href="https://fabriclayer.ai/blog">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://fabriclayer.ai/blog">
-<meta property="og:title" content="Blog — Fabric">
-<meta property="og:description" content="Case studies, security research, and product updates from the Fabric team.">
+<meta property="og:title" content="Fabric Blog — Security research, case studies, product updates">
+<meta property="og:description" content="Case studies, security research, and product updates from the Fabric team. The latest on AI trust scoring and MCP security.">
 <meta property="og:site_name" content="Fabric">
+<meta property="og:image" content="https://fabriclayer.ai/og-blog.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://fabriclayer.ai/og-blog.png">
 <meta name="twitter:site" content="@fabriclayer">
-<meta name="twitter:title" content="Blog — Fabric">
-<meta name="twitter:description" content="Case studies, security research, and product updates from the Fabric team.">
+<meta name="twitter:title" content="Fabric Blog — Security research, case studies, product updates">
+<meta name="twitter:description" content="Case studies, security research, and product updates from the Fabric team. The latest on AI trust scoring and MCP security.">
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,300;1,9..40,400&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
 :root{--black:#000;--blue:#068cff;--pink:#fe83e0;--white:#fff;--bg:#f7f7f7;--text:#0a0a0a;--text-2:#555;--text-3:#999;--border:#e5e5e5;--green:#0dc956;--orange:#f7931e;--red:#e82d35;--sans:'DM Sans',-apple-system,BlinkMacSystemFont,sans-serif;--mono:'DM Mono','SF Mono',monospace}
@@ -108,7 +115,26 @@ nav{padding:0 40px}
 .post-title{font-size:24px;letter-spacing:-1px}
 footer{padding:40px}.foot-inner{flex-direction:row;justify-content:space-between;text-align:left}
 }
+
+/* ── BLOG LISTING MOBILE ── */
+@media(max-width:480px){
+.page{padding:64px 14px 48px}
+.page h1{font-size:24px}
+.page .subtitle{font-size:14px;margin-bottom:28px}
+.featured{padding:22px 16px;border-radius:12px;margin-bottom:28px}
+.featured .post-title{font-size:20px;letter-spacing:-.5px}
+.featured .post-desc{font-size:13.5px}
+.post{padding:20px 0}
+.post-title{font-size:17px;letter-spacing:-.3px}
+.post-desc{font-size:13px}
+.post-meta{font-size:10px}
+.post-tag{font-size:9px;padding:2px 7px}
+.score-badge{font-size:18px;padding:6px 12px}
+}
+nav{padding-left:max(1rem,env(safe-area-inset-left));padding-right:max(1rem,env(safe-area-inset-right))}
+footer{padding-bottom:max(20px,env(safe-area-inset-bottom))}
 </style>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"CollectionPage","name":"Fabric Blog","description":"Case studies, security research, and product updates from the Fabric team.","url":"https://fabriclayer.ai/blog","publisher":{"@type":"Organization","name":"Fabric","url":"https://fabriclayer.ai"}}</script>
 </head>
 <body>
 
